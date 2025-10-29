@@ -10,7 +10,8 @@ AX_THOR_FUNC_INIT_BUILD([ThorsChalice], [src/ThorsChalice/ThorsChalice.cpp])
 #
 # Add extra configuration here
 #
-
+AX_THOR_CHECK_USE_THORS_SERIALIZE
+AX_THOR_CHECK_USE_THORS_NISSE
 
 LT_INIT
 

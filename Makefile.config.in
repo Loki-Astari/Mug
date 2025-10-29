@@ -3,3 +3,9 @@
 # They can then be included by surrounding with @
 # AC_SUBST([ExampleMakeFileVariable], [ValueOfVariable])
 ExampleMakeFileVariable=@ExampleMakeFileVariable@
+
+ThorSerialize_ROOT_LIB=@ThorSerialize_ROOT_LIB@
+ThorSerialize_ROOT_DIR=@ThorSerialize_ROOT_DIR@
+
+Nisse_ROOT_LIB=@Nisse_ROOT_LIB@
+Nisse_ROOT_DIR=@Nisse_ROOT_DIR@
