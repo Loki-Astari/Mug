@@ -12,7 +12,11 @@ int main(int argc, char* argv[])
     std::cout << "ThorsChalice\n";
     try
     {
-        ChaliceCLA          arguments(std::vector<std::string>(argv + 1, argv + argc));
+        ChaliceCLA          arguments(std::vector<std::string_view>(argv + 1, argv + argc));
+        if (arguments.isHelpNeeded()) {
+            arguments.displayHelp(argv[0]);
+            return 0;
+        }
         ChaliceServer       server(arguments);
         server.run();
     }
