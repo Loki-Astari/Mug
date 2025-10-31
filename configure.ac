@@ -13,6 +13,13 @@ AX_THOR_FUNC_INIT_BUILD([ThorsChalice], [src/ThorsChalice/ThorsChalice.cpp])
 AX_THOR_CHECK_USE_THORS_SERIALIZE
 AX_THOR_CHECK_USE_MAGIC_ENUM
 AX_THOR_CHECK_USE_THORS_NISSE
+AX_THOR_CHECK_USE_EVENT
+AX_THOR_CHECK_USE_BOOST([1.70], [], [
+    AC_MSG_ERROR([
+        Nisse requires boost CoRoutine2
+        The minimum version we support is via boost 1.70 please upgrade your boost libraries to this (or later).
+    ])
+])
 
 LT_INIT
 

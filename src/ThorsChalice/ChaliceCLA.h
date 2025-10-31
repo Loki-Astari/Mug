@@ -21,7 +21,7 @@ struct SplitArg
     bool                hasValue;
 };
 
-using Paths         = std::vector<FSys::path>;
+using Paths         = std::vector<FS::path>;
 using VerbosityMap  = std::map<std::string_view, loguru::Verbosity>;
 
 class ChaliceCLA

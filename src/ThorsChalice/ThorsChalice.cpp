@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
         if (arguments.configPath.empty()) {
             ThorsLogAndThrowCritical("ThorsChalice", "main", "No config file set. Not explicitly set and default ones don't exist");
         }
-        if (!FSys::exists(arguments.configPath)) {
+        if (!FS::exists(arguments.configPath)) {
             ThorsLogAndThrowCritical("ThorsChalice", "main", "Specified config file does not exist. Config File: ", arguments.configPath);
         }
 
@@ -44,6 +44,10 @@ int main(int argc, char* argv[])
 
         if (!(configStream >> jsonImporter(config, ParserConfig{ParseType::Exact}))) {
             ThorsLogAndThrowCritical("ThorsChalice", "main", "Failed to load config file: ", arguments.configPath);
+        }
+
+        if (config.servers.empty()) {
+            ThorsLogAndThrowCritical("ThorsChalice", "main", "Config specifies no servers to run");
         }
 
         ChaliceServer       server(config, arguments.silent ? ChaliceServerMode::Headless : ChaliceServerMode::Active);

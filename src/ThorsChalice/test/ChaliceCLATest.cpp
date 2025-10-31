@@ -24,12 +24,12 @@ struct MockArguments: public ThorsAnvil::ThorsChalice::ChaliceCLAInterface
 {
     std::size_t                 classCount      = 0;
     std::array<std::size_t, 6>  methodCallCount = {0, 0, 0, 0, 0, 0};
-    FSys::path                  config;
-    FSys::path                  logFile;
+    FS::path                    config;
+    FS::path                    logFile;
     std::string                 appName;
     loguru::Verbosity           verbosity;
 
-    virtual void logAddFile(FSys::path file)            override
+    virtual void logAddFile(FS::path file)              override
     {
         ++classCount;
         ++methodCallCount[0];
@@ -57,7 +57,7 @@ struct MockArguments: public ThorsAnvil::ThorsChalice::ChaliceCLAInterface
         ++classCount;
         ++methodCallCount[4];
     }
-    virtual void setConfigFile(FSys::path file)         override
+    virtual void setConfigFile(FS::path file)           override
     {
         ++classCount;
         ++methodCallCount[5];
