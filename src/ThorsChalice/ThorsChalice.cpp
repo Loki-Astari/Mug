@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
         using ThorsAnvil::Serialize::ParseType;
         std::ifstream   configStream(arguments.configPath);
         ChaliceConfig   config;
+
         if (!(configStream >> jsonImporter(config, ParserConfig{ParseType::Exact}))) {
             ThorsLogAndThrowCritical("ThorsChalice", "main", "Failed to load config file: ", arguments.configPath);
         }
