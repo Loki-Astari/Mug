@@ -30,10 +30,10 @@ int main(int argc, char* argv[])
         }
 
         if (arguments.configPath.empty()) {
-            ThorsLogAndThrowCritical("ThorsChalice", "main", "No config file set. Not explicitly set and default ones don't exist");
+            ThorsLogAndThrowError("ThorsChalice", "main", "No config file set. Not explicitly set and default ones don't exist");
         }
         if (!FS::exists(arguments.configPath)) {
-            ThorsLogAndThrowCritical("ThorsChalice", "main", "Specified config file does not exist. Config File: ", arguments.configPath);
+            ThorsLogAndThrowError("ThorsChalice", "main", "Specified config file does not exist. Config File: ", arguments.configPath);
         }
 
         using ThorsAnvil::Serialize::jsonImporter;
@@ -43,11 +43,11 @@ int main(int argc, char* argv[])
         ChaliceConfig   config;
 
         if (!(configStream >> jsonImporter(config, ParserConfig{ParseType::Exact}))) {
-            ThorsLogAndThrowCritical("ThorsChalice", "main", "Failed to load config file: ", arguments.configPath);
+            ThorsLogAndThrowError("ThorsChalice", "main", "Failed to load config file: ", arguments.configPath);
         }
 
         if (config.servers.empty()) {
-            ThorsLogAndThrowCritical("ThorsChalice", "main", "Config specifies no servers to run");
+            ThorsLogAndThrowError("ThorsChalice", "main", "Config specifies no servers to run");
         }
 
         ChaliceServer       server(config, arguments.silent ? ChaliceServerMode::Headless : ChaliceServerMode::Active);
