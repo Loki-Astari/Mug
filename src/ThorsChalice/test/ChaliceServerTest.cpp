@@ -219,3 +219,58 @@ TEST(ChaliceServer, ServiceRunAddServerWithFileValidateWorks)
     socket.putMessageData("Stop", 4);
 }
 
+TEST(ChaliceServer, CallALoadedLib)
+{
+    using ThorsAnvil::ThorsChalice::ActionType;
+    std::stringstream   configStream(R"(
+        {
+            "controlPort": 8079,
+            "servers": [
+                {
+                    "port":     8080,
+                    "actions": [
+                        {
+                            "type":     "Lib",
+                            "rootDir":  "../L3/release/libL3.dylib",
+                            "path":     "/page1"
+                        }
+                    ]
+                }
+            ]
+        }
+    )");
+
+    ThorsAnvil::ThorsChalice::ChaliceConfig     config;
+
+    if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
+        ASSERT_TRUE(false);
+    }
+
+    ThorsAnvil::ThorsChalice::ChaliceServer     server(config, ThorsAnvil::ThorsChalice::Active);
+
+    auto work = [&]() {
+        server.run();
+    };
+
+    std::jthread     serverThread(work);
+
+    {
+        // Talk to server.
+        std::this_thread::sleep_for(20ms);
+        ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8080});
+
+        socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/page1");
+
+        ThorsAnvil::ThorsSocket::HTTPResponse   response;
+        socketData >> response;
+
+        ASSERT_EQ(305, response.getCode());
+
+    }
+
+    // Touch the control point to shut down the server.
+    std::this_thread::sleep_for(250ms);
+    ThorsAnvil::ThorsSocket::Socket     socket({"localhost", 8079});
+    socket.putMessageData("Stop", 4);
+}
+
