@@ -15,19 +15,19 @@ namespace FS = std::filesystem;
 
 TEST(DLLibTest, Create)
 {
-    DLLib   dlLib;
+    ThorsAnvil::ThorsChalice::DLLib   dlLib;
 }
 
 TEST(DLLibTest, Move)
 {
-    DLLib   dlLib1;
-    DLLib   dlLib2(std::move(dlLib1));
+    ThorsAnvil::ThorsChalice::DLLib   dlLib1;
+    ThorsAnvil::ThorsChalice::DLLib   dlLib2(std::move(dlLib1));
 }
 
 TEST(DLLibTest, MoveAssign)
 {
-    DLLib   dlLib1;
-    DLLib   dlLib2;
+    ThorsAnvil::ThorsChalice::DLLib   dlLib1;
+    ThorsAnvil::ThorsChalice::DLLib   dlLib2;
 
     dlLib1 = std::move(dlLib1);
 }
@@ -35,12 +35,12 @@ TEST(DLLibTest, MoveAssign)
 TEST(DLLibTest, LoadL3)
 {
     std::error_code ec;
-    DLLib   dlLib1(FS::canonical(FS::path("../L3/release/libL3.dylib"), ec));
+    ThorsAnvil::ThorsChalice::DLLib   dlLib1(FS::canonical(FS::path("../L3/release/libL3.dylib"), ec));
 }
 TEST(DLLibTest, LoadFailEmpty)
 {
     std::error_code ec;
-    auto action = [&](){DLLib   dlLib1(FS::canonical(FS::path("../../build/lib/libBadLibName.dylib"), ec));};
+    auto action = [&](){ThorsAnvil::ThorsChalice::DLLib   dlLib1(FS::canonical(FS::path("../../build/lib/libBadLibName.dylib"), ec));};
     EXPECT_THROW(
                  action(),
                  std::runtime_error
@@ -48,7 +48,7 @@ TEST(DLLibTest, LoadFailEmpty)
 }
 TEST(DLLibTest, LoadFailWithPath)
 {
-    auto action = [&](){DLLib   dlLib1(FS::path("../../build/lib/libBadLibName.dylib"));};
+    auto action = [&](){ThorsAnvil::ThorsChalice::DLLib   dlLib1(FS::path("../../build/lib/libBadLibName.dylib"));};
     EXPECT_THROW(
                  action(),
                  std::runtime_error
@@ -57,7 +57,7 @@ TEST(DLLibTest, LoadFailWithPath)
 TEST(DLLibTest, LoadOKFunctionBad)
 {
     std::error_code ec;
-    auto action = [&](){DLLib   dlLib1(FS::canonical(FS::path("../L5/release/libL5.dylib"), ec));};
+    auto action = [&](){ThorsAnvil::ThorsChalice::DLLib   dlLib1(FS::canonical(FS::path("../L5/release/libL5.dylib"), ec));};
     EXPECT_THROW(
                  action(),
                  std::runtime_error
@@ -67,7 +67,7 @@ TEST(DLLibTest, LoadOKFunctionBad)
 TEST(DLLibTest, LoadL3Call)
 {
     std::error_code ec;
-    DLLib   dlLib1(FS::canonical(FS::path("../L3/release/libL3.dylib"), ec));
+    ThorsAnvil::ThorsChalice::DLLib     dlLib1(FS::canonical(FS::path("../L3/release/libL3.dylib"), ec));
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8080\r\n"
                                                "content-length: 0\r\n"
@@ -84,7 +84,7 @@ TEST(DLLibTest, LoadL3Call)
 TEST(DLLibTest, LoadL4Call)
 {
     std::error_code ec;
-    DLLib   dlLib1(FS::canonical(FS::path("../L4/release/libL4.dylib"), ec));
+    ThorsAnvil::ThorsChalice::DLLib     dlLib1(FS::canonical(FS::path("../L4/release/libL4.dylib"), ec));
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8080\r\n"
                                                "content-length: 0\r\n"
@@ -102,7 +102,7 @@ TEST(DLLibTest, LoadL4Call)
 TEST(DLLibTest, CallCheck)
 {
     std::error_code ec;
-    DLLib   dlLib1(FS::canonical(FS::path("../L4/release/libL4.dylib"), ec));
+    ThorsAnvil::ThorsChalice::DLLib     dlLib1(FS::canonical(FS::path("../L4/release/libL4.dylib"), ec));
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8080\r\n"
                                                "content-length: 0\r\n"
@@ -115,17 +115,18 @@ TEST(DLLibTest, CallCheck)
 
     dlLib1.call(request, response);
     EXPECT_EQ(404, response.getCode().code);
-    EXPECT_EQ(NoChange, dlLib1.check());
+    EXPECT_EQ(ThorsAnvil::ThorsChalice::NoChange, dlLib1.check());
     dlLib1.call(request, response);
     EXPECT_EQ(404, response.getCode().code);
 }
 
 TEST(DLLibTest, CallCheckAfterLibChange)
 {
-    std::error_code ec;
     std::filesystem::remove("./CallCheckAfterLibChange.dylib");
     std::filesystem::copy("../L3/release/libL3.dylib", "./CallCheckAfterLibChange.dylib");
-    DLLib   dlLib1(FS::canonical(FS::path("./CallCheckAfterLibChange.dylib"), ec));
+
+    std::error_code                     ec;
+    ThorsAnvil::ThorsChalice::DLLib     dlLib1(FS::canonical(FS::path("./CallCheckAfterLibChange.dylib"), ec));
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8080\r\n"
                                                "content-length: 0\r\n"
@@ -140,7 +141,7 @@ TEST(DLLibTest, CallCheckAfterLibChange)
     EXPECT_EQ(305, response.getCode().code);
     std::filesystem::remove("./CallCheckAfterLibChange.dylib");
     std::filesystem::copy("../L4/release/libL4.dylib", "./CallCheckAfterLibChange.dylib");
-    EXPECT_EQ(ChangeAndSwapped, dlLib1.check());
+    EXPECT_EQ(ThorsAnvil::ThorsChalice::ChangeAndSwapped, dlLib1.check());
     dlLib1.call(request, response);
     EXPECT_EQ(404, response.getCode().code);
     std::filesystem::remove("./CallCheckAfterLibChange.dylib");
@@ -148,19 +149,19 @@ TEST(DLLibTest, CallCheckAfterLibChange)
 
 TEST(DLLibTest, CheckOnEmpty)
 {
-    DLLib   dlLib;
-    EXPECT_EQ(NoChange, dlLib.check());
+    ThorsAnvil::ThorsChalice::DLLib     dlLib;
+    EXPECT_EQ(ThorsAnvil::ThorsChalice::NoChange, dlLib.check());
 }
 
 TEST(DLLibTest, ForceCheckOnEmpty)
 {
-    DLLib   dlLib;
+    ThorsAnvil::ThorsChalice::DLLib     dlLib;
     dlLib.checkWithForce();
 }
 
 TEST(DLLibTest, CallOnEmpty)
 {
-    DLLib   dlLib;
+    ThorsAnvil::ThorsChalice::DLLib     dlLib;
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8080\r\n"
                                                "content-length: 0\r\n"
@@ -180,8 +181,9 @@ TEST(DLLibTest, Sleep)
 {
     std::filesystem::remove("./CallCheckAfterLibChange.dylib");
     std::filesystem::copy("../L3/release/libL3.dylib", "./CallCheckAfterLibChange.dylib");
+
     std::error_code                     ec;
-    DLLib                               dlLib(FS::canonical(FS::path("./CallCheckAfterLibChange.dylib"), ec));
+    ThorsAnvil::ThorsChalice::DLLib     dlLib(FS::canonical(FS::path("./CallCheckAfterLibChange.dylib"), ec));
     std::filesystem::remove("./CallCheckAfterLibChange.dylib");
     std::filesystem::copy("../L4/release/libL4.dylib", "./CallCheckAfterLibChange.dylib");
 
@@ -206,7 +208,9 @@ TEST(DLLibTest, Sleep)
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(20ms);
     auto result = dlLib.check();                      // This will try and unload the library but it can't because there is an active thread.
-    EXPECT_EQ(ChangedButLocked, result);
+    EXPECT_EQ(ThorsAnvil::ThorsChalice::ChangedButLocked, result);
+
+    work.join();
     std::filesystem::remove("./CallCheckAfterLibChange.dylib");
 }
 

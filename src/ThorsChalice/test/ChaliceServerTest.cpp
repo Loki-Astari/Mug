@@ -98,7 +98,6 @@ TEST(ChaliceServer, ServiceRunAddServer)
             "servers": [
                 {
                     "port":     8080,
-                    "rootDir":  "./test/data/pages",
                     "actions": [
                     ]
                 }
@@ -134,12 +133,11 @@ TEST(ChaliceServer, ServiceRunAddServerWithFile)
             "servers": [
                 {
                     "port":     8080,
-                    "rootDir":  "./test/data/pages",
                     "actions": [
                         {
-                            "path":     "page1",
                             "type":     "File",
-                            "value":    "XXX"
+                            "rootDir":  "./test/data/pages",
+                            "path":     "page1"
                         }
                     ]
                 }
@@ -176,12 +174,11 @@ TEST(ChaliceServer, ServiceRunAddServerWithFileValidateWorks)
             "servers": [
                 {
                     "port":     8080,
-                    "rootDir":  "./test/data/pages",
                     "actions": [
                         {
-                            "path":     "/page1",
                             "type":     "File",
-                            "value":    "XXX"
+                            "rootDir":  "./test/data/pages",
+                            "path":     "/page1"
                         }
                     ]
                 }

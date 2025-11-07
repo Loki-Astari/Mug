@@ -2,6 +2,7 @@
 #define THORSANVIL_THORS_CHALICE_CHALICE_SERVER_H
 
 #include "ChaliceConfig.h"
+#include "DLLib.h"
 #include "NisseServer/NisseServer.h"
 #include "NisseServer/PyntControl.h"
 #include "NisseHTTP/HTTPHandler.h"
@@ -26,9 +27,10 @@ class ChaliceServer: public NisServer::NisseServer
     NisServer::PyntControl  control;
     // HTTPHandler
     Hanlders                servers;
+    DLLibMap                libraries;
 
     TASock::ServerInit getServerInit(std::optional<FS::path> certPath, int port);
-    void handleRequestLib(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir);
+    void handleRequestLib(NisHttp::Request& request, NisHttp::Response& response, std::size_t libIndex);
     void handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir);
 
     public:

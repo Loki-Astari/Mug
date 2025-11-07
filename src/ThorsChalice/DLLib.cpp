@@ -4,6 +4,8 @@
 #include <dlfcn.h>
 #include <filesystem>
 
+using namespace ThorsAnvil::ThorsChalice;
+
 
 DLLib::DLLib()
     : lib(nullptr)
@@ -115,7 +117,7 @@ void DLLib::reload()
     lib = dlopen(FS::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL);
     if (lib == nullptr) {
         loadFailed = true;
-        ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlopne() failed: ", safeDLerror());
+        ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlopen() failed: ", safeDLerror());
     }
 
     void*           chaliceFuncSym = dlsym(lib, "chaliceFunction");
@@ -135,4 +137,21 @@ void DLLib::reload()
     chaliceHandle = reinterpret_cast<ChaliceHanlde>(chaliceResult);
     reloadInProgress = false;
     cond.notify_all();
+}
+
+std::size_t DLLibMap::load(std::string const& path)
+{
+    std::error_code ec;
+    FS::path    libPath = FS::canonical(path, ec);
+    if (libPath.empty()) {
+        ThorsLogAndThrowError(std::runtime_error, "DLLibMap", "load", "Invalid path to shared library: ", path);
+    }
+    auto find = libNameMap.find(libPath.string());
+    if (find != std::end(libNameMap)) {
+        return find->second;
+    }
+    std::size_t result = loadedLibs.size();
+    libNameMap[libPath.string()] = result;
+    loadedLibs.emplace_back(libPath);
+    return result;
 }

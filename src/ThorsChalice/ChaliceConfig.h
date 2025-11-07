@@ -18,16 +18,23 @@ enum class ActionType {File, Lib};
 
 struct Action
 {
-    std::string                 path;
     ActionType                  type;
-    std::string                 value;
+    std::string                 rootDir;
+    std::string                 path;
+    // For File:
+    //      rootDir:        The directory on the file system where files will be loaded from.
+    //      path:           registered with Nisse to match against input request.
+    //          The file loaded from the server will be "<rootDir>/<path>" (after normalization)
+    //          Note: If path tries to dip below root (using ../../ etc) it will log an error and return a 400
+    // For Lib:
+    //      rootDir:        The path to the shared library.
+    //      path:           registered with Nisse to match against input request.
 };
 
 struct PortConfig
 {
     int                         port;
     std::optional<std::string>  certPath;
-    std::string                 rootDir;
     std::vector<Action>         actions;
 };
 
@@ -39,8 +46,8 @@ struct ChaliceConfig
 
 }
 
-ThorsAnvil_MakeTrait(ThorsAnvil::ThorsChalice::Action, path, type, value);
-ThorsAnvil_MakeTrait(ThorsAnvil::ThorsChalice::PortConfig, port, certPath, rootDir, actions);
+ThorsAnvil_MakeTrait(ThorsAnvil::ThorsChalice::Action, type, rootDir, path);
+ThorsAnvil_MakeTrait(ThorsAnvil::ThorsChalice::PortConfig, port, certPath, actions);
 ThorsAnvil_MakeTrait(ThorsAnvil::ThorsChalice::ChaliceConfig, servers, controlPort);
 
 #endif

@@ -21,32 +21,48 @@ TASock::ServerInit ChaliceServer::getServerInit(std::optional<FS::path> certPath
     return TASock::SServerInfo{port, std::move(ctx)};
 }
 
-void ChaliceServer::handleRequestLib(NisHttp::Request& /*request*/, NisHttp::Response& /*response*/, FS::path const& /*contentDir*/)
+void ChaliceServer::handleRequestLib(NisHttp::Request& request, NisHttp::Response& response, std::size_t libIndex)
 {
+    // Make the loaded library handle the request.
+    libraries.call(libIndex, request, response);
 }
+
 void ChaliceServer::handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir)
 {
+    // Get the path from the HTTP request object.
+    // Remove the leading slash if it exists.
     std::string_view    path = request.getUrl().pathname();
     while (!path.empty() && path[0] == '/') {
         path.remove_prefix(1);
     }
-    FS::path            requestPath = path;
+
+    // Check that the path is valid
+    // i.e. Some basic checks that the user is not trying to break into the filesystem.
+    FS::path            requestPath = FS::path(path).lexically_normal();
     if (requestPath.empty() || (*requestPath.begin()) == "..") {
-        return response.error(400, "Invalid Request Path");
+        response.error(400, "Invalid Request Path");
+        return;
     }
 
+    // Add the path to the root contentDir and check if the file exists.
+    // Note if the user picked a directory we look for index.html
     std::error_code ec;
     FS::path        filePath = FS::canonical(FS::path{contentDir} /= requestPath, ec);
     if (!ec && FS::is_directory(filePath)) {
         filePath = FS::canonical(filePath /= "index.html", ec);
     }
     if (ec || !FS::is_regular_file(filePath)) {
-        return response.error(404, "No File Found At Path");
+        response.error(404, "No File Found At Path");
+        return;
     }
 
+    // Create an async File stream for the file we found.
     TASock::SocketStream    file{TASock::Socket{TASock::FileInfo{filePath.string(), TASock::FileMode::Read}, TASock::Blocking::No}};
     NisServer::AsyncStream  async(file, request.getContext(), NisServer::EventType::Read);
 
+    // Stream the file to the output stream (this is an async operation).
+    // So if the streaming blocks the thread will be released to do other work.
+    // But return here to complete the task when either the file or the socket become available.
     response.body(NisHttp::Encoding::Chunked) << file.rdbuf();
 }
 
@@ -69,17 +85,18 @@ ChaliceServer::ChaliceServer(ChaliceConfig const& config, ChaliceServerMode /*mo
                 {
                     servers.back().addPath(NisHttp::Method::GET,
                                            action.path,
-                                           [&, rootDir = server.rootDir](NisHttp::Request& request, NisHttp::Response& response)
+                                           [&, rootDir = action.rootDir](NisHttp::Request& request, NisHttp::Response& response)
                                            {handleRequestPath(request, response, rootDir);}
                                           );
                     break;
                 }
                 case ActionType::Lib:
                 {
+                    std::size_t libIndex = libraries.load(action.rootDir);
                     servers.back().addPath(NisHttp::Method::GET,
                                            action.path,
-                                           [&, rootDir = server.rootDir](NisHttp::Request& request, NisHttp::Response& response)
-                                           {handleRequestLib(request, response, rootDir);}
+                                           [&, libIndex](NisHttp::Request& request, NisHttp::Response& response)
+                                           {handleRequestLib(request, response, libIndex);}
                                           );
                     break;
                 }

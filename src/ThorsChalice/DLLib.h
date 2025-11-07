@@ -1,12 +1,14 @@
-#ifndef DL_LIB_H_MIY
-#define DL_LIB_H_MIY
+#ifndef THORSANVIL_THORS_CHALICE_DLLIB_H
+#define THORSANVIL_THORS_CHALICE_DLLIB_H
 
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 
-#include <cstdint>
 #include <mutex>
 #include <condition_variable>
+#include <map>
+#include <vector>
+#include <string>
 
 #include <cstddef>
 #include <filesystem>
@@ -22,6 +24,9 @@ extern "C"
 }
 
 typedef void (*ChaliceHanlde)(ThorsAnvil::Nisse::HTTP::Request&, ThorsAnvil::Nisse::HTTP::Response&);
+
+namespace ThorsAnvil::ThorsChalice
+{
 
 enum CheckState {NoChange, ChangedButLocked, ChangeAndSwapped};
 
@@ -54,9 +59,21 @@ class DLLib
         void swap(DLLib& other)         noexcept;
         ~DLLib();
 
-        void call(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/);
+        void call(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response);
         CheckState check();
         void checkWithForce();
 };
+
+class DLLibMap
+{
+    std::map<std::string, std::size_t>  libNameMap;
+    std::vector<DLLib>                  loadedLibs;
+    public:
+    std::size_t load(std::string const& path);
+    void        call(std::size_t index, ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response) {loadedLibs[index].call(request, response);}
+    void        check(std::size_t index)    {loadedLibs[index].check();}
+};
+
+}
 
 #endif
