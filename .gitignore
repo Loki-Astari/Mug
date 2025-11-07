@@ -31,3 +31,4 @@ config.h
 ThorsChaliceConfig.h
 MockHeaderInclude.h
 
+CallCheckAfterLibChange.dylib

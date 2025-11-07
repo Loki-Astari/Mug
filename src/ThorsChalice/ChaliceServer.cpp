@@ -21,7 +21,10 @@ TASock::ServerInit ChaliceServer::getServerInit(std::optional<FS::path> certPath
     return TASock::SServerInfo{port, std::move(ctx)};
 }
 
-void ChaliceServer::handleRequest(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir)
+void ChaliceServer::handleRequestLib(NisHttp::Request& /*request*/, NisHttp::Response& /*response*/, FS::path const& /*contentDir*/)
+{
+}
+void ChaliceServer::handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir)
 {
     std::string_view    path = request.getUrl().pathname();
     while (!path.empty() && path[0] == '/') {
@@ -59,13 +62,27 @@ ChaliceServer::ChaliceServer(ChaliceConfig const& config, ChaliceServerMode /*mo
         //std::cerr << "    Server: " << server.port << "\n";
         servers.emplace_back();
         for (auto const& action: server.actions) {
-            if (action.type == ActionType::File) {
-                //std::cerr << "        Path: " << action.path << "\n";
-                servers.back().addPath(NisHttp::Method::GET,
-                                       action.path,
-                                       [&, rootDir = server.rootDir](NisHttp::Request& request, NisHttp::Response& response)
-                                       {handleRequest(request, response, rootDir);}
-                                      );
+            //std::cerr << "        Path: " << action.path << "\n";
+            switch (action.type)
+            {
+                case ActionType::File:
+                {
+                    servers.back().addPath(NisHttp::Method::GET,
+                                           action.path,
+                                           [&, rootDir = server.rootDir](NisHttp::Request& request, NisHttp::Response& response)
+                                           {handleRequestPath(request, response, rootDir);}
+                                          );
+                    break;
+                }
+                case ActionType::Lib:
+                {
+                    servers.back().addPath(NisHttp::Method::GET,
+                                           action.path,
+                                           [&, rootDir = server.rootDir](NisHttp::Request& request, NisHttp::Response& response)
+                                           {handleRequestLib(request, response, rootDir);}
+                                          );
+                    break;
+                }
             }
         }
         listen(getServerInit(server.certPath, server.port), servers.back());

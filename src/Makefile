@@ -1,5 +1,5 @@
 THORSANVIL_ROOT             = $(realpath ../)
 
-TARGET                      = ThorsChalice
+TARGET                      = L5 L4 L3 ThorsChalice
 
 include $(THORSANVIL_ROOT)/build/tools/Project.Makefile

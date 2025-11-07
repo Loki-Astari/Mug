@@ -5,6 +5,8 @@
 #include "NisseServer/NisseServer.h"
 #include "NisseServer/PyntControl.h"
 #include "NisseHTTP/HTTPHandler.h"
+#include <filesystem>
+
 
 namespace NisServer = ThorsAnvil::Nisse::Server;
 namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
@@ -26,7 +28,8 @@ class ChaliceServer: public NisServer::NisseServer
     Hanlders                servers;
 
     TASock::ServerInit getServerInit(std::optional<FS::path> certPath, int port);
-    void handleRequest(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir);
+    void handleRequestLib(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir);
+    void handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir);
 
     public:
         ChaliceServer(ChaliceConfig const& config, ChaliceServerMode mode);
