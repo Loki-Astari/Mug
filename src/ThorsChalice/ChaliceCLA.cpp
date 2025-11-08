@@ -33,7 +33,7 @@ void ChaliceCLA::parseArguments(std::vector<std::string_view> const& arguments)
 
     for (std::string_view const& arg: arguments)
     {
-        ThorsLogTrace("ChaliceCLA", "parseArguments", "Check arguments ", args);
+        ThorsLogTrace("ChaliceCLA", "parseArguments", "Check arguments ", arg);
         if (first) {
             first = false;
             continue;

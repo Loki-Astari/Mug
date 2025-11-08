@@ -178,7 +178,7 @@ TEST(ChaliceServer, ServiceRunAddServerWithFileValidateWorks)
                         {
                             "type":     "File",
                             "rootDir":  "./test/data/pages",
-                            "path":     "/page1"
+                            "path":     "/files"
                         }
                     ]
                 }
@@ -205,7 +205,7 @@ TEST(ChaliceServer, ServiceRunAddServerWithFileValidateWorks)
         std::this_thread::sleep_for(20ms);
         ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8080});
 
-        socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/page1");
+        socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/files/page1");
 
         ThorsAnvil::ThorsSocket::HTTPResponse   response;
         socketData >> response;

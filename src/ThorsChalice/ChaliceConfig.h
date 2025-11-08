@@ -24,8 +24,20 @@ struct Action
     // For File:
     //      rootDir:        The directory on the file system where files will be loaded from.
     //      path:           registered with Nisse to match against input request.
-    //          The file loaded from the server will be "<rootDir>/<path>" (after normalization)
+    //                      Will match requests of the form:
+    //                          http://Hostname/<path>/{FilePath}
+    //
+    //          The file loaded from the server will be "<rootDir>/<FilePath>" (after normalization)
     //          Note: If path tries to dip below root (using ../../ etc) it will log an error and return a 400
+    //
+    //          Example:
+    //              If
+    //                  path = "/files"
+    //                  rootDir = "/etc/pages"
+    //              Then
+    //                  GET http://localhost:8080/files/mydata/file.html
+    //              Will retrieve:
+    //                  /etc/pages/mydata/file.html
     // For Lib:
     //      rootDir:        The path to the shared library.
     //      path:           registered with Nisse to match against input request.
