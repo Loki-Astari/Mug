@@ -72,6 +72,7 @@ class DLLibMap
     std::size_t load(std::string const& path);
     void        call(std::size_t index, ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response) {loadedLibs[index].call(request, response);}
     void        check(std::size_t index)    {loadedLibs[index].check();}
+    void        checkAll()                  {for (auto& lib: loadedLibs){lib.check();}}
 };
 
 }

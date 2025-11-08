@@ -69,6 +69,7 @@ void ChaliceServer::handleRequestPath(NisHttp::Request& request, NisHttp::Respon
 ChaliceServer::ChaliceServer(ChaliceConfig const& config, ChaliceServerMode /*mode*/)
     : NisseServer(workerCount)
     , control(*this)
+    , libraryChecker(*this)
 {
     //std::cerr << "Server Create\n";
     servers.reserve(config.servers.size());
@@ -106,4 +107,11 @@ ChaliceServer::ChaliceServer(ChaliceConfig const& config, ChaliceServerMode /*mo
     }
     //std::cerr << "    Control\n";
     listen(TASock::ServerInfo{config.controlPort}, control);
+    using namespace std::chrono_literals;
+    addTimer(1s, libraryChecker);
+}
+
+void ChaliceServer::checkLibrary()
+{
+    libraries.checkAll();
 }

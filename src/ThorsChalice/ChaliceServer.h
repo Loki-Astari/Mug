@@ -19,6 +19,19 @@ enum ChaliceServerMode {Headless, Active};
 
 class ChaliceServer: public NisServer::NisseServer
 {
+    class LibraryChecker: public NisServer::TimerAction
+    {
+        ChaliceServer& server;
+        public:
+            LibraryChecker(ChaliceServer& server)
+                : server(server)
+            {}
+            virtual void handleRequest(int) override
+            {
+                server.checkLibrary();
+            }
+    };
+
     static constexpr std::size_t workerCount = 4;
 
     using Hanlders = std::vector<NisHttp::HTTPHandler>;
@@ -28,6 +41,7 @@ class ChaliceServer: public NisServer::NisseServer
     // HTTPHandler
     Hanlders                servers;
     DLLibMap                libraries;
+    LibraryChecker          libraryChecker;
 
     TASock::ServerInit getServerInit(std::optional<FS::path> certPath, int port);
     void handleRequestLib(NisHttp::Request& request, NisHttp::Response& response, std::size_t libIndex);
@@ -35,6 +49,9 @@ class ChaliceServer: public NisServer::NisseServer
 
     public:
         ChaliceServer(ChaliceConfig const& config, ChaliceServerMode mode);
+
+    private:
+        void checkLibrary();
 };
 
 }
