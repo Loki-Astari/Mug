@@ -1,0 +1,7 @@
+THORSANVIL_ROOT             = $(realpath ../../)
+
+TARGET                      = ThorsSlackBot.slib
+FILE_WARNING_FLAGS			= -Wno-missing-braces -Wno-deprecated-copy-with-user-provided-dtor
+LDLIBS_EXTERN_BUILD			= Nisse ThorSerialize
+
+include $(THORSANVIL_ROOT)/build/tools/Makefile
