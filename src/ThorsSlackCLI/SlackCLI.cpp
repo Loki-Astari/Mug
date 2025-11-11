@@ -1,31 +1,41 @@
 #include "HTTPRequest.h"
+#include "NisseHTTP/HeaderResponse.h"
 #include "SlackStream.h"
+#include "ThorSerialize/JsonThor.h"
+#include "ThorSerialize/PrinterConfig.h"
 
 std::string const SLACK_TOKEN = "<Token>";
+
+using namespace std::literals::string_literals;
 
 int main()
 {
     loguru::g_stderr_verbosity = 9;
     ThorsLogDebug("main", "main", "SlackCLI");
 
-    using ThorsAnvil::Nisse::HTTP::HTTPPost;
-    using ThorsAnvil::Nisse::HTTP::HTTPGet;
-    using ThorsAnvil::Nisse::HTTP::HTTPSStream;
-    using ThorsAnvil::Nisse::HTTP::HTTPHeaders;
-    using ThorsAnvil::Nisse::HTTP::HTTPData;
+    using ThorsAnvil::Nisse::HTTP::HTTPRequest;
+    using ThorsAnvil::Nisse::HTTP::Method;
+    using ThorsAnvil::Nisse::HTTP::HeaderResponse;
+    using ThorsAnvil::Nisse::HTTP::Encoding;
+    using ThorsAnvil::Serialize::PrinterConfig;
+    using ThorsAnvil::Serialize::OutputType;
+    using ThorsAnvil::Slack::SlackStream;
+    using ThorsAnvil::Slack::PostMessageData;
 
-    std::map<std::string, std::string> headers
+    HeaderResponse  headers;
+    headers.add("Connection", "close");
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    headers.add("Authorization", "Bearer " + SLACK_TOKEN);
+
+    PostMessageData data{"C09RU2URYMS", "I hope the tour went well, Mr. Wonka."};
+
+    SlackStream     stream;
     {
-        {"Connection", "close"},
-        {"Content-Length", "72"}
-    };
-    ThorsAnvil::Slack::PostMessageData data{"C09RU2URYMS", "I hope the tour went well, Mr. Wonka."};
-
-    ThorsAnvil::Slack::SlackStream  stream(SLACK_TOKEN);
-    stream  << HTTPPost("https://slack.com/api/chat.postMessage", ThorsAnvil::Nisse::HTTP::Version::HTTP1_1)
-            << HTTPHeaders(headers)
-            << HTTPData(data)
-            << std::flush;
+        HTTPRequest     post(stream, "https://slack.com/api/chat.postMessage"s, Method::POST);
+        post.addHeaders(headers);
+        std::size_t size = ThorsAnvil::Serialize::jsonStreanSize(data);
+        post.body(size) << ThorsAnvil::Serialize::jsonExporter(data, PrinterConfig{OutputType::Stream});
+    }
 
     std::string     line;
     while (std::getline(static_cast<std::istream&>(stream), line)) {

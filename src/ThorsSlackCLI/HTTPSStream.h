@@ -26,6 +26,7 @@ class HTTPSStream
 
         friend std::ostream& operator<<(HTTPSStream& stream, HTTPRequest const& request);
 
+        operator std::ostream&() {return stream;}
         operator std::istream&() {return stream;}
 };
 

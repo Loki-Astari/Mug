@@ -41,13 +41,3 @@ HTTPSStream::HTTPSStream(std::string const& url)
     : ctx{ThorsAnvil::ThorsSocket::SSLMethodType::Client}
     , stream{ThorsAnvil::ThorsSocket::SSocketInfo{getHost(url), getPort(url), ctx, ThorsAnvil::ThorsSocket::DeferAccept::No}}
 {}
-
-namespace ThorsAnvil::Nisse::HTTP
-{
-
-std::ostream& operator<<(HTTPSStream& stream, HTTPRequest const& request)
-{
-    return stream.stream << request;
-}
-
-}

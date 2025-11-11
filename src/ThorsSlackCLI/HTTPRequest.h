@@ -3,9 +3,10 @@
 
 #include "SlackCLIConfig.h"
 #include "NisseHTTP/Util.h"
-// Need to serialize the Data structures. See: jsonExporter()
-#include "ThorSerialize/Traits.h"
-#include "ThorSerialize/JsonThor.h"
+#include "NisseHTTP/URL.h"
+// NOTE: Should move headers to UTIL
+//       Then this include is not required.
+#include "NisseHTTP/Response.h"
 
 #include <ostream>
 #include <string>
@@ -19,66 +20,19 @@ class HTTPRequest
     static std::string_view getRequest(std::string const& url);
 
     protected:
-        std::string const&  url;
+        Method              method;
         Version             version;
+        std::string         url;
+        std::ostream&       baseStream;
+        StreamOutput        stream;
+        bool                headerSent;
 
     public:
-        HTTPRequest(std::string const& url, Version version = Version::HTTP1_1);
-        virtual ~HTTPRequest();
-        virtual char const* type() const = 0;
-        void print(std::ostream& stream) const;
+        HTTPRequest(std::ostream& baseStream, std::string url, Method method = Method::GET, Version version = Version::HTTP1_1);
+        ~HTTPRequest();
 
-        friend std::ostream& operator<<(std::ostream& stream, HTTPRequest const& request);
-};
-
-class HTTPPost: public HTTPRequest
-{
-    public:
-        HTTPPost(std::string const& url, Version version = Version::HTTP1_1)
-            : HTTPRequest(url, version)
-        {}
-        virtual char const* type() const override {return "POST";}
-};
-
-class HTTPGet: public HTTPRequest
-{
-    public:
-        HTTPGet(std::string const& url, Version version = Version::HTTP1_1)
-            : HTTPRequest(url, version)
-        {}
-        virtual char const* type() const override {return "GET";}
-};
-
-template<typename T>
-class HTTPHeaders
-{
-    T const&        headers;
-    public:
-        HTTPHeaders(T const& headers)
-            : headers(headers)
-        {}
-        friend std::ostream& operator<<(std::ostream& stream, HTTPHeaders const& request)
-        {
-            for (auto const& head: request.headers) {
-                stream << head.first << ": " << head.second << "\r\n";
-            }
-            stream << "\r\n";
-            return stream;
-        }
-};
-
-template<typename T>
-class HTTPData
-{
-    T const&        data;
-    public:
-        HTTPData(T const& data)
-            : data(data)
-        {}
-        friend std::ostream& operator<<(std::ostream& stream, HTTPData const& request)
-        {
-            return stream << ThorsAnvil::Serialize::jsonExporter(request.data, Serialize::PrinterConfig{Serialize::OutputType::Stream});
-        }
+        void addHeaders(Header const& headers);
+        std::ostream& body(BodyEncoding bodyEncoding);
 };
 
 }

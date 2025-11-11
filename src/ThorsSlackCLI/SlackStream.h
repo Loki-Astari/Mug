@@ -13,11 +13,8 @@ namespace ThorsAnvil::Slack
 
 class SlackStream: public ThorsAnvil::Nisse::HTTP::HTTPSStream
 {
-    std::string     authToken;
-
     public:
-        SlackStream(std::string authToken);
-        friend std::ostream& operator<<(SlackStream& stream, ThorsAnvil::Nisse::HTTP::HTTPRequest const& request);
+        SlackStream();
 };
 
 struct PostMessageData
