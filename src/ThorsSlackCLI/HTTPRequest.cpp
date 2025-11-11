@@ -85,7 +85,10 @@ void HTTPRequest::addHeaders(Header const& headers)
 
 std::ostream& HTTPRequest::body(BodyEncoding bodyEncoding)
 {
-    ThorsLogDebug("ThorsAnvil::Nisse::HTTP::HTTPRequest", "body", "adding body");
+    ThorsLogDebug("ThorsAnvil::Nisse::HTTP::HTTPRequest", "body", "Adding body");
+    if (version > Version::HTTP1_1 && std::holds_alternative<Encoding>(bodyEncoding) && std::get<Encoding>(bodyEncoding) == Encoding::Chunked) {
+        ThorsLogFatal("ThorsAnvil::Nisse::HTTP::HTTPRequest", "body", "Invalid encoding requested. Chunked encoding not supported in HTTP 2 or 3");
+    }
     if (!headerSent)
     {
         ThorsLogDebug("ThorsAnvil::Nisse::HTTP::HTTPRequest", "~HTTPRequest", "Sending header: ", method, " ", url, " ", version);
