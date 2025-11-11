@@ -1,25 +1,22 @@
+#include "Environment.h"
 #include "HTTPRequest.h"
 #include "HTTPResponse.h"
 #include "NisseHTTP/HeaderResponse.h"
 #include "SlackStream.h"
 #include "ThorSerialize/JsonThor.h"
-#include "ThorSerialize/SerUtil.h"
-#include "ThorSerialize/PrinterConfig.h"
-
-std::string const SLACK_TOKEN = "<Token>";
 
 using namespace std::literals::string_literals;
 
 int main()
 {
     loguru::g_stderr_verbosity = 9;
-    ThorsLogDebug("main", "main", "SlackCLI");
+    Environment     environment(".slackenv");
+    ThorsLogDebug("main", "main", "SlackCLI ", environment.slackToken);
 
     using ThorsAnvil::Nisse::HTTP::HTTPRequest;
     using ThorsAnvil::Nisse::HTTP::HTTPResponse;
     using ThorsAnvil::Nisse::HTTP::Method;
     using ThorsAnvil::Nisse::HTTP::HeaderResponse;
-    using ThorsAnvil::Nisse::HTTP::Encoding;
     using ThorsAnvil::Serialize::PrinterConfig;
     using ThorsAnvil::Serialize::OutputType;
     using ThorsAnvil::Slack::SlackStream;
@@ -29,7 +26,7 @@ int main()
     HeaderResponse  headers;
     headers.add("Connection", "close");
     headers.add("Content-Type", "application/json; charset=utf-8");
-    headers.add("Authorization", "Bearer " + SLACK_TOKEN);
+    headers.add("Authorization", "Bearer " + environment.slackToken);
 
     PostMessageData data{"C09RU2URYMS", "I hope the tour went well, Mr. Wonka."};
 
