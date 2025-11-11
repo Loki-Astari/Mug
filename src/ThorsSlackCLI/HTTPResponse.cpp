@@ -17,6 +17,10 @@ namespace ThorsAnvil::Nisse::HTTP
         std::getline(stream, data.message);
         return stream;
     }
+    std::ostream& operator<<(std::ostream& stream, StatusResponse const& data)
+    {
+        return stream << data.code << " " << data.message;
+    }
 }
 
 HTTPResponse::HTTPResponse(std::istream& stream)
@@ -35,4 +39,13 @@ HTTPResponse::HTTPResponse(std::istream& stream)
             headers.insert_or_assign(line.substr(0, colon), line.substr(value));
         }
     }
+}
+
+void HTTPResponse::print(std::ostream& stream) const
+{
+    stream << version << " " << status << "\r\n";
+    for (auto const& head: headers) {
+        stream << head.first << ": " << head.second << "\r\n";
+    }
+    stream << "\r\n";
 }

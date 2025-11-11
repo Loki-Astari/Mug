@@ -29,6 +29,8 @@ class HTTPResponse
 
     public:
         HTTPResponse(std::istream& baseStream);
+        void print(std::ostream& stream) const;
+        friend std::ostream& operator<<(std::ostream& stream, HTTPResponse const& data) {data.print(stream);return stream;}
 };
 
 }

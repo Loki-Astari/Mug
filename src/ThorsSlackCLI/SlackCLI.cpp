@@ -44,5 +44,7 @@ int main()
     HTTPResponse    response(stream);
     Reply           reply;
     stream >> ThorsAnvil::Serialize::jsonImporter(reply);
+
+    std::cout << response << "\n\n";
     std::cout << ThorsAnvil::Serialize::jsonExporter(reply);
 }
