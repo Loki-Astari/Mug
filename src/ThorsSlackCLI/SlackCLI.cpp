@@ -1,7 +1,9 @@
 #include "HTTPRequest.h"
+#include "HTTPResponse.h"
 #include "NisseHTTP/HeaderResponse.h"
 #include "SlackStream.h"
 #include "ThorSerialize/JsonThor.h"
+#include "ThorSerialize/SerUtil.h"
 #include "ThorSerialize/PrinterConfig.h"
 
 std::string const SLACK_TOKEN = "<Token>";
@@ -14,6 +16,7 @@ int main()
     ThorsLogDebug("main", "main", "SlackCLI");
 
     using ThorsAnvil::Nisse::HTTP::HTTPRequest;
+    using ThorsAnvil::Nisse::HTTP::HTTPResponse;
     using ThorsAnvil::Nisse::HTTP::Method;
     using ThorsAnvil::Nisse::HTTP::HeaderResponse;
     using ThorsAnvil::Nisse::HTTP::Encoding;
@@ -21,6 +24,7 @@ int main()
     using ThorsAnvil::Serialize::OutputType;
     using ThorsAnvil::Slack::SlackStream;
     using ThorsAnvil::Slack::PostMessageData;
+    using ThorsAnvil::Slack::Reply;
 
     HeaderResponse  headers;
     headers.add("Connection", "close");
@@ -37,9 +41,8 @@ int main()
         post.body(size) << ThorsAnvil::Serialize::jsonExporter(data, PrinterConfig{OutputType::Stream});
     }
 
-    std::string     line;
-    while (std::getline(static_cast<std::istream&>(stream), line)) {
-        std::cout << "L: >" << line << "<\n";
-    }
-    std::cout << "========\n";
+    HTTPResponse    response(stream);
+    Reply           reply;
+    stream >> ThorsAnvil::Serialize::jsonImporter(reply);
+    std::cout << ThorsAnvil::Serialize::jsonExporter(reply);
 }
