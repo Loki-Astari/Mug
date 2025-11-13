@@ -20,10 +20,22 @@ class SlackStream: public ThorsAnvil::Nisse::HTTP::HTTPSStream
         SlackStream();
 };
 
-struct PostMessageData
+struct AuthTestReply
 {
-    std::string             channel;
-    std::string             text;
+    bool                    ok;
+    std::string             url;
+    std::string             team;
+    std::string             user;
+    std::string             team_id;
+    std::string             user_id;
+    std::string             bot_id;
+    std::string             error;
+};
+struct AuthTest
+{
+    static const std::string api;
+    static constexpr bool hasBody = false;
+    using Reply = AuthTestReply;
 };
 
 struct BotIcon
@@ -72,7 +84,7 @@ struct Message
     std::vector<Block>      blocks;
 };
 
-struct Reply
+struct PostMessageDataReply
 {
     bool                    ok;
     std::string             channel;
@@ -80,16 +92,26 @@ struct Reply
     Message                 message;
 };
 
+struct PostMessageData
+{
+    static const std::string api;
+    static constexpr bool hasBody = true;
+    using Reply = PostMessageDataReply;
+    std::string             channel;
+    std::string             text;
+};
+
 
 }
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::AuthTestReply, ok, url, team, user, team_id, user_id, bot_id, error);
 
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::PostMessageData, channel, text);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BotIcon, image_36, image_48, image_72);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BotProfile, id, app_id, user_id, name, icons, deleted, updated, team_id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Item, type, text);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Element, type, elements);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Block, type, block_id, elements);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Reply, ok, channel, ts, message);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::PostMessageDataReply, ok, channel, ts, message);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::PostMessageData, channel, text);
 
 #endif

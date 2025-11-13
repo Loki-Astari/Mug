@@ -5,6 +5,9 @@
 #include "NisseHTTP/Response.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/JsonThor.h"
+#include "SlackClient.h"
+#include "SlackStream.h"
+#include "Environment.h"
 
 #include <cstddef>
 #include <iostream>
@@ -96,16 +99,11 @@ ThorsAnvil_MakeTrait(Authorization, enterprise_id, team_id, user_id, is_bot, is_
 ThorsAnvil_MakeTrait(Message, token, challenge, url_verification, team_id, context_team_id, context_enterprise_id, api_app_id, event, type, event_id, event_time, authorizations, is_ext_shared_channel, event_context);
 
 
-/*
-
-Your Response:
-"code":
-"error": "challenge_failed"
-"body": {
-}
-*/
-
 namespace Ser = ThorsAnvil::Serialize;
+
+const Environment                   environment("/Users/martinyork/Repo/ThorsChalice/src/ThorsSlackBot/.slackenv");
+ThorsAnvil::Slack::SlackClient      client(environment.slackToken);
+std::string                         botId = client.sendMessage(ThorsAnvil::Slack::AuthTest{}).user_id;
 
 void handle(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response)
 {
@@ -140,6 +138,14 @@ void handle(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::
     }
 
     std::cout << "Message: " << Ser::jsonExporter(message) << "\n\n";
+
+    std::string const& userId = message.event.user;
+    if (userId != botId) {
+        std::string const&  channel = message.event.channel;
+        std::string         text = "I see: " + message.event.text;
+
+        client.sendMessage(ThorsAnvil::Slack::PostMessageData{channel, text}, ThorsAnvil::Nisse::HTTP::Method::POST);
+    }
 }
 
 extern "C"
