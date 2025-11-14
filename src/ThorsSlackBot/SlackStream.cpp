@@ -5,7 +5,7 @@
 using namespace ThorsAnvil::Slack;
 
 SlackStream::SlackStream()
-    : HTTPSStream("slack.com")
+    : ClientStream("slack.com")
 {}
 
 

@@ -2,19 +2,17 @@
 #define THORSANVIL_SLACK_SLACKSTREAM_H
 
 #include "ThorsSlackBotConfig.h"
-#include "HTTPSStream.h"
+#include "NisseHTTP/ClientStream.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
-#include "ThorsLogging/ThorsLogging.h"
 
-#include <cstddef>
 #include <string>
-#include <ostream>
+#include <vector>
 
 namespace ThorsAnvil::Slack
 {
 
-class SlackStream: public ThorsAnvil::Nisse::HTTP::HTTPSStream
+class SlackStream: public ThorsAnvil::Nisse::HTTP::ClientStream
 {
     public:
         SlackStream();

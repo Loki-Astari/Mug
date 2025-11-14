@@ -1,17 +1,22 @@
-#include "Environment.h"
+#include "NisseServer/EventHandlerLibEvent.h"
+#include "ThorSerialize/PrinterConfig.h"
+#include "ThorsSlackBotConfig.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 #include "ThorSerialize/Traits.h"
+#include "ThorSerialize/JsonThor.h"
 #include "ThorsCrypto/hash.h"
 #include "ThorsCrypto/hmac.h"
 #include "SlackClient.h"
+#include "SlackStream.h"
+#include "Environment.h"
+
+#include <bit>
+#include <cstddef>
+#include <iostream>
 #include <string>
-#include <string_view>
-#include <vector>
-#include <map>
-#include <algorithm>
-#include <cmath>
-#include <ctime>
+#include <thread>
+#include <chrono>
 
 // std::string const SLACK_TOKEN = "<TOKEN>";
 // REST:
@@ -106,36 +111,61 @@ std::map<std::string, int>          messageCount;
 
 bool validateRequest(ThorsAnvil::Nisse::HTTP::Request& request)
 {
+    std::cerr << "validateRequest\n";
     std::string const&  key = environment.slackSecret;
-    std::string const&  sig = request.variables()["x-slack-signature"];
+    std::cerr << "Key: >" << key << "<\n";
     std::string const&  timestampStr = request.variables()["x-slack-request-timestamp"];
-    auto                timestamp = std::stoll(timestampStr);
-    auto                versionEnd = std::min(std::size(sig), sig.find('='));
 
+    std::cerr << "TS: >" << timestampStr << "<\n";
+    auto timestamp = std::stoll(timestampStr);
+    std::cerr << "TS: >" << timestamp << "<\n";
     if (std::abs(std::time(nullptr) - timestamp) > (60 * 5)) {
         return false;
     }
 
     using namespace std::literals::string_literals;
-    using HMac = ThorsAnvil::Crypto::HMacBuilder<ThorsAnvil::Crypto::Sha256>;
+    using HMac = ThorsAnvil::Crypto::HMac<ThorsAnvil::Crypto::Sha256>;
 
+    std::cerr << "Digest Start\n";
     ThorsAnvil::Crypto::Digest<ThorsAnvil::Crypto::Sha256>      digest;
-    {
-        HMac hmac(key, digest);
-        hmac.appendData(std::string_view{std::begin(sig), std::begin(sig) + versionEnd});
-        hmac.appendData(":"s);
-        hmac.appendData(timestampStr);
-        hmac.appendData(":"s);
+    HMac::hash(key, "v0:"s, digest);
+    std::cerr << "Val: >v0:<\n";
+    HMac::hash(key, timestampStr, digest);
+    std::cerr << "Val: >" << timestampStr << "<\n";
+    HMac::hash(key, ":"s, digest);
+    std::cerr << "Val: >:<\n";
 
-        std::string_view    body = request.preloadStreamIntoBuffer();
-        hmac.appendData(body);
+    std::istream& stream = request.body();
+    char buffer[1000];
+    while (stream.read(buffer, 1000)) {
+        std::size_t size = stream.gcount();
+        std::cerr << "Val: >" << std::string_view(buffer, buffer + size) << "<\n";
+        HMac::hash(key, std::string_view(buffer, buffer + size), digest);
     }
-    std::size_t versionNext = versionEnd + (versionEnd == std::size(sig) ? 0 : 1);
-    return ThorsAnvil::Crypto::hexdigest<ThorsAnvil::Crypto::Sha256>(digest) == std::string_view{std::begin(sig) + versionNext, std::end(sig)};
+    std::cerr << "Hash:      >";
+    for (auto c: digest) {
+        std::cerr << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(c);
+    }
+    std::cout << "<\n";
+    std::cerr << "Signature: >" << request.variables()["x-slack-signature"] << "<\n";
+
+    std::cerr << "validateRequest DONE\n";
+    return false;
 }
 
 void handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response)
 {
+    std::cerr << "handleEvent\n";
+    Message    message;
+    //request.body() >> Ser::jsonImporter(message);
+    //std::cerr << "handleRequest: serialization Complete\n";
+
+    std::cout << "Request:      " << request << "\n\n";
+    //std::cout << "Verification: " << Ser::jsonExporter(message) << "\n\n";
+
+    using ThorsAnvil::Nisse::HTTP::HeaderResponse;
+    using namespace std::string_literals;
+
     /*
      * TODO:
      * =====
@@ -143,17 +173,12 @@ void handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::H
      * and that it is correctly signed.
      * See: https://docs.slack.dev/authentication/verifying-requests-from-slack
      */
+    std::cerr << "handleEvent: About to Validate\n";
     if (!validateRequest(request)) {
         response.setStatus(400);
+        std::cerr << "handleEvent: About to Validate Failed\n";
         return;
     }
-
-    using ThorsAnvil::Nisse::HTTP::HeaderResponse;
-    using namespace std::string_literals;
-
-
-    Message    message;
-    request.body() >> Ser::jsonImporter(message);
 
     if (message.challenge != "") {
         HeaderResponse  headers;
@@ -167,6 +192,8 @@ void handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::H
         response.body(challangeBackSize) << Ser::jsonExporter(challangeBack, Ser::PrinterConfig{Ser::OutputType::Stream});
         return;
     }
+
+    std::cout << "Message: " << Ser::jsonExporter(message) << "\n\n";
 
     std::string const& userId = message.event.user;
     if (userId != botId) {

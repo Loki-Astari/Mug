@@ -1,7 +1,7 @@
 #include "Environment.h"
 
-#include <fstream>
 #include "ThorSerialize/JsonThor.h"
+#include <fstream>
 
 Environment::Environment(std::string const& fileName)
 {
