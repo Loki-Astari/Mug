@@ -23,13 +23,6 @@ TASock::ServerInit ChaliceServer::getServerInit(std::optional<FS::path> certPath
     return TASock::SServerInfo{port, std::move(ctx)};
 }
 
-void ChaliceServer::handleRequestLib(NisHttp::Request& request, NisHttp::Response& response, std::size_t libIndex)
-{
-    ThorsLogDebug("ChaliceServer", "handleRequestLib", "Send request to shared lib");
-    // Make the loaded library handle the request.
-    libraries.call(libIndex, request, response);
-}
-
 void ChaliceServer::handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir)
 {
     ThorsLogDebug("ChaliceServer", "handleRequestLib", "Handle file extract");
@@ -102,17 +95,9 @@ ChaliceServer::ChaliceServer(ChaliceConfig const& config, ChaliceServerMode /*mo
                 }
                 case ActionType::Lib:
                 {
-                    NisHttp::Method method = NisHttp::Method::GET;
-                    if (action.method == "POST") {
-                        method = NisHttp::Method::POST;
-                    }
                     ThorsLogDebug("ChaliceServer", "ChaliceServer", "    Lib  Listener: ");
                     std::size_t libIndex = libraries.load(action.rootDir);
-                    servers.back().addPath(method,
-                                           action.path,
-                                           [&, libIndex](NisHttp::Request& request, NisHttp::Response& response)
-                                           {handleRequestLib(request, response, libIndex);}
-                                          );
+                    libraries.registerHandlers(libIndex, servers.back(), action.path);
                     break;
                 }
             }
@@ -121,6 +106,8 @@ ChaliceServer::ChaliceServer(ChaliceConfig const& config, ChaliceServerMode /*mo
     }
     ThorsLogDebug("ChaliceServer", "ChaliceServer", "  Adding Control Port: ", config.controlPort);
     listen(TASock::ServerInfo{config.controlPort}, control);
+    //control.
+
     using namespace std::chrono_literals;
     std::chrono::milliseconds   libraryCheckTime(config.libraryCheckTime);
     if (config.libraryCheckTime == 0) {

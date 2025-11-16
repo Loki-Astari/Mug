@@ -8,7 +8,6 @@ using namespace ThorsAnvil::ThorsChalice;
 
 
 DLLib::DLLib()
-    : lib(nullptr)
 {}
 
 DLLib::DLLib(FS::path const& path)
@@ -35,8 +34,10 @@ DLLib& DLLib::operator=(DLLib&& move) noexcept
 void DLLib::swap(DLLib& other) noexcept
 {
     using std::swap;
+    swap(path,          other.path);
+    swap(lastModified,  other.lastModified);
     swap(lib,           other.lib);
-    swap(chaliceHandle, other.chaliceHandle);
+    swap(plugin,        other.plugin);
 }
 
 char const* DLLib::safeDLerror()
@@ -55,69 +56,25 @@ DLLib::~DLLib()
     }
 }
 
-void DLLib::inc()
+void DLLib::registerHandlers(NisHttp::HTTPHandler& handler, std::string const& name)
 {
-    std::unique_lock<std::mutex>    lock(mutex);
-    if (reloadInProgress) {
-        cond.wait(lock, [&reloadInProgress = this->reloadInProgress](){return !reloadInProgress;});
+    if (plugin == nullptr) {
+        ThorsLogAndThrowError(std::runtime_error, "DLLib", "registerHandlers", "Calling unloaded fuction");
     }
-    ++activeCalls;
-}
-void DLLib::dec()
-{
-    std::unique_lock<std::mutex>    lock(mutex);
-    --activeCalls;
-    if (reloadInProgress && activeCalls == 0) {
-        reload();
-    }
+    plugin->registerHandlers(handler, name);
 }
 
-void DLLib::call(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response)
+bool DLLib::check()
 {
-    if (chaliceHandle == nullptr) {
-        ThorsLogAndThrowError(std::runtime_error, "DLLib", "call", "Calling unloaded fuction");
-    }
-    inc();
-    (*chaliceHandle)(request, response);
-    dec();
-}
-
-void DLLib::checkWithForce()
-{
-    loadFailed = false;
-    check();
-}
-
-CheckState DLLib::check()
-{
-    if (loadFailed || path.empty() || lastModified == FS::last_write_time(path)) {
-        return NoChange;
-    }
-
-    std::unique_lock<std::mutex>    lock(mutex);
-    if (lastModified == FS::last_write_time(path)) {
-        return NoChange;
-    }
-    reloadInProgress = true;
-    if (activeCalls != 0) {
-        return ChangedButLocked;
-    }
-    reload();
-    return ChangeAndSwapped;
+    return !(path.empty() || lastModified == FS::last_write_time(path));
 }
 
 void DLLib::reload()
 {
-    if (lib != nullptr) {
-        dlclose(lib);
-        lib = nullptr;
-        chaliceHandle = nullptr;
-    }
     ThorsLogDebug("DLLib", "reload", "Reload DLL: ", path);
     std::error_code ec;
     lib = dlopen(FS::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL);
     if (lib == nullptr) {
-        loadFailed = true;
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlopen() failed: ", safeDLerror());
     }
 
@@ -125,19 +82,14 @@ void DLLib::reload()
     if (chaliceFuncSym == nullptr) {
         dlclose(lib);
         lib = nullptr;
-        loadFailed = true;
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlsym() failed: ", safeDLerror());
     }
     lastModified = FS::last_write_time(path);
 
 
-    GenericFuncPtr  chaliceFuncGen  = reinterpret_cast<GenericFuncPtr>(chaliceFuncSym);
-    ChaliceFunc     chaliceFunc     = reinterpret_cast<ChaliceFunc>(chaliceFuncGen);
-    GenericFuncPtr  chaliceResult   = (*chaliceFunc)();
-
-    chaliceHandle = reinterpret_cast<ChaliceHanlde>(chaliceResult);
-    reloadInProgress = false;
-    cond.notify_all();
+    ChaliceFunc     chaliceFunc     = reinterpret_cast<ChaliceFunc>(chaliceFuncSym);
+    void*           chalicePluginV  = (*chaliceFunc)();
+    plugin                          = reinterpret_cast<ChalicePlugin*>(chalicePluginV);
 }
 
 std::size_t DLLibMap::load(std::string const& path)

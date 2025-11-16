@@ -3,6 +3,7 @@
 
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
+#include "NisseHTTP/HTTPHandler.h"
 
 #include <mutex>
 #include <condition_variable>
@@ -14,13 +15,13 @@
 #include <filesystem>
 
 
-namespace FS = std::filesystem;
+namespace FS        = std::filesystem;
+namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
 
 extern "C"
 {
-    typedef void(*GenericFuncPtr)();
-    typedef GenericFuncPtr(*ChaliceFunc)();
+    typedef void*(*ChaliceFunc)();
 }
 
 typedef void (*ChaliceHanlde)(ThorsAnvil::Nisse::HTTP::Request&, ThorsAnvil::Nisse::HTTP::Response&);
@@ -28,24 +29,21 @@ typedef void (*ChaliceHanlde)(ThorsAnvil::Nisse::HTTP::Request&, ThorsAnvil::Nis
 namespace ThorsAnvil::ThorsChalice
 {
 
-enum CheckState {NoChange, ChangedButLocked, ChangeAndSwapped};
-
+class ChalicePlugin
+{
+    public:
+        virtual ~ChalicePlugin() {}
+        virtual void registerHandlers(NisHttp::HTTPHandler& handler, std::string const& name) = 0;
+};
 
 class DLLib
 {
     FS::path                    path;
     FS::file_time_type          lastModified;
     void*                       lib             = nullptr;
-    ChaliceHanlde               chaliceHandle   = nullptr;
-    std::size_t                 activeCalls     = 0;
-    bool                        reloadInProgress= false;
-    bool                        loadFailed      = false;
-    std::mutex                  mutex;
-    std::condition_variable     cond;
+    ChalicePlugin*              plugin          = nullptr;
 
     private:
-        void inc();
-        void dec();
         void reload();
         char const* safeDLerror();
 
@@ -59,9 +57,8 @@ class DLLib
         void swap(DLLib& other)         noexcept;
         ~DLLib();
 
-        void call(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response);
-        CheckState check();
-        void checkWithForce();
+        void registerHandlers(NisHttp::HTTPHandler& handler, std::string const& name);
+        bool check();
 };
 
 class DLLibMap
@@ -70,9 +67,9 @@ class DLLibMap
     std::vector<DLLib>                  loadedLibs;
     public:
     std::size_t load(std::string const& path);
-    void        call(std::size_t index, ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response) {loadedLibs[index].call(request, response);}
-    void        check(std::size_t index)    {loadedLibs[index].check();}
-    void        checkAll()                  {for (auto& lib: loadedLibs){lib.check();}}
+    void        registerHandlers(std::size_t index, NisHttp::HTTPHandler& handler, std::string const& name)  {loadedLibs[index].registerHandlers(handler, name);}
+    void        check(std::size_t index)                                            {loadedLibs[index].check();}
+    void        checkAll()                                                          {for (auto& lib: loadedLibs){lib.check();}}
 };
 
 }

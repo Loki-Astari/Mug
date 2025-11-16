@@ -9,4 +9,4 @@ include $(THORSANVIL_ROOT)/build/tools/Makefile
 
 done:
 	echo "Stopping Chalice"
-	curl localhost:8079 2> /dev/null || echo "Done"
+	curl localhost:8079?command=stopsoft

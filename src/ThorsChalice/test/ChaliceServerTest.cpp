@@ -4,6 +4,9 @@
 #include "ChaliceConfig.h"
 #include "ChaliceServer.h"
 
+#include "NisseHTTP/ClientStream.h"
+#include "NisseHTTP/ClientRequest.h"
+#include "NisseHTTP/Util.h"
 #include "ThorSerialize/JsonThor.h"
 #include "ThorsSocket/Socket.h"
 #include "ThorsSocket/SocketStream.h"
@@ -39,7 +42,7 @@ TEST(ChaliceServer, ServiceRunManuallyStopped)
     std::jthread     serverThread(work);
 
     std::this_thread::sleep_for(250ms);
-    server.stop();
+    server.stopHard();
 }
 
 TEST(ChaliceServer, ServiceRunDefaultConfigHitControl)
@@ -55,8 +58,14 @@ TEST(ChaliceServer, ServiceRunDefaultConfigHitControl)
 
     // Touch the control point to shut down the server.
     std::this_thread::sleep_for(250ms);
-    ThorsAnvil::ThorsSocket::Socket     socket({"localhost", 8079});
-    socket.putMessageData("Stop", 4);
+    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
+    {
+        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+        headers.add("host", "localhost");
+        headers.add("content-length", "0");
+        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+        request.addHeaders(headers);
+    }
 }
 
 TEST(ChaliceServer, ServiceRunModifiedControl)
@@ -85,8 +94,14 @@ TEST(ChaliceServer, ServiceRunModifiedControl)
 
     // Touch the control point to shut down the server.
     std::this_thread::sleep_for(250ms);
-    ThorsAnvil::ThorsSocket::Socket     socket({"localhost", 8078});
-    socket.putMessageData("Stop", 4);
+    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8078});
+    {
+        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+        headers.add("host", "localhost");
+        headers.add("content-length", "0");
+        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+        request.addHeaders(headers);
+    }
 }
 
 TEST(ChaliceServer, ServiceRunAddServer)
@@ -120,8 +135,14 @@ TEST(ChaliceServer, ServiceRunAddServer)
 
     // Touch the control point to shut down the server.
     std::this_thread::sleep_for(250ms);
-    ThorsAnvil::ThorsSocket::Socket     socket({"localhost", 8079});
-    socket.putMessageData("Stop", 4);
+    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
+    {
+        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+        headers.add("host", "localhost");
+        headers.add("content-length", "0");
+        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+        request.addHeaders(headers);
+    }
 }
 
 TEST(ChaliceServer, ServiceRunAddServerWithFile)
@@ -161,8 +182,14 @@ TEST(ChaliceServer, ServiceRunAddServerWithFile)
 
     // Touch the control point to shut down the server.
     std::this_thread::sleep_for(250ms);
-    ThorsAnvil::ThorsSocket::Socket     socket({"localhost", 8079});
-    socket.putMessageData("Stop", 4);
+    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
+    {
+        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+        headers.add("host", "localhost");
+        headers.add("content-length", "0");
+        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+        request.addHeaders(headers);
+    }
 }
 
 TEST(ChaliceServer, ServiceRunAddServerWithFileValidateWorks)
@@ -215,8 +242,14 @@ TEST(ChaliceServer, ServiceRunAddServerWithFileValidateWorks)
 
     // Touch the control point to shut down the server.
     std::this_thread::sleep_for(250ms);
-    ThorsAnvil::ThorsSocket::Socket     socket({"localhost", 8079});
-    socket.putMessageData("Stop", 4);
+    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
+    {
+        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+        headers.add("host", "localhost");
+        headers.add("content-length", "0");
+        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+        request.addHeaders(headers);
+    }
 }
 
 TEST(ChaliceServer, CallALoadedLib)
@@ -259,7 +292,7 @@ TEST(ChaliceServer, CallALoadedLib)
         std::this_thread::sleep_for(20ms);
         ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8070});
 
-        socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/page1");
+        socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/Plop/");
 
         ThorsAnvil::ThorsSocket::HTTPResponse   response;
         socketData >> response;
@@ -270,7 +303,13 @@ TEST(ChaliceServer, CallALoadedLib)
 
     // Touch the control point to shut down the server.
     std::this_thread::sleep_for(250ms);
-    ThorsAnvil::ThorsSocket::Socket     socket({"localhost", 8079});
-    socket.putMessageData("Stop", 4);
+    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
+    {
+        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+        headers.add("host", "localhost");
+        headers.add("content-length", "0");
+        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+        request.addHeaders(headers);
+    }
 }
 

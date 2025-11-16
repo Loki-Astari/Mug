@@ -62,7 +62,6 @@ class HTTPResponse
                     value.resize(value.size() - 1);
                     std::transform(std::begin(header), std::end(header), std::begin(header), []( char x){return std::tolower(x);});
                     headers[header] = value;
-                    std::cout << "HEADER: >" << header << "< => >" << value << "<\n";
                 }
             }
             std::string    length   = std::string((*this)["content-length"]);

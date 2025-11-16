@@ -4,7 +4,7 @@
 #include "ChaliceConfig.h"
 #include "DLLib.h"
 #include "NisseServer/NisseServer.h"
-#include "NisseServer/PyntControl.h"
+#include "NisseHTTP/PyntHTTPControl.h"
 #include "NisseHTTP/HTTPHandler.h"
 #include <filesystem>
 
@@ -37,14 +37,13 @@ class ChaliceServer: public NisServer::NisseServer
     using Hanlders = std::vector<NisHttp::HTTPHandler>;
 
     // PyntControl create access point that can be used to cleanly shut down server.
-    NisServer::PyntControl  control;
+    NisHttp::PyntHTTPControl    control;
     // HTTPHandler
-    Hanlders                servers;
-    DLLibMap                libraries;
-    LibraryChecker          libraryChecker;
+    DLLibMap                    libraries;
+    LibraryChecker              libraryChecker;
+    Hanlders                    servers;
 
     TASock::ServerInit getServerInit(std::optional<FS::path> certPath, int port);
-    void handleRequestLib(NisHttp::Request& request, NisHttp::Response& response, std::size_t libIndex);
     void handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir);
 
     public:

@@ -1,31 +1,40 @@
-#include "Environment.h"
-#include "NisseHTTP/Request.h"
-#include "NisseHTTP/Response.h"
+#include "ThorsSlackBot.h"
 #include "ThorSerialize/JsonThor.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorsCrypto/hash.h"
 #include "ThorsCrypto/hmac.h"
-#include "SlackClient.h"
 #include "SlackAPI_Auth.h"
 #include "SlackAPI_Chat.h"
-#include "SlackEvent_Message.h"
-#include "SlackEvent_Challenge.h"
-#include <string>
 #include <string_view>
 #include <vector>
-#include <map>
 #include <algorithm>
 #include <cmath>
 #include <ctime>
 
-namespace Ser = ThorsAnvil::Serialize;
 
-const Environment                   environment("/Users/martinyork/Repo/ThorsChalice/src/ThorsSlackBot/.slackenv");
-ThorsAnvil::Slack::SlackClient      client(environment.slackToken);
-std::string                         botId = client.sendMessage(ThorsAnvil::Slack::API::Auth::Test{}).user_id;
-std::map<std::string, int>          messageCount;
+SlackBot    slackBot;
 
-bool validateRequest(ThorsAnvil::Nisse::HTTP::Request& request)
+extern "C" void* chaliceFunction()
+{
+    return dynamic_cast<ThorsAnvil::ThorsChalice::ChalicePlugin*>(&slackBot);
+}
+
+namespace Ser       = ThorsAnvil::Serialize;
+namespace NisHTTP   = ThorsAnvil::Nisse::HTTP;
+
+SlackBot::SlackBot()
+    : environment("/Users/martinyork/Repo/ThorsChalice/src/ThorsSlackBot/.slackenv")
+    , client(environment.slackToken)
+    , botId{client.sendMessage(ThorsAnvil::Slack::API::Auth::Test{}).user_id}
+{}
+
+void SlackBot::registerHandlers(NisHttp::HTTPHandler& handler, std::string const& /*name*/)
+{
+    handler.addPath(NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request& request, NisHTTP::Response& response){handleEvent(request, response);});
+    handler.addPath(NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request& request, NisHTTP::Response& response){handleCommand(request, response);});
+}
+
+bool SlackBot::validateRequest(NisHTTP::Request& request)
 {
     std::string const&  key = environment.slackSecret;
     std::string const&  sig = request.variables()["x-slack-signature"];
@@ -55,9 +64,9 @@ bool validateRequest(ThorsAnvil::Nisse::HTTP::Request& request)
     return ThorsAnvil::Crypto::hexdigest<ThorsAnvil::Crypto::Sha256>(digest) == std::string_view{std::begin(sig) + versionNext, std::end(sig)};
 }
 
-void handleUrlVerification(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Slack::Event::Challenge::Event const& event, ThorsAnvil::Nisse::HTTP::Response& response)
+void SlackBot::handleUrlVerification(NisHTTP::Request& /*request*/, ThorsAnvil::Slack::Event::Challenge::Event const& event, NisHTTP::Response& response)
 {
-    ThorsAnvil::Nisse::HTTP::HeaderResponse  headers;
+    NisHTTP::HeaderResponse  headers;
     headers.add("Content-Type", "application/json; charset=utf-8");
 
     ThorsAnvil::Slack::Event::Challenge::Response   reply{event.challenge};
@@ -69,7 +78,7 @@ void handleUrlVerification(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsA
     return;
 }
 
-void handleEventCallback(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Slack::Event::Message::Event const& event, ThorsAnvil::Nisse::HTTP::Response& /*response*/)
+void SlackBot::handleEventCallback(NisHTTP::Request& /*request*/, ThorsAnvil::Slack::Event::Message::Event const& event, NisHTTP::Response& /*response*/)
 {
     std::string const& userId = event.event.user;
     if (userId != botId) {
@@ -77,11 +86,11 @@ void handleEventCallback(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnv
         std::string const&  channel = event.event.channel;
         std::string         text = "I see: " + event.event.text;
 
-        client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage{channel, text}, ThorsAnvil::Nisse::HTTP::Method::POST);
+        client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage{channel, text}, NisHTTP::Method::POST);
     }
 }
 
-void handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response)
+void SlackBot::handleEvent(NisHTTP::Request& request, NisHTTP::Response& response)
 {
     /*
      * TODO:
@@ -95,7 +104,7 @@ void handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::H
         return;
     }
 
-    using ThorsAnvil::Nisse::HTTP::HeaderResponse;
+    using NisHTTP::HeaderResponse;
     using namespace std::string_literals;
     //std::cerr << "Recieved: Message\n";
     //std::cerr << request << "\n";
@@ -116,35 +125,11 @@ void handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::H
     response.setStatus(404);
 }
 
-void handleCommand(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response)
+void SlackBot::handleCommand(NisHTTP::Request& request, NisHTTP::Response& response)
 {
     std::string const& userId = request.variables()["user_id"];
     std::string const& channel = request.variables()["channel_id"];
 
-    client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage{channel, "I have seen " + std::to_string(messageCount[userId])}, ThorsAnvil::Nisse::HTTP::Method::POST);
+    client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage{channel, "I have seen " + std::to_string(messageCount[userId])}, NisHTTP::Method::POST);
     response.setStatus(200);
-}
-
-void handle(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response)
-{
-    if (request.variables()["Command"] == "event") {
-        handleEvent(request, response);
-        return;
-    }
-    if (request.variables()["Command"] == "command/speak") {
-        handleCommand(request, response);
-        return;
-    }
-    response.setStatus(404);
-}
-
-extern "C"
-{
-    typedef void(*GenericFuncPtr)();
-}
-
-extern "C" GenericFuncPtr chaliceFunction()
-{
-    GenericFuncPtr  result = (GenericFuncPtr)&handle;
-    return result;
 }
