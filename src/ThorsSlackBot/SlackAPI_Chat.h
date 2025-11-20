@@ -134,23 +134,7 @@ struct BotProfile
     std::time_t                 updated;
     std::string                 team_id;
 };
-struct MessageText
-{
-    std::string                 type;   // plain_text or mrkdwn.
-    OptString                   text;
-};
-struct MessageElement
-{
-    std::string                 type;
-    std::vector<MessageText>    elements;
-};
 
-struct MessageBlock
-{
-    std::string                 type;
-    std::string                 block_id;
-    std::vector<MessageElement> elements;
-};
 struct Message
 {
     std::string                 user;
@@ -161,15 +145,16 @@ struct Message
     std::string                 text;
     std::string                 team;
     BotProfile                  bot_profile;
-    std::vector<MessageBlock>   blocks;
+    BlockKit::Blocks            blocks;
 };
 
 struct PostMessageReply
 {
     bool                        ok;
-    std::string                 error;
-    std::string                 channel;
-    std::string                 ts;
+    OptString                   error;
+    OptString                   warning;
+    OptString                   channel;
+    OptString                   ts;
     Message                     message;
 };
 
@@ -191,11 +176,64 @@ struct PostMessage
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::BotIcon, image_36, image_48, image_72);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::BotProfile, id, app_id, user_id, name, icons, deleted, updated, team_id);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::MessageText, type, text);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::MessageElement, type, elements);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::MessageBlock, type, elements);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostMessageReply, ok, error, channel, ts, message);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostMessage, channel, text, blocks, icon_emoji, username, thread_ts);
+
+#if 0
+{
+    "ok": true,
+    "error": "",
+    "channel": "C09RU2URYMS",
+    "ts": "1763605562.780799",
+    "message":
+    {
+        "user": "U09S3D8R00Z",
+        "type": "message",
+        "ts": "1763605562.780799",
+        "bot_id": "B09RJ4A000K",
+        "app_id": "A09RQFXSEKC",
+        "text": "Stuff to print Here we go",
+        "team": "T095XJHH589",
+        "bot_profile":
+        {
+            "id": "B09RJ4A000K",
+            "app_id": "A09RQFXSEKC",
+            "user_id": "U09S3D8R00Z",
+            "name": "ThorsSlackBotOne",
+            "icons":
+            {
+                "image_36": "https://a.slack-edge.com/80588/img/plugins/app/bot_36.png",
+                "image_48": "https://a.slack-edge.com/80588/img/plugins/app/bot_48.png",
+                "image_72": "https://a.slack-edge.com/80588/img/plugins/app/service_72.png"
+            },
+            "deleted": false,
+            "updated": 1762644664,
+            "team_id": "T095XJHH589"
+        },
+        "blocks":
+        [
+            {
+                "type": "section",
+                "elements":
+                [
+                ]
+            },
+            {
+                "type": "divider",
+                "elements":
+                [
+                ]
+            },
+            {
+                "type": "section",
+                "elements":
+                [
+                ]
+            }
+        ]
+    }
+}%
+#endif
 
 #endif

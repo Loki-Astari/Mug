@@ -92,7 +92,9 @@ void SlackBot::sendWelcomeMessage(std::string const& channel, std::string const&
     std::cerr << "Message: " << ThorsAnvil::Serialize::jsonExporter(message) << "\n=====\n";
     auto response = client.sendMessage(message);
     std::cerr << "Response: " << ThorsAnvil::Serialize::jsonExporter(response) << "\n====\n";
-    find->second.timestamp = std::stoi(response.ts);
+    if (response.ts.has_value()) {
+        find->second.timestamp = std::stoi(response.ts.value());
+    }
 }
 
 void SlackBot::handleEventCallback(NisHTTP::Request& /*request*/, ThorsAnvil::Slack::Event::Message::Event const& event, NisHTTP::Response& /*response*/)

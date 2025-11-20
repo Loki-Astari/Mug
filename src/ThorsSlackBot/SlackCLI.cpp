@@ -31,9 +31,6 @@ int main()
     PostMessage::Reply      reply1 = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."});
     std::cout << ThorsAnvil::Serialize::jsonExporter(reply1);
 
-    std::cout << ThorsAnvil::Serialize::jsonExporter(PostMessage{.channel = "C09RU2URYMS", .blocks = Blocks{Section{.text = Text{.type = "mrkdwn", .text = "Stuff"}}, Divider{}, Section{.text = Text{.type="mrkdwn", .text = "More"}}}});
-    std::cout << ThorsAnvil::Serialize::jsonStreanSize(PostMessage{.channel = "C09RU2URYMS", .blocks = Blocks{Section{.text = Text{.type = "mrkdwn", .text = "Stuff"}}, Divider{}, Section{.text = Text{.type="mrkdwn", .text = "More"}}}});
-    //PostMessage::Reply      reply2 = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .blocks = Blocks{Divider{}}});
     PostMessage::Reply      reply2 = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .blocks = Blocks{Section{.text = Text{.type = "mrkdwn", .text = "Stuff to print"}}, Divider{}, Section{.text = Text{.type = "plain_text", .text = "Here we go"}}}});
     std::cout << ThorsAnvil::Serialize::jsonExporter(reply2);
 

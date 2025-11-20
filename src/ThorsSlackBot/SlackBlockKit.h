@@ -17,6 +17,7 @@ namespace ThorsAnvil::Slack::BlockKit
 {
 
 using OptString         = std::optional<std::string>;
+using OptInt            = std::optional<int>;
 using OptBool           = std::optional<bool>;
 
 template<typename T>
@@ -84,14 +85,137 @@ namespace Element
         // https://docs.slack.dev/reference/block-kit/block-elements/url-input-element/
     };
 
-    struct RichText
+    namespace RichText
     {
-        // One of
-        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#rich_text_section
-        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#rich_text_list
-        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#rich_text_preformatted
-        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#rich_text_quote
-    };
+        namespace Elements
+        {
+            namespace Info
+            {
+                struct Style
+                {
+                     OptBool    bold;
+                     OptBool    italic;
+                     OptBool    strike;
+                     OptBool    highlight;
+                     OptBool    client_highlight;
+                     OptBool    unlink;
+                };
+                struct Text
+                {
+                    bool    bold;
+                    bool    italic;
+                    bool    strike;
+                    bool    code;
+                };
+                using OptStyle = std::optional<Style>;
+                using OptText = std::optional<Text>;
+            }
+            struct Broadcast
+            {
+                std::string         range;      // The range of the broadcast; value can be here, channel, or everyone.
+                                                // Using here notifies only the active members of a channel; channel notifies all members of a channel;
+                                                // everyone notifies every person in the #general channel.
+                ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Broadcast, broadcast);
+                ThorsAnvil_TypeFieldName(type);
+            };
+            struct Color
+            {
+                std::string         value;      // The hex value for the color.
+                ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Color, color);
+                ThorsAnvil_TypeFieldName(type);
+            };
+            struct Channel
+            {
+                std::string         channel_id; // The ID of the channel to be mentioned.
+                Info::OptStyle      style;      // An object of six optional boolean properties that dictate style: bold, italic, strike, highlight, client_highlight, and unlink.
+                ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Channel, channel);
+                ThorsAnvil_TypeFieldName(type);
+            };
+            struct Date
+            {
+                std::time_t         timestamp;  // A Unix timestamp for the date to be displayed in seconds.
+                std::string         format;     // A template string containing curly-brace-enclosed tokens to substitute your provided timestamp. See details below.
+                OptString           url;        // URL to link the entire format string to.
+                OptString           fallback;   // Text to display in place of the date should parsing, formatting or displaying fail.
+                ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Date, date);
+                ThorsAnvil_TypeFieldName(type);
+            };
+            struct Emoji
+            {
+                std::string         type;       // The type of object; in this case, "emoji".
+                std::string         name;       // The name of the emoji; i.e. "wave" or "wave::skin-tone-2".
+                OptString           unicode;    // Represents the unicode code point of the emoji, where applicable.
+                ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Emoji, emoji);
+                ThorsAnvil_TypeFieldName(type);
+            };
+            struct Link
+            {
+                std::string         url;        // The link's url.
+                OptText             text;       // The text shown to the user (instead of the url). If no text is provided, the url is used.
+                OptBool             unsafe;     // Indicates whether the link is safe.
+                Info::OptText       style;      // An object containing four boolean properties: bold, italic, strike, and code.
+                ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Link, link);
+                ThorsAnvil_TypeFieldName(type);
+            };
+            struct Text
+            {
+                std::string         text;       // The text shown to the user.
+                Info::OptText       style;      // An object containing four boolean fields, none of which are required: bold, italic, strike, and code.
+                ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Text, text);
+                ThorsAnvil_TypeFieldName(type);
+            };
+            struct User
+            {
+                std::string         user_id;    // The ID of the user to be mentioned.
+                Info::OptStyle      style;      // An object of six optional boolean properties that dictate style: bold, italic, strike, highlight, client_highlight, and unlink.
+                ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::User, user);
+                ThorsAnvil_TypeFieldName(type);
+            };
+            struct UserGroup
+            {
+                std::string         usergroup_id;   // The ID of the user group to be mentioned.
+                Info::OptStyle      style;          // An object of six optional boolean properties that dictate style: bold, italic, strike, highlight, client_highlight, and unlink.
+                ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::UserGroup, usergroup);
+                ThorsAnvil_TypeFieldName(type);
+            };
+        };
+        using Element = std::variant<Elements::Broadcast, Elements::Color, Elements::Channel, Elements::Date, Elements::Emoji, Elements::Link, Elements::Text, Elements::User, Elements::UserGroup>;
+        using VecElement = std::vector<Element>;
+        struct Section
+        {
+            VecElement              elements;
+            ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Section, rich_text_section);
+            ThorsAnvil_TypeFieldName(type);
+        };
+        using VecSection = std::vector<Section>;
+        struct List
+        {
+            std::string             style;      // Either "bullet" or "ordered"
+            VecSection              elements;   // An array of rich_text_section objects containing two properties: type, which is "rich_text_section", and elements, which is an array of rich text element objects.
+            OptInt                  indent;     // Number of pixels to indent the list.
+            OptInt                  offset;     // Number to offset the first number in the list. For example, if the offset = 4, the first number in the ordered list would be 5.
+            OptInt                  border;     // Number of pixels of border thickness.
+            ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::List, rich_text_list);
+            ThorsAnvil_TypeFieldName(type);
+        };
+        struct Preformatted
+        {
+            VecElement              elements;   // An array of rich text elements.
+            OptInt                  border;     // Number of pixels of border thickness.
+            ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Preformatted, rich_text_preformatted);
+            ThorsAnvil_TypeFieldName(type);
+        };
+        struct Quote
+        {
+            VecElement              elements;   // An array of rich text elements.
+            OptInt                  border;     // Number of pixels of border thickness.
+            ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Quote, rich_text_quote);
+            ThorsAnvil_TypeFieldName(type);
+        };
+    }
+    using RichTextObj = std::variant<RichText::Section, RichText::List, RichText::Preformatted, RichText::Quote>;
+    using VecRichTextObj = std::vector<RichTextObj>;
+
     struct Row
     {
     };
@@ -202,7 +326,7 @@ struct RichText
 {
     // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block/
     //std::string                 type;           // always "rich_text"
-    std::vector<Element::RichText>elements;       // An array of rich text objects - rich_text_section, rich_text_list, rich_text_preformatted, and rich_text_quote. See your specific desired element below for more details.
+    Element::VecRichTextObj     elements;       // An array of rich text objects - rich_text_section, rich_text_list, rich_text_preformatted, and rich_text_quote. See your specific desired element below for more details.
     OptString                   block_id;
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::RichText, rich_text);
     ThorsAnvil_TypeFieldName(type);
@@ -270,7 +394,25 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::But);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::Text, type, text, emoji, verbatim);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::SlackFile, url, id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::Input);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText);
+// -- Rich Text
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Info::Style, bold, italic, strike, highlight, client_highlight, unlink);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Info::Text, bold, italic, strike, code);
+// ---
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Broadcast, range);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Color, value);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Channel, channel_id, style);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Date, timestamp, format, url, fallback);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Emoji, name, unicode);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Link, url, text, unsafe, style);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Text, text, style);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::User, user_id, style);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::UserGroup, usergroup_id, style);
+//---
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Section, elements);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::List, style, elements, indent, offset, border);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Preformatted, elements, border);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText::Quote, elements, border);
+// -- Rich Text
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::Row);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::ColInfo);
 /// ----
