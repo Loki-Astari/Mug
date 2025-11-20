@@ -1,6 +1,52 @@
 #ifndef THORSANVIL_SLACK_BLOCKKIT_H
 #define THORSANVIL_SLACK_BLOCKKIT_H
 
+#if 0
+Tested:
+=======
+    ThorsAnvil::Slack::BlockKit::Element::Active
+    ThorsAnvil::Slack::BlockKit::Element::Img
+    ThorsAnvil::Slack::BlockKit::Element::But
+    ThorsAnvil::Slack::BlockKit::Element::Text
+    ThorsAnvil::Slack::BlockKit::Element::SlackFile
+    ThorsAnvil::Slack::BlockKit::Element::Input
+    // -- Rich Text
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Info::Style
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Info::Text
+    // ---
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Broadcast
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Color
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Channel
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Date
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Emoji
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Link
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Text
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::User
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::UserGroup
+    //---
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Section
+    ThorsAnvil::Slack::BlockKit::Element::RichText::List
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Preformatted
+    ThorsAnvil::Slack::BlockKit::Element::RichText::Quote
+    // -- Rich Text
+    ThorsAnvil::Slack::BlockKit::Element::Row
+    ThorsAnvil::Slack::BlockKit::Element::ColInfo
+    /// ----
+    ThorsAnvil::Slack::BlockKit::Actions
+    ThorsAnvil::Slack::BlockKit::Context
+    ThorsAnvil::Slack::BlockKit::Context_Actions
+*   ThorsAnvil::Slack::BlockKit::Divider
+    ThorsAnvil::Slack::BlockKit::File
+    ThorsAnvil::Slack::BlockKit::Header
+    ThorsAnvil::Slack::BlockKit::Image
+    ThorsAnvil::Slack::BlockKit::Input
+    ThorsAnvil::Slack::BlockKit::Markdown
+    ThorsAnvil::Slack::BlockKit::RichText
+*   ThorsAnvil::Slack::BlockKit::Section
+    ThorsAnvil::Slack::BlockKit::Table
+    ThorsAnvil::Slack::BlockKit::Video
+#endif
+
 #include "ThorsSlackBotConfig.h"
 #include "ThorSerialize/Serialize.h"
 #include "ThorSerialize/PolymorphicMarker.h"
@@ -46,10 +92,11 @@ namespace Element
         // or   https://docs.slack.dev/reference/block-kit/block-elements/icon-button-element
     };
 
+    enum TextType { /*vera-ignore*/ plain_text, mrkdwn};
     struct Text
     {
         // https://docs.slack.dev/reference/block-kit/composition-objects/text-object
-        std::string                 type;           // Can be one of "plain_text" or "mrkdwn"
+        TextType                    type;           // Can be one of "plain_text" or "mrkdwn"
         std::string                 text;           // The text for the block. This field accepts any of the standard text formatting markup when type is mrkdwn. The minimum length is 1 and maximum length is 3000 characters.
         OptBool                     emoji;          // Indicates whether emojis in a text field should be escaped into the colon emoji format. This field is only usable when type is plain_text.
         OptBool                     verbatim;       // When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed.
@@ -110,9 +157,10 @@ namespace Element
                 using OptStyle = std::optional<Style>;
                 using OptText = std::optional<Text>;
             }
+            enum BroadcastType {/*vera-ignore*/here, channel, everyone};
             struct Broadcast
             {
-                std::string         range;      // The range of the broadcast; value can be here, channel, or everyone.
+                BroadcastType       range;      // The range of the broadcast; value can be here, channel, or everyone.
                                                 // Using here notifies only the active members of a channel; channel notifies all members of a channel;
                                                 // everyone notifies every person in the #general channel.
                 ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Broadcast, broadcast);
@@ -142,7 +190,6 @@ namespace Element
             };
             struct Emoji
             {
-                std::string         type;       // The type of object; in this case, "emoji".
                 std::string         name;       // The name of the emoji; i.e. "wave" or "wave::skin-tone-2".
                 OptString           unicode;    // Represents the unicode code point of the emoji, where applicable.
                 ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Element::RichText::Elements::Emoji, emoji);
@@ -188,9 +235,10 @@ namespace Element
             ThorsAnvil_TypeFieldName(type);
         };
         using VecSection = std::vector<Section>;
+        enum ListType {/*vera-ignore*/bullet, ordered};
         struct List
         {
-            std::string             style;      // Either "bullet" or "ordered"
+            ListType                style;      // Either "bullet" or "ordered"
             VecSection              elements;   // An array of rich_text_section objects containing two properties: type, which is "rich_text_section", and elements, which is an array of rich text element objects.
             OptInt                  indent;     // Number of pixels to indent the list.
             OptInt                  offset;     // Number to offset the first number in the list. For example, if the offset = 4, the first number in the ordered list would be 5.
@@ -227,7 +275,6 @@ namespace Element
 
 // Section 2:
 // Different Types of Blocks
-//enum class BlockType { Actions, Context, Context_actions, Divider, File, Header, Image, Input, Markdown, Section, Table, Video};
 struct Actions
 {
     // https://docs.slack.dev/reference/block-kit/blocks/actions-block/
@@ -301,7 +348,7 @@ struct Input
 {
     // https://docs.slack.dev/reference/block-kit/blocks/input-block/
     //std::string                 type;           // always "input".
-    Element::Text                        label;          // A label that appears above an input element in the form of a text object that must have type of plain_text. Maximum length for the text in this field is 2000 characters.
+    Element::Text               label;          // A label that appears above an input element in the form of a text object that must have type of plain_text. Maximum length for the text in this field is 2000 characters.
     Element::Input              element;        // A block element. See above for full list.
     OptBool                     dispatch_action;// A boolean that indicates whether or not the use of elements in this block should dispatch a block_actions payload.
                                                 // Defaults to false.

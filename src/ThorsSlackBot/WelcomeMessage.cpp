@@ -7,7 +7,7 @@ BlockKit::Section const WelcomeMessage::startText =
 {
     .text = BlockKit::Element::Text
     {
-        .type = "mrkdwn",
+        .type = BlockKit::Element::mrkdwn,
         .text = R"(Welcome to this awesome channel! -- *Get started by completing the tasks!*)"
     }
 };

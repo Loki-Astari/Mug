@@ -9,13 +9,16 @@ using namespace std::literals::string_literals;
 
 int main()
 {
+    using ThorsAnvil::Slack::BlockKit::Element::TextType;
+    using ThorsAnvil::Slack::BlockKit::Element::mrkdwn;
+    using ThorsAnvil::Slack::BlockKit::Element::plain_text;
     using ThorsAnvil::Slack::BlockKit::Block;
     using ThorsAnvil::Slack::BlockKit::Blocks;
     using ThorsAnvil::Slack::BlockKit::Section;
     using ThorsAnvil::Slack::BlockKit::Divider;
     using ThorsAnvil::Slack::BlockKit::Element::Text;
 
-    Block block = Section{.text = Text{.type = "mrkdwn", .text = "Hi there this is text"}};
+    Block block = Section{.text = Text{.type = mrkdwn, .text = "Hi there this is text"}};
     std::cerr << ThorsAnvil::Serialize::jsonExporter(block);
     std::cerr << ThorsAnvil::Serialize::jsonExporter(block, ThorsAnvil::Serialize::PrinterConfig{ThorsAnvil::Serialize::OutputType::Stream}) << "\n";
     std::cerr << "Size: " << ThorsAnvil::Serialize::jsonStreanSize(block) << "\n";
@@ -31,7 +34,7 @@ int main()
     PostMessage::Reply      reply1 = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."});
     std::cout << ThorsAnvil::Serialize::jsonExporter(reply1);
 
-    PostMessage::Reply      reply2 = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .blocks = Blocks{Section{.text = Text{.type = "mrkdwn", .text = "Stuff to print"}}, Divider{}, Section{.text = Text{.type = "plain_text", .text = "Here we go"}}}});
+    PostMessage::Reply      reply2 = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .blocks = Blocks{Section{.text = Text{.type = mrkdwn, .text = "Stuff to print"}}, Divider{}, Section{.text = Text{.type = plain_text, .text = "Here we go"}}}});
     std::cout << ThorsAnvil::Serialize::jsonExporter(reply2);
 
 
