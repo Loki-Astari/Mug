@@ -3,17 +3,13 @@
 
 using namespace ThorsAnvil::Slack;
 
-API::Chat::Block const WelcomeMessage::startText =
+BlockKit::Section const WelcomeMessage::startText =
 {
-    "section",
-    API::Chat::Text
+    .text = BlockKit::Element::Text
     {
-        "mrkdwn",
-        R"(Welcome to this awesome channel! -- *Get started by completing the tasks!*)"
+        .type = "mrkdwn",
+        .text = R"(Welcome to this awesome channel! -- *Get started by completing the tasks!*)"
     }
 };
 
-API::Chat::Block const WelcomeMessage::divider =
-{
-    .type = "divider"
-};
+BlockKit::Divider const WelcomeMessage::divider;

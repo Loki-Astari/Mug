@@ -10,8 +10,8 @@ namespace ThorsAnvil::Slack
 
 class WelcomeMessage
 {
-    static API::Chat::Block const startText;
-    static API::Chat::Block const divider;
+    static BlockKit::Section const startText;
+    static BlockKit::Divider const divider;
 
     std::string     channel;
     std::string     user;
@@ -34,7 +34,7 @@ class WelcomeMessage
         {
             return {    .channel = channel,
                         .text = "Plop",
-                        .blocks = API::Chat::Blocks{startText, divider, getReactionTask()},
+                        .blocks = BlockKit::Blocks{startText, divider, getReactionTask()},
                         //.blocks = API::Chat::Blocks{{"section", {"mrkdwn", R"(Welcome to this awesome channel! -- *Get started by completing the tasks!*)"}}},
                         //.blocks = API::Chat::Blocks{{"section", {"plain_text", "Hello world"}}},
                         .icon_emoji = iconEmoji,
@@ -42,7 +42,7 @@ class WelcomeMessage
                    };
         }
     private:
-        API::Chat::Block getReactionTask()
+        BlockKit::Section getReactionTask()
         {
             std::string checkmark = ":white_check_mark:";
             if (not completed) {
@@ -50,7 +50,7 @@ class WelcomeMessage
             }
             std::string text = checkmark + " *React to this message!*";
 
-            return {.type = "section", .text = API::Chat::Text{"mrkdwn", text}};
+            return BlockKit::Section{.text = BlockKit::Element::Text{.type = "mrkdwn", .text = text}};
         }
 };
 

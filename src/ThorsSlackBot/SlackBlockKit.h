@@ -1,0 +1,292 @@
+#ifndef THORSANVIL_SLACK_BLOCKKIT_H
+#define THORSANVIL_SLACK_BLOCKKIT_H
+
+#include "ThorsSlackBotConfig.h"
+#include "ThorSerialize/Serialize.h"
+#include "ThorSerialize/PolymorphicMarker.h"
+#include "ThorSerialize/JsonThor.h"
+#include "ThorSerialize/Traits.h"
+#include "ThorSerialize/SerUtil.h"
+
+#include <string>
+#include <sys/_pthread/_pthread_types.h>
+#include <type_traits>
+#include <vector>
+
+namespace ThorsAnvil::Slack::BlockKit
+{
+
+using OptString         = std::optional<std::string>;
+using OptBool           = std::optional<bool>;
+
+template<typename T>
+using OptVector     = std::optional<std::vector<T>>;
+
+// Section 1:
+// Objects used by Blocks.
+// See Blocks Below.
+namespace Element
+{
+    struct Active
+    {
+        // see: https://docs.slack.dev/reference/block-kit/block-elements
+    };
+    using OptActive  = std::optional<Active>;
+
+    struct Img
+    {
+        // see: https://docs.slack.dev/reference/block-kit/block-elements/image-element
+        // or   https://docs.slack.dev/reference/block-kit/composition-objects/text-object
+    };
+
+    struct But
+    {
+        // see: https://docs.slack.dev/reference/block-kit/block-elements/feedback-buttons-element
+        // or   https://docs.slack.dev/reference/block-kit/block-elements/icon-button-element
+    };
+
+    struct Text
+    {
+        // https://docs.slack.dev/reference/block-kit/composition-objects/text-object
+        std::string                 type;           // Can be one of "plain_text" or "mrkdwn"
+        std::string                 text;           // The text for the block. This field accepts any of the standard text formatting markup when type is mrkdwn. The minimum length is 1 and maximum length is 3000 characters.
+        OptBool                     emoji;          // Indicates whether emojis in a text field should be escaped into the colon emoji format. This field is only usable when type is plain_text.
+        OptBool                     verbatim;       // When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed.
+                                                    // When set to true, Slack will continue to process all markdown formatting and manual parsing strings, but it won’t modify any plain-text content. For example, channel names will not be hyperlinked.
+                                                    // This field is only usable when type is mrkdwn.
+    };
+    using OptText       = std::optional<Text>;
+    using OptTexts      = std::optional<std::vector<Text>>;
+
+    struct SlackFile
+    {
+        // https://docs.slack.dev/reference/block-kit/composition-objects/slack-file-object
+        OptString                   url;            // This URL can be the url_private or the permalink of the Slack file.
+        OptString                   id;             // Slack ID of the file.
+    };
+    using OptSlackFile  = std::optional<SlackFile>;
+
+    struct Input
+    {
+        // One of:
+        // https://docs.slack.dev/reference/block-kit/block-elements/checkboxes-element/
+        // https://docs.slack.dev/reference/block-kit/block-elements/date-picker-element/
+        // https://docs.slack.dev/reference/block-kit/block-elements/datetime-picker-element/
+        // https://docs.slack.dev/reference/block-kit/block-elements/email-input-element/
+        // https://docs.slack.dev/reference/block-kit/block-elements/file-input-element/
+        // https://docs.slack.dev/reference/block-kit/block-elements/multi-select-menus-element
+        // https://docs.slack.dev/reference/block-kit/block-elements/number-input-element/
+        // https://docs.slack.dev/reference/block-kit/block-elements/plain-text-input-element/
+        // https://docs.slack.dev/reference/block-kit/block-elements/radio-button-element
+        // https://docs.slack.dev/reference/block-kit/block-elements/rich-text-input-element/
+        // https://docs.slack.dev/reference/block-kit/block-elements/select-menu-element/
+        // https://docs.slack.dev/reference/block-kit/block-elements/time-picker-element/
+        // https://docs.slack.dev/reference/block-kit/block-elements/url-input-element/
+    };
+
+    struct RichText
+    {
+        // One of
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#rich_text_section
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#rich_text_list
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#rich_text_preformatted
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#rich_text_quote
+    };
+    struct Row
+    {
+    };
+
+    struct ColInfo
+    {
+    };
+}
+
+// Section 2:
+// Different Types of Blocks
+//enum class BlockType { Actions, Context, Context_actions, Divider, File, Header, Image, Input, Markdown, Section, Table, Video};
+struct Actions
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/actions-block/
+    //std::string                 type;           // always "actions"
+    std::vector<Element::Active>elements;       // Max 25 elements.
+                                                // An array of interactive element objects - buttons, select menus, overflow menus, or date pickers.
+    OptString                   block_id;
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Actions, actions);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct Context
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/context-block/
+    //std::string                 type;           // always "context"
+    std::vector<Element::Img>   elements;       // Max 10 elements
+                                                // An array of image elements and text objects.
+    OptString                   block_id;
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Context, context);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct Context_Actions
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/context-actions-block/
+    //std::string                 type;           // always "context_actions"
+    std::vector<Element::But>   elements;       // Max 5 elements.
+                                                // An array of feedback buttons elements and icon button elements.
+    OptString                   block_id;
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Context_Actions, context_actions);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct Divider
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/divider-block/
+    //std::string                 type;           // always "divider"
+    OptString                   block_id;
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Divider, divider);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct File
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/file-block/
+    //std::string                 type;           // always "file"
+    std::string                 external_id;    // The external unique ID for this file.
+    std::string                 source;         // At the moment, source will always be remote for a remote file.
+    OptString                   block_id;
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::File, file);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct Header
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/header-block/
+    //std::string                 type;           // always "header"
+    Element::Text               text;           // The text for the block, in the form of a plain_text text object. Maximum length for the text in this field is 150 characters.
+    OptString                   block_id;
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Header, header);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct Image
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/image-block/
+    //std::string                 type;           // always "image"
+    std::string                 alt_text;       // A plain-text summary of the image. This should not contain any markup. Maximum length for this field is 2000 characters.
+    OptString                   image_url;      // The URL for a publicly hosted image. You must provide either an image_url or slack_file. Maximum length for this field is 3000 characters.
+    Element::OptSlackFile       slack_file;     // A Slack image file object that defines the source of the image.
+    Element::OptText            title;          // An optional title for the image in the form of a text object that can only be of type: plain_text. Maximum length for the text in this field is 2000 characters.
+    OptString                   block_id;
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Image, image);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct Input
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/input-block/
+    //std::string                 type;           // always "input".
+    Element::Text                        label;          // A label that appears above an input element in the form of a text object that must have type of plain_text. Maximum length for the text in this field is 2000 characters.
+    Element::Input              element;        // A block element. See above for full list.
+    OptBool                     dispatch_action;// A boolean that indicates whether or not the use of elements in this block should dispatch a block_actions payload.
+                                                // Defaults to false.
+                                                // This field is incompatible with the file_input block element. If dispatch_action is set to true and a file_input block element is provided, an unsupported type error will be raised.
+    OptString                   block_id;
+    Element::OptText            hint;           // An optional hint that appears below an input element in a lighter grey. It must be a text object with a type of plain_text. Maximum length for the text in this field is 2000 characters.
+    OptBool                     optional;       // A boolean that indicates whether the input element may be empty when a user submits the modal.
+                                                // Defaults to false.
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Input, input);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct Markdown
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/markdown-block/
+    //std::string                 type;           // always "markdown"
+    std::string                 text;           // The standard markdown-formatted text. Limit 12,000 characters max.
+    OptString                   block_id;
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Markdown, markdown);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct RichText
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block/
+    //std::string                 type;           // always "rich_text"
+    std::vector<Element::RichText>elements;       // An array of rich text objects - rich_text_section, rich_text_list, rich_text_preformatted, and rich_text_quote. See your specific desired element below for more details.
+    OptString                   block_id;
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::RichText, rich_text);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct Section
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/section-block/
+    //std::string                 type;           // always "section"
+    // Preferred
+    Element::OptText            text;           // The text for the block, in the form of a text object. Minimum length for the text in this field is 1 and maximum length is 3000 characters.
+                                                // This field is not required if a valid array of fields objects is provided instead.
+    // Maybe: Alternative to text
+    Element::OptTexts           fields;         // Required if no text is provided. An array of text objects. Any text objects included with fields will be rendered in a compact format that allows for 2 columns of side-by-side text.
+                                                // Maximum number of items is 10. Maximum length for the text in each item is 2000 characters.
+    OptString                   block_id;
+    Element::OptActive          accessory;      // One of the compatible element objects noted above. Be sure to confirm the desired element works with section.
+    OptBool                     expand;         // Whether or not this section block's text should always expand when rendered.
+                                                // If false or not provided, it may be rendered with a 'see more' option to expand and show the full text.
+                                                // For AI Assistant apps, this allows the app to post long messages without users needing to click 'see more' to expand the message.
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Section, section);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct Table
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/table-block/
+    //std::string                 type;           // Always "table".
+    OptString                   block_id;
+    std::vector<Element::Row>   rows;           // An array consisting of table rows.
+                                                // Maximum 100 rows.
+                                                // Each row object is an array with a max of 20 table cells. Table cells can have a type of raw_text or rich_text.
+    OptVector<Element::ColInfo> column_settings;// An array describing column behavior.
+                                                // If there are fewer items in the column_settings array than there are columns in the table, then the items in the the column_settings array will
+                                                // describe the same number of columns in the table as there are in the array itself. Any additional columns will have the default behavior.
+                                                // Maximum 20 items. See below for column settings schema.
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Table, table);
+    ThorsAnvil_TypeFieldName(type);
+};
+struct Video
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/video-block/
+    //std::string                 type;           // always "video"
+    std::string                 alt_text;       // A tooltip for the video. Required for accessibility
+    OptString                   author_name;    // Author name to be displayed. Must be less than 50 characters.
+    OptString                   block_id;
+    Element::OptText            description;    // Description for video in the form of a text object that must have type of plain_text. text within must be less than 200 characters.
+    OptString                   provider_icon_url; // Icon for the video provider, e.g. YouTube icon.
+    OptString                   provider_name;  // The originating application or domain of the video, e.g. YouTube.
+    Element::Text               title;          // Video title in the form of a text object that must have type of plain_text. text within must be less than 200 characters.
+    OptString                   title_url;      // Hyperlink for the title text. Must correspond to the non-embeddable URL for the video. Must go to an HTTPS URL.
+    std::string                 thumbnail_url;  // The thumbnail image URL
+    std::string                 video_url;      // The URL to be embedded. Must match any existing unfurl domains within the app and point to a HTTPS URL.
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Video, video);
+    ThorsAnvil_TypeFieldName(type);
+};
+
+using Block = std::variant<Actions, Context, Context_Actions, Divider, File, Header, Image, Input, Markdown, RichText, Section, Table, Video>;
+using Blocks = std::vector<Block>;
+using OptBlocks = std::optional<Blocks>;
+
+}
+
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::Active);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::Img);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::But);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::Text, type, text, emoji, verbatim);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::SlackFile, url, id);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::Input);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::RichText);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::Row);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Element::ColInfo);
+/// ----
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Actions, elements);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Context, elements);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Context_Actions, elements);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Divider);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::File, external_id, source);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Header, text);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Image, alt_text, image_url, slack_file, title);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Input, label, element, dispatch_action, hint, optional);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Markdown, text);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::RichText, elements);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Section, text, fields, accessory, expand);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Table, rows, column_settings);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Video, alt_text, author_name, description, provider_icon_url, provider_name, title, title_url, thumbnail_url, video_url);
+
+
+#endif

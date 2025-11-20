@@ -1,6 +1,8 @@
 #ifndef THORSANVIL_SLACK_API_CHAT_H
 #define THORSANVIL_SLACK_API_CHAT_H
 
+#include "SlackBlockKit.h"
+
 #include "ThorsSlackBotConfig.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
@@ -132,22 +134,22 @@ struct BotProfile
     std::time_t                 updated;
     std::string                 team_id;
 };
-struct Text
+struct MessageText
 {
     std::string                 type;   // plain_text or mrkdwn.
     OptString                   text;
 };
-struct Element
+struct MessageElement
 {
     std::string                 type;
-    std::vector<Text>           elements;
+    std::vector<MessageText>    elements;
 };
 
 struct MessageBlock
 {
     std::string                 type;
     std::string                 block_id;
-    std::vector<Element>        elements;
+    std::vector<MessageElement> elements;
 };
 struct Message
 {
@@ -171,18 +173,6 @@ struct PostMessageReply
     Message                     message;
 };
 
-using OptText       = std::optional<Text>;
-
-struct Block
-{
-    std::string                 type;
-    OptText                     text;
-};
-
-using Blocks            = std::vector<Block>;
-using OptBlocks         = std::optional<Blocks>;
-
-
 struct PostMessage
 {
     static const std::string api;
@@ -190,7 +180,7 @@ struct PostMessage
     using Reply = PostMessageReply;
     std::string                 channel;
     OptString                   text;
-    OptBlocks                   blocks;
+    BlockKit::OptBlocks         blocks;
     OptString                   icon_emoji;
     OptString                   username;
     OptString                   thread_ts;
@@ -201,12 +191,11 @@ struct PostMessage
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::BotIcon, image_36, image_48, image_72);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::BotProfile, id, app_id, user_id, name, icons, deleted, updated, team_id);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Text, type, text);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Element, type, elements);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::MessageText, type, text);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::MessageElement, type, elements);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::MessageBlock, type, elements);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostMessageReply, ok, error, channel, ts, message);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Block, type, text);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostMessage, channel, text, blocks, icon_emoji, username, thread_ts);
 
 #endif
