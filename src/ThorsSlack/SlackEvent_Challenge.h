@@ -1,6 +1,7 @@
 #ifndef THORSANVIL_SLACK_EVENT_CHALLENGE_H
 #define THORSANVIL_SLACK_EVENT_CHALLENGE_H
 
+#include "ThorsSlackConfig.h"
 #include "ThorSerialize/Traits.h"
 #include <string>
 

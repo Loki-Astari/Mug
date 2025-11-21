@@ -1,7 +1,7 @@
 #ifndef THORSANVIL_SLACK_API_AUTH_H
 #define THORSANVIL_SLACK_API_AUTH_H
 
-#include "ThorsSlackBotConfig.h"
+#include "ThorsSlackConfig.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
 
@@ -37,7 +37,7 @@ struct TestReply
 };
 struct Test
 {
-    static const std::string api;
+    static constexpr char const* api = "https://slack.com/api/auth.test";
     static constexpr bool hasBody = false;
     using Reply = TestReply;
 };

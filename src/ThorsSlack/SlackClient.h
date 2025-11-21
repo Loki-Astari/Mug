@@ -1,7 +1,7 @@
 #ifndef THORSANVIL_SLACK_SLACKCLIENT_H
 #define THORSANVIL_SLACK_SLACKCLIENT_H
 
-#include "ThorsSlackBotConfig.h"
+#include "ThorsSlackConfig.h"
 #include "NisseHTTP/ClientRequest.h"
 #include "NisseHTTP/ClientResponse.h"
 #include "NisseHTTP/HeaderResponse.h"

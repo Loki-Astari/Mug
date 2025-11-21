@@ -47,7 +47,7 @@ Tested:
     ThorsAnvil::Slack::BlockKit::Video
 #endif
 
-#include "ThorsSlackBotConfig.h"
+#include "ThorsSlackConfig.h"
 #include "ThorSerialize/Serialize.h"
 #include "ThorSerialize/PolymorphicMarker.h"
 #include "ThorSerialize/JsonThor.h"

@@ -1,9 +1,9 @@
 #ifndef THORSANVIL_SLACK_API_CHAT_H
 #define THORSANVIL_SLACK_API_CHAT_H
 
-#include "SlackBlockKit.h"
 
-#include "ThorsSlackBotConfig.h"
+#include "ThorsSlackConfig.h"
+#include "SlackBlockKit.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
 
@@ -160,7 +160,7 @@ struct PostMessageReply
 
 struct PostMessage
 {
-    static const std::string api;
+    static constexpr char const* api = "https://slack.com/api/chat.postMessage";
     static constexpr bool hasBody = true;
     using Reply = PostMessageReply;
     std::string                 channel;
