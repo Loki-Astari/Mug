@@ -21,6 +21,36 @@ AX_THOR_CHECK_USE_BOOST([1.70], [], [
     ])
 ])
 
+AC_ARG_WITH(
+    [slackToken],
+    AS_HELP_STRING([--with-slackToken=<token>], [Slack authentication token. Used to authenticate with Slack when running tests])
+)
+AC_ARG_WITH(
+    [slackSecret],
+    AS_HELP_STRING([--with-slackSecret=<secret>], [Slack secret. Used to hash requests and thus validate incomming requests from slack])
+)
+
+AS_IF(
+    [test "x${with_slackToken}" == "x"],
+    [
+        AC_MSG_ERROR([No slack token defined. Can not run the slack tests. Please look at tutorials on how to generate a slack Bot Token.])
+    ]
+)
+AS_IF(
+    [test "x${with_slackSecret}" == "x"],
+    [
+        AC_MSG_ERROR([No slack secret defined. Can not run the slack tests. Please look at tutorials on how to generate a slack Bot Secret.])
+    ]
+)
+
+mkdir -p src/ThorsSlack/test/data
+cat - <<ENVIRONMENT > src/ThorsSlack/test/data/environment.json
+{
+    "slackToken": "${with_slackToken}",
+    "slackSecret": "${with_slackSecret}"
+}
+ENVIRONMENT
+
 LT_INIT
 
 AX_THOR_FEATURE_HEADER_ONLY_VARIANT([THORSCHALICE])

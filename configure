@@ -813,6 +813,8 @@ with_nisse_root
 with_event_root
 with_boost
 with_boost_libdir
+with_slackToken
+with_slackSecret
 enable_shared
 enable_static
 enable_pic
@@ -1522,6 +1524,14 @@ Optional Packages:
                           this parameter only if default library detection
                           fails and you know exactly where your boost
                           libraries are located.
+  --with-slackToken=<token>
+                          Slack authentication token. Used to authenticate
+                          with Slack when running tests
+
+  --with-slackSecret=<secret>
+                          Slack secret. Used to hash requests and thus
+                          validate incomming requests from slack
+
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
                           compiler's sysroot if not specified).
@@ -6084,6 +6094,44 @@ fi
 
 
 
+
+
+# Check whether --with-slackToken was given.
+if test ${with_slackToken+y}
+then :
+  withval=$with_slackToken;
+fi
+
+
+# Check whether --with-slackSecret was given.
+if test ${with_slackSecret+y}
+then :
+  withval=$with_slackSecret;
+fi
+
+
+if test "x${with_slackToken}" == "x"
+then :
+
+        as_fn_error $? "No slack token defined. Can not run the slack tests. Please look at tutorials on how to generate a slack Bot Token." "$LINENO" 5
+
+
+fi
+if test "x${with_slackSecret}" == "x"
+then :
+
+        as_fn_error $? "No slack secret defined. Can not run the slack tests. Please look at tutorials on how to generate a slack Bot Secret." "$LINENO" 5
+
+
+fi
+
+mkdir -p src/ThorsSlack/test/data
+cat - <<ENVIRONMENT > src/ThorsSlack/test/data/environment.json
+{
+    "slackToken": "${with_slackToken}",
+    "slackSecret": "${with_slackSecret}"
+}
+ENVIRONMENT
 
 
 case `pwd` in
