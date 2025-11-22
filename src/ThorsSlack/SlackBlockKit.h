@@ -26,11 +26,44 @@ using OptVector     = std::optional<std::vector<T>>;
 // Section 1:
 // Objects used by Blocks.
 // See Blocks Below.
-    struct ElActive
+
+    enum TextType { /*vera-ignore*/ plain_text, mrkdwn};
+    struct ElText
     {
-        // see: https://docs.slack.dev/reference/block-kit/block-elements
+        // https://docs.slack.dev/reference/block-kit/composition-objects/text-object
+        TextType                    type;           // Can be one of "plain_text" or "mrkdwn"
+        std::string                 text;           // The text for the block. This field accepts any of the standard text formatting markup when type is mrkdwn. The minimum length is 1 and maximum length is 3000 characters.
+        OptBool                     emoji;          // Indicates whether emojis in a text field should be escaped into the colon emoji format. This field is only usable when type is plain_text.
+        OptBool                     verbatim;       // When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed.
+                                                    // When set to true, Slack will continue to process all markdown formatting and manual parsing strings, but it won’t modify any plain-text content. For example, channel names will not be hyperlinked.
+                                                    // This field is only usable when type is mrkdwn.
     };
-    using OptElActive  = std::optional<ElActive>;
+    struct Confirm
+    {
+        // https://docs.slack.dev/reference/block-kit/composition-objects/confirmation-dialog-object
+        ElText                      title;          // A plain_text text object that defines the dialog's title. Maximum length for this field is 100 characters.
+        ElText                      text;           // A plain_text text object that defines the explanatory text that appears in the confirm dialog. Maximum length for the text in this field is 300 characters.
+        ElText                      confirm;        // A plain_text text object to define the text of the button that confirms the action. Maximum length for the text in this field is 30 characters.
+        ElText                      deny;           // A plain_text text object to define the text of the button that cancels the action. Maximum length for the text in this field is 30 characters.
+        OptString                   style;          // Defines the color scheme applied to the confirm button. A value of danger will display the button with a red background on desktop, or red text on mobile. A value of primary will display the button with a green background on desktop, or blue text on mobile. If this field is not provided, the default value will be primary.
+    };
+    using OptConfirm = std::optional<Confirm>;
+    struct ElActButton
+    {
+        // https://docs.slack.dev/reference/block-kit/block-elements/button-element/
+        // std::string                 type;           // always "button"
+        ElText                      text;           // A text object that defines the button's text. Can only be of type: plain_text. text may truncate with ~30 characters. Maximum length for the text in this field is 75 characters
+        OptString                   action_id;      // An identifier for this action. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
+        OptString                   url;            // A URL to load in the user's browser when the button is clicked. Maximum length is 3000 characters. If you're using url, you'll still receive an interaction payload and will need to send an acknowledgement response.
+        OptString                   value;          // The value to send along with the interaction payload. Maximum length is 2000 characters.
+        OptString                   style;          // Decorates buttons with alternative visual color schemes. Use this option with restraint.primary gives buttons a green outline and text, ideal for affirmation or confirmation actions. primary should only be used for one button within a set.danger gives buttons a red outline and text, and should be used when the action is destructive. Use danger even more sparingly than primary.If you don't include this field, the default button style will be used.
+        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog after the button is clicked.
+        OptString                   accessibility_label; // A label for longer descriptive text about a button element. This label will be read out by screen readers instead of the button text object. Maximum length is 75 characters.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActButton, button);
+        ThorsAnvil_TypeFieldName(type);
+    };
+    using ElActive  = std::variant<ElActButton>;
+    using OptElActive = std::optional<ElActive>;
 
     struct ElImg
     {
@@ -44,17 +77,6 @@ using OptVector     = std::optional<std::vector<T>>;
         // or   https://docs.slack.dev/reference/block-kit/block-elements/icon-button-element
     };
 
-    enum TextType { /*vera-ignore*/ plain_text, mrkdwn};
-    struct ElText
-    {
-        // https://docs.slack.dev/reference/block-kit/composition-objects/text-object
-        TextType                    type;           // Can be one of "plain_text" or "mrkdwn"
-        std::string                 text;           // The text for the block. This field accepts any of the standard text formatting markup when type is mrkdwn. The minimum length is 1 and maximum length is 3000 characters.
-        OptBool                     emoji;          // Indicates whether emojis in a text field should be escaped into the colon emoji format. This field is only usable when type is plain_text.
-        OptBool                     verbatim;       // When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed.
-                                                    // When set to true, Slack will continue to process all markdown formatting and manual parsing strings, but it won’t modify any plain-text content. For example, channel names will not be hyperlinked.
-                                                    // This field is only usable when type is mrkdwn.
-    };
     using OptElText     = std::optional<ElText>;
     using OptElTexts    = std::optional<std::vector<ElText>>;
 
@@ -383,10 +405,12 @@ using OptBlocks = std::optional<Blocks>;
 
 }
 
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActive);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElText, type, text, emoji, verbatim);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Confirm, title, text, confirm, deny, style);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActButton, text, action_id, url, value, style, confirm, accessibility_label);
+
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElBut);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElText, type, text, emoji, verbatim);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElSlackFile, url, id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElInput);
 // -- Rich Text

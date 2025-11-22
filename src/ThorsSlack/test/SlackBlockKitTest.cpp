@@ -325,6 +325,33 @@ TEST(SlackBlockKitTest, Block_RichText_Failure)
     ASSERT_FALSE(reply.ok);
 }
 
+TEST(SlackBlockKitTest, Block_Action_Button)
+{
+#if 0
+    PostMessage     message{    .channel = "C09RU2URYMS",
+                                .blocks = BK::Blocks{
+                                    BK::Actions{
+                                        .elements = {
+                                            BK::ElActButton{.text = BK::ElText{.text = "Push"}, .value="Clicked"}
+                                        }
+                                    },
+                                }
+                           };
+    BK::Actions& actions = std::get<BK::Actions>(message.blocks.value()[0]);
+    std::cerr << "Count: " << actions.elements.size() << "\n";
+
+    ThorsAnvil::Serialize::PrinterConfig config{ThorsAnvil::Serialize::OutputType::Stream};
+    std::cerr << ThorsAnvil::Serialize::jsonExporter(message) << "\n"
+              << ThorsAnvil::Serialize::jsonExporter(message, config) << "\n"
+              << "Size: " << ThorsAnvil::Serialize::jsonStreanSize(message) << "\n";
+
+    PostMessage::Reply      reply = client.sendMessage(message);
+    if (!reply.ok) {
+        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
+    }
+    ASSERT_TRUE(reply.ok);
+#endif
+}
 TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
 {
     PostMessage::Reply      reply = client.sendMessage(PostMessage{.channel = "C09RU2URYMS",
@@ -333,6 +360,11 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Section{.text = BK::ElText{.text="Selection with all Elements"}},
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Actions: TODO"}},
+                                                                        BK::Actions{
+                                                                            .elements = {
+                                                                                BK::ElActButton{.text = BK::ElText{.text = "Push"}, .value="Clicked"}
+                                                                            }
+                                                                        },
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Context: TODO"}},
                                                                         BK::Divider{},
