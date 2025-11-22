@@ -194,7 +194,20 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, static_select);
         ThorsAnvil_TypeFieldName(type);
     };
-    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu>;
+    struct ElActTimePicker
+    {
+        // https://docs.slack.dev/reference/block-kit/block-elements/time-picker-element/
+        //std::string                 type;           // always "timepicker"
+        OptString                   action_id;      // An identifier for the action triggered when a time is selected. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
+        OptString                   initial_time;   // The initial time that is selected when the element is loaded. This should be in the format HH:mm, where HH is the 24-hour format of an hour (00 to 23) and mm is minutes with leading zeros (00 to 59), for example 22:25 for 10:25pm.
+        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after a time is selected.
+        OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
+        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown on the time picker. Maximum length for the text in this field is 150 characters.
+        OptString                   timezone;       // A string in the IANA format, e.g. "America/Chicago". The timezone is displayed to end users as hint text underneath the time picker. It is also passed to the app upon certain interactions, such as view_submission.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActTimePicker, timepicker);
+        ThorsAnvil_TypeFieldName(type);
+    };
+    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu, ElActTimePicker>;
     using OptElActive = std::optional<ElActive>;
 
     struct ElImg
@@ -547,6 +560,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActDatetimePicker, action_id
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActOverflowMenu, action_id, options, confirm);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActRadioButton, action_id, options, initial_option, confirm, focus_on_load);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, action_id, options, option_groups, initial_option, confirm, focus_on_load, placeholder);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActTimePicker, action_id, initial_time, confirm, focus_on_load, placeholder, timezone);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElBut);

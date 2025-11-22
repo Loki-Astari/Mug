@@ -399,6 +399,7 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                                         , BK::Option{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElText{.text="The description 3"}}
                                                                                     }
                                                                                 }
+                                                                                , BK::ElActTimePicker{}
                                                                             }
                                                                         },
                                                                         BK::Divider{},
