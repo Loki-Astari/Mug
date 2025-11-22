@@ -382,9 +382,9 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             }
                                                                         },
                                                                         BK::Divider{},
-                                                                        BK::Section{.text = BK::ElText{.text="Actions: TODO"}},
+                                                                        BK::Section{.text = BK::ElText{.text="Actions"}},
                                                                         BK::Actions{
-                                                                            .elements = {
+.elements = {
                                                                                 BK::ElActRadioButton {
                                                                                     .options = {
                                                                                         BK::Option{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElText{.text="The description 1"}}
@@ -400,6 +400,22 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                                     }
                                                                                 }
                                                                                 , BK::ElActTimePicker{}
+#if 0
+// TODO: Need to implement workflows before this becomes useful.
+                                                                                , BK::ElActWorkflowButton{
+                                                                                    .text = BK::ElText{.text = "Workflow"},
+                                                                                    .workflow = BK::Workflow{
+                                                                                        .trigger = {
+                                                                                            .url = "https://slack.com/shortcuts/Ft0123ABC456/321...zyx",
+                                                                                            .customizable_input_parameters ={
+                                                                                                BK::NameValue{"input_parameter_a", "Value for input param A"},
+                                                                                                BK::NameValue{"input_parameter_b", "Value for input param B"}
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    .action_id = "Action",
+                                                                                }
+#endif
                                                                             }
                                                                         },
                                                                         BK::Divider{},

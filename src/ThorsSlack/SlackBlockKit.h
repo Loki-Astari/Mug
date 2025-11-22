@@ -109,6 +109,21 @@ using OptVector     = std::optional<std::vector<T>>;
         std::string                 value;          // The value to send along with the interaction payload. Maximum length is 2000 characters.
         OptString                   accessibility_label; // A label for longer descriptive text about a button element. This label will be read out by screen readers instead of the button text object. Maximum length is 75 characters.
     };
+    struct NameValue
+    {
+        std::string                 name;
+        std::string                 value;
+    };
+    using VecNameValue = std::vector<NameValue>;
+    struct Trigger
+    {
+        std::string                 url;
+        VecNameValue                customizable_input_parameters;
+    };
+    struct Workflow
+    {
+        Trigger                     trigger;        // A trigger object that contains information about a workflow's trigger.
+    };
     struct ElActButton
     {
         // https://docs.slack.dev/reference/block-kit/block-elements/button-element/
@@ -207,7 +222,19 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActTimePicker, timepicker);
         ThorsAnvil_TypeFieldName(type);
     };
-    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu, ElActTimePicker>;
+    struct ElActWorkflowButton
+    {
+        // https://docs.slack.dev/reference/block-kit/block-elements/workflow-button-element/
+        // std::string                 type;           // always "workflow_button"
+        ElText                      text;           // A text object that defines the button's text. Can only be of type: plain_text. text may truncate with ~30 characters. Maximum length for the text in this field is 75 characters.
+        Workflow                    workflow;       // A workflow object that contains details about the workflow that will run when the button is clicked.
+        std::string                 action_id;      // An identifier for the action. Use this when you receive an interaction payload to identify the source of the action. Every action_id in a block should be unique. Maximum length is 255 characters.
+        OptString                   style;          // Decorates buttons with alternative visual color schemes. Use this option with restraint.primary gives buttons a green outline and text, ideal for affirmation or confirmation actions. primary should only be used for one button within a set.danger gives buttons a red outline and text, and should be used when the action is destructive. Use danger even more sparingly than primary.If you don't include this field, the default button style will be used.
+        OptString                   accessibility_label;    // A label for longer descriptive text about a button element. This label will be read out by screen readers instead of the button text object. Maximum length is 75 characters.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActWorkflowButton, workflow_button);
+        ThorsAnvil_TypeFieldName(type);
+    };
+    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu, ElActTimePicker, ElActWorkflowButton>;
     using OptElActive = std::optional<ElActive>;
 
     struct ElImg
@@ -552,6 +579,9 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Confirm, title, text, confirm,
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Option, text, value, description, url);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Dispatch, trigger_actions_on);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Button, text, value, accessibility_label);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::NameValue, name, value);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Trigger, url, customizable_input_parameters);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Workflow, trigger);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActButton, text, action_id, url, value, style, confirm, accessibility_label);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActCheckbox, action_id, options, initial_options, confirm, focus_on_load);
@@ -561,6 +591,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActOverflowMenu, action_id, 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActRadioButton, action_id, options, initial_option, confirm, focus_on_load);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, action_id, options, option_groups, initial_option, confirm, focus_on_load, placeholder);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActTimePicker, action_id, initial_time, confirm, focus_on_load, placeholder, timezone);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActWorkflowButton, text, workflow, action_id, style, accessibility_label);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElBut);
