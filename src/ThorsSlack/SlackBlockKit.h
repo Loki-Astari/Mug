@@ -1,52 +1,6 @@
 #ifndef THORSANVIL_SLACK_BLOCKKIT_H
 #define THORSANVIL_SLACK_BLOCKKIT_H
 
-#if 0
-Tested:
-=======
-    ThorsAnvil::Slack::BlockKit::ElActive
-    ThorsAnvil::Slack::BlockKit::ElImg
-    ThorsAnvil::Slack::BlockKit::ElBut
-    ThorsAnvil::Slack::BlockKit::ElText
-    ThorsAnvil::Slack::BlockKit::ElSlackFile
-    ThorsAnvil::Slack::BlockKit::ElInput
-    // -- Rich Text
-    ThorsAnvil::Slack::BlockKit::InfoStyle
-    ThorsAnvil::Slack::BlockKit::InfoText
-    // ---
-    ThorsAnvil::Slack::BlockKit::ElRtBroadcast
-    ThorsAnvil::Slack::BlockKit::ElRtColor
-    ThorsAnvil::Slack::BlockKit::ElRtChannel
-    ThorsAnvil::Slack::BlockKit::ElRtDate
-    ThorsAnvil::Slack::BlockKit::ElRtEmoji
-    ThorsAnvil::Slack::BlockKit::ElRtLink
-*   ThorsAnvil::Slack::BlockKit::ElRtText
-    ThorsAnvil::Slack::BlockKit::ElRtUser
-    ThorsAnvil::Slack::BlockKit::ElRtUserGroup
-    //---
-*   ThorsAnvil::Slack::BlockKit::RichTextSection
-*   ThorsAnvil::Slack::BlockKit::RichTextList
-    ThorsAnvil::Slack::BlockKit::RichTextPreformatted
-    ThorsAnvil::Slack::BlockKit::RichTextQuote
-    // -- Rich Text
-    ThorsAnvil::Slack::BlockKit::ElRow
-    ThorsAnvil::Slack::BlockKit::ElColInfo
-    /// ----
-    ThorsAnvil::Slack::BlockKit::Actions
-    ThorsAnvil::Slack::BlockKit::Context
-    ThorsAnvil::Slack::BlockKit::Context_Actions
-*   ThorsAnvil::Slack::BlockKit::Divider
-    ThorsAnvil::Slack::BlockKit::File
-    ThorsAnvil::Slack::BlockKit::Header
-    ThorsAnvil::Slack::BlockKit::Image
-    ThorsAnvil::Slack::BlockKit::Input
-    ThorsAnvil::Slack::BlockKit::Markdown
-    ThorsAnvil::Slack::BlockKit::RichText
-*   ThorsAnvil::Slack::BlockKit::Section
-    ThorsAnvil::Slack::BlockKit::Table
-    ThorsAnvil::Slack::BlockKit::Video
-#endif
-
 #include "ThorsSlackConfig.h"
 #include "ThorSerialize/Serialize.h"
 #include "ThorSerialize/PolymorphicMarker.h"
@@ -160,7 +114,9 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElRtColor
     {
+        // This provides a colour block!
         std::string         value;      // The hex value for the color.
+                                        // Must be proceeded by # => #FF0000 => Red
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElRtColor, color);
         ThorsAnvil_TypeFieldName(type);
     };
@@ -190,7 +146,7 @@ using OptVector     = std::optional<std::vector<T>>;
     struct ElRtLink
     {
         std::string         url;        // The link's url.
-        OptElText           text;       // The text shown to the user (instead of the url). If no text is provided, the url is used.
+        OptString           text;       // The text shown to the user (instead of the url). If no text is provided, the url is used.
         OptBool             unsafe;     // Indicates whether the link is safe.
         OptInfoText         style;      // An object containing four boolean properties: bold, italic, strike, and code.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElRtLink, link);
@@ -240,14 +196,14 @@ using OptVector     = std::optional<std::vector<T>>;
     struct RichTextPreformatted
     {
         VecRtElement            elements;   // An array of rich text elements.
-        OptInt                  border;     // Number of pixels of border thickness.
+        OptInt                  border;     // Number of pixels of border thickness. (1 or 0)
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::RichTextPreformatted, rich_text_preformatted);
         ThorsAnvil_TypeFieldName(type);
     };
     struct RichTextQuote
     {
         VecRtElement            elements;   // An array of rich text elements.
-        OptInt                  border;     // Number of pixels of border thickness.
+        OptInt                  border;     // Number of pixels of border thickness. (1 or 0)
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::RichTextQuote, rich_text_quote);
         ThorsAnvil_TypeFieldName(type);
     };

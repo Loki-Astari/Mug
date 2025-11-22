@@ -7,6 +7,7 @@
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -117,6 +118,8 @@ struct Block
 #endif
 
 using OptString         = std::optional<std::string>;
+using VecString         = std::vector<std::string>;
+using OptVecString      = std::optional<VecString>;
 struct BotIcon
 {
     std::string                 image_36;
@@ -147,15 +150,25 @@ struct Message
     BotProfile                  bot_profile;
     BlockKit::Blocks            blocks;
 };
+using OptMessage = std::optional<Message>;
+
+struct ResponseMetadata
+{
+    VecString                   messages;
+};
+using OptResponseMetaData = std::optional<ResponseMetadata>;
 
 struct PostMessageReply
 {
     bool                        ok;
     OptString                   error;
+    OptVecString                errors;
     OptString                   warning;
+    OptVecString                warnings;
+    OptResponseMetaData         response_metadata;
     OptString                   channel;
     OptString                   ts;
-    Message                     message;
+    OptMessage                  message;
 };
 
 struct PostMessage
@@ -177,7 +190,8 @@ struct PostMessage
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::BotIcon, image_36, image_48, image_72);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::BotProfile, id, app_id, user_id, name, icons, deleted, updated, team_id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostMessageReply, ok, error, channel, ts, message);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::ResponseMetadata, messages);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostMessageReply, ok, error, errors, warning, warnings, response_metadata, channel, ts, message);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostMessage, channel, text, blocks, icon_emoji, username, thread_ts);
 
 #endif
