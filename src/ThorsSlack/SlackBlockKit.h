@@ -87,7 +87,19 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActCheckbox, checkboxes);
         ThorsAnvil_TypeFieldName(type);
     };
-    using ElActive  = std::variant<ElActButton, ElActCheckbox>;
+    struct ElActDatepicker
+    {
+        // https://docs.slack.dev/reference/block-kit/block-elements/date-picker-element/
+        // std::string                 type;           // always "datepicker".
+        OptString                   action_id;      // An identifier for the action triggered when a menu option is selected. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
+        OptString                   initial_date;   // The initial date that is selected when the element is loaded. This should be in the format YYYY-MM-DD.
+        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after a date is selected.
+        OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
+        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown on the datepicker. Maximum length for the text in this field is 150 characters.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::OptActDatepicker, datepicker);
+        ThorsAnvil_TypeFieldName(type);
+    };
+    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatepicker>;
     using OptElActive = std::optional<ElActive>;
 
     struct ElImg
@@ -432,6 +444,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Confirm, title, text, confirm,
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Option, text, value, description, url);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActButton, text, action_id, url, value, style, confirm, accessibility_label);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActCheckbox, action_id, options, initial_options, confirm, focus_on_load);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActDatepicker, action_id, initial_date, confirm, focus_on_load, placeholder);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElBut);
