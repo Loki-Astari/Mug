@@ -180,7 +180,21 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActRadioButton, radio_buttons);
         ThorsAnvil_TypeFieldName(type);
     };
-    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton>;
+    struct ElActSelectMenu
+    {
+        // https://docs.slack.dev/reference/block-kit/block-elements/select-menu-element/
+        //std::string                 type;           // always "static_select"
+        OptString                   action_id;      // An identifier for the action triggered when a menu option is selected. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
+        VecOption                   options;        // An array of option objects. Maximum number of options is 100. If option_groups is specified, this field should not be.
+        OptVecOption                option_groups;  // An array of option group objects. Maximum number of option groups is 100. If options is specified, this field should not be.
+        OptOption                   initial_option; // A single option that exactly matches one of the options within options or option_groups. This option will be selected when the menu initially loads.
+        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after a menu item is selected.
+        OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
+        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown on the menu. Maximum length for the text in this field is 150 characters.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActRadioButton, radio_buttons);
+        ThorsAnvil_TypeFieldName(type);
+    };
+    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu>;
     using OptElActive = std::optional<ElActive>;
 
     struct ElImg
@@ -532,6 +546,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActDatePicker, action_id, in
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActDatetimePicker, action_id, initial_date_time, confirm, focus_on_load);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActOverflowMenu, action_id, options, confirm);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActRadioButton, action_id, options, initial_option, confirm, focus_on_load);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, action_id, options, option_groups, initial_option, confirm, focus_on_load, placeholder);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElBut);
