@@ -362,7 +362,14 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Section{.text = BK::ElText{.text="Actions: TODO"}},
                                                                         BK::Actions{
                                                                             .elements = {
-                                                                                BK::ElActButton{.text = BK::ElText{.text = "Push"}, .value="Clicked"}
+                                                                                BK::ElActButton{.text = BK::ElText{.text = "Push"}, .value="Clicked"},
+                                                                                BK::ElActCheckbox{
+                                                                                    .options = {
+                                                                                        BK::Option{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElText{.text="The description 1"}}
+                                                                                        , BK::Option{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElText{.text="The description 2"}}
+                                                                                        , BK::Option{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElText{.text="The description 3"}}
+                                                                                    }
+                                                                                },
                                                                             }
                                                                         },
                                                                         BK::Divider{},

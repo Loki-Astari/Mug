@@ -38,6 +38,9 @@ using OptVector     = std::optional<std::vector<T>>;
                                                     // When set to true, Slack will continue to process all markdown formatting and manual parsing strings, but it won’t modify any plain-text content. For example, channel names will not be hyperlinked.
                                                     // This field is only usable when type is mrkdwn.
     };
+    using OptElText     = std::optional<ElText>;
+    using OptElTexts    = std::optional<std::vector<ElText>>;
+
     struct Confirm
     {
         // https://docs.slack.dev/reference/block-kit/composition-objects/confirmation-dialog-object
@@ -48,6 +51,16 @@ using OptVector     = std::optional<std::vector<T>>;
         OptString                   style;          // Defines the color scheme applied to the confirm button. A value of danger will display the button with a red background on desktop, or red text on mobile. A value of primary will display the button with a green background on desktop, or blue text on mobile. If this field is not provided, the default value will be primary.
     };
     using OptConfirm = std::optional<Confirm>;
+    struct Option
+    {
+        // https://docs.slack.dev/reference/block-kit/composition-objects/option-object
+        ElText                      text;           // A text object that defines the text shown in the option on the menu. Overflow, select, and multi-select menus can only use plain_text objects, while radio buttons and checkboxes can use mrkdwn text objects. Maximum length for the text in this field is 75 characters.
+        std::string                 value;          // A unique string value that will be passed to your app when this option is chosen. Maximum length for this field is 150 characters.
+        OptElText                   description;    // A plain_text text object that defines a line of descriptive text shown below the text field beside a single selectable item in a select menu, multi-select menu, checkbox group, radio button group, or overflow menu. Checkbox group and radio button group items can also use mrkdwn formatting. Maximum length for the text within this field is 75 characters.
+        OptString                   url;            // A URL to load in the user's browser when the option is clicked. The url attribute is only available in overflow menus. Maximum length for this field is 3000 characters. If you're using url, you'll still receive an interaction payload and will need to send an acknowledgement response.
+    };
+    using VecOption = std::vector<Option>;
+    using OptVecOption = std::optional<VecOption>;
     struct ElActButton
     {
         // https://docs.slack.dev/reference/block-kit/block-elements/button-element/
@@ -62,7 +75,19 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActButton, button);
         ThorsAnvil_TypeFieldName(type);
     };
-    using ElActive  = std::variant<ElActButton>;
+    struct ElActCheckbox
+    {
+        // https://docs.slack.dev/reference/block-kit/block-elements/checkboxes-element/
+        //std::string                 type;           // always "checkboxes".
+        OptString                   action_id;      // An identifier for the action triggered when the checkbox group is changed. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
+        VecOption                   options;        // An array of option objects. A maximum of 10 options are allowed.
+        OptVecOption                initial_options;// An array of option objects that exactly matches one or more of the options within options. These options will be selected when the checkbox group initially loads.
+        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after clicking one of the checkboxes in this element.
+        OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActCheckbox, checkboxes);
+        ThorsAnvil_TypeFieldName(type);
+    };
+    using ElActive  = std::variant<ElActButton, ElActCheckbox>;
     using OptElActive = std::optional<ElActive>;
 
     struct ElImg
@@ -76,9 +101,6 @@ using OptVector     = std::optional<std::vector<T>>;
         // see: https://docs.slack.dev/reference/block-kit/block-elements/feedback-buttons-element
         // or   https://docs.slack.dev/reference/block-kit/block-elements/icon-button-element
     };
-
-    using OptElText     = std::optional<ElText>;
-    using OptElTexts    = std::optional<std::vector<ElText>>;
 
     struct ElSlackFile
     {
@@ -407,7 +429,9 @@ using OptBlocks = std::optional<Blocks>;
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElText, type, text, emoji, verbatim);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Confirm, title, text, confirm, deny, style);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Option, text, value, description, url);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActButton, text, action_id, url, value, style, confirm, accessibility_label);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActCheckbox, action_id, options, initial_options, confirm, focus_on_load);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElBut);
