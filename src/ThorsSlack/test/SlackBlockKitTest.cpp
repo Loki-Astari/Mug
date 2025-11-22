@@ -379,7 +379,13 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                                         , BK::Option{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElText{.text="The description 3"}}
                                                                                     }
                                                                                 }
-                                                                                , BK::ElActRadioButton {
+                                                                            }
+                                                                        },
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Actions: TODO"}},
+                                                                        BK::Actions{
+                                                                            .elements = {
+                                                                                BK::ElActRadioButton {
                                                                                     .options = {
                                                                                         BK::Option{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElText{.text="The description 1"}}
                                                                                         , BK::Option{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElText{.text="The description 2"}}
