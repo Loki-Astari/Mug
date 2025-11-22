@@ -1,0 +1,49 @@
+#!/bin/bash
+
+token=$(jq -r .slackToken test/data/environment.json)
+
+echo "Token: ${token}"
+
+
+curl \
+    --header "authorization: Bearer ${token}" \
+    --header "content-type: application/json; charset=utf-8" \
+    --header "content-size: 243" \
+    --data   '{"channel":"C09RU2URYMS","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_preformatted","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}],"border":1}]}]}' \
+    --request POST \
+    https://slack.com/api/chat.postMessage
+echo
+echo
+
+#curl \
+#    --header "authorization: Bearer ${token}" \
+#    --header "content-type: application/json; charset=utf-8" \
+#    --header "content-size: 225" \
+#    --data   '{"channel":"C09RU2URYMS","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_preformatted","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}]}]}]}' \
+#    --request POST \
+#    https://slack.com/api/chat.postMessage
+#
+#echo
+#echo
+#curl \
+#    --header "authorization: Bearer ${token}" \
+#    --header "content-type: application/json; charset=utf-8" \
+#    --header "content-size: 236" \
+#    --data   '{"channel":"C09RU2URYMS","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_quote","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}],"border":1}]}]}' \
+#    --request POST \
+#    https://slack.com/api/chat.postMessage
+#
+#echo
+#echo
+#curl \
+#    --header "authorization: Bearer ${token}" \
+#    --header "content-type: application/json; charset=utf-8" \
+#    --header "content-size: 225" \
+#    --data   '{"channel":"C09RU2URYMS","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_quote","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}]}]}]}' \
+#    --request POST \
+#    https://slack.com/api/chat.postMessage
+#
+#echo
+#echo
+
+
