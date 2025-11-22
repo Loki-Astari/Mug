@@ -6125,6 +6125,31 @@ then :
 
 fi
 
+
+data=$(curl \
+   --header "authorization: Bearer ${with_slackToken}" \
+✗  --header "content-type: application/json; charset=utf-8" \
+│  --request GET \
+│  https://slack.com/api/auth.test 2> /dev/null)
+
+dataok=$(echo ${data} | jq -r .ok)
+if test "x${dataok}" != "xtrue"
+then :
+
+        as_fn_error $? "
+Failed to authenticate with slack please check your token
+
+Command used:
+    curl --header \"authorization: Bearer ${with_slackToken}\" --header \"content-type: application/json; charset=utf-8\" --request GET https://slack.com/api/auth.test
+
+Response:
+    ${data}
+        " "$LINENO" 5
+
+
+fi
+
+
 mkdir -p src/ThorsSlack/test/data
 cat - <<ENVIRONMENT > src/ThorsSlack/test/data/environment.json
 {

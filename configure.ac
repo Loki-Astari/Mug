@@ -43,6 +43,30 @@ AS_IF(
     ]
 )
 
+
+data=$(curl \
+   --header "authorization: Bearer ${with_slackToken}" \
+✗  --header "content-type: application/json; charset=utf-8" \
+│  --request GET \
+│  https://slack.com/api/auth.test 2> /dev/null)
+
+dataok=$(echo ${data} | jq -r .ok)
+AS_IF(
+    [test "x${dataok}" != "xtrue"],
+    [
+        AC_MSG_ERROR([
+Failed to authenticate with slack please check your token
+
+Command used:
+    curl --header "authorization: Bearer ${with_slackToken}" --header "content-type: application/json; charset=utf-8" --request GET https://slack.com/api/auth.test
+
+Response:
+    ${data}
+        ])
+    ]
+)
+
+
 mkdir -p src/ThorsSlack/test/data
 cat - <<ENVIRONMENT > src/ThorsSlack/test/data/environment.json
 {
