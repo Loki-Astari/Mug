@@ -258,6 +258,9 @@ struct Divider
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Divider, divider);
     ThorsAnvil_TypeFieldName(type);
 };
+// You can not send this message block.
+// But it can be received from SLACK.
+//     Currently not testable.
 struct File
 {
     // https://docs.slack.dev/reference/block-kit/blocks/file-block/

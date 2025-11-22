@@ -325,4 +325,62 @@ TEST(SlackBlockKitTest, Block_RichText_Failure)
     ASSERT_FALSE(reply.ok);
 }
 
+TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
+{
+    PostMessage::Reply      reply = client.sendMessage(PostMessage{.channel = "C09RU2URYMS",
+                                                                        // Actions, Context, Context_Actions, Divider, File, Header, Image, Input, Markdown, RichText, Section, Table, Video
+                                                                   .blocks = BK::Blocks{
+                                                                        BK::Section{.text = BK::ElText{.text="Selection with all Elements"}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Actions: TODO"}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Context: TODO"}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Context Actions: TODO"}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Divider"}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Header"}},
+                                                                        BK::Header{.text = BK::ElText{.text = "Header Text"}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Image"}},
+                                                                        BK::Image{.alt_text="An image", .image_url="https://marvelofficial.com/wp-content/uploads/2020/10/1030357-247x296.jpg", .title=BK::ElText{.text="Thors Hammer"}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Input: TODO - ELInput"}},
+                                                                        // BK::Input{.label=BK::ElText{.text="User Input"}, .element = BK::ElInput{}, .hint=BK::ElText{.text="Hinty"}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Markdown"}},
+                                                                        BK::Markdown{.text="**MarkDown** Bold?"},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="RichText"}},
+                                                                        BK::RichText{.elements = {BK::RichTextQuote{.elements = {BK::ElRtText{.text = "Rich Text Quote", .style = BK::InfoText{true,true,false,false}}}}}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Section"}},
+                                                                        BK::Section{.text = BK::ElText{.text="This is the section test!!"}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Table: TODO"}},
+                                                                        BK::Divider{},
+                                                                        BK::Section{.text = BK::ElText{.text="Video:TODO"}},
+                                                                    #if 0
+                                                                        // Need to own the domain that the video is coming from.
+                                                                        BK::Video{
+                                                                            .alt_text="A video",
+                                                                            .author_name="Not me",
+                                                                            .description=BK::ElText{.text="The desction"},
+                                                                            .provider_icon_url="",
+                                                                            .provider_name="Provider Name",
+                                                                            .title=BK::ElText{.text="Title"},
+                                                                            .thumbnail_url="https://i.ytimg.com/vi/0kNpnjPpf1c/oar2.jpg?sqp=-oaymwEoCJUDENAFSFqQAgHyq4qpAxcIARUAAIhC2AEB4gEKCBgQAhgGOAFAAQ==&rs=AOn4CLDSJuHZ9q0tZXS8Kz6QPXW-5NqG3g",
+                                                                            .video_url="https://www.youtube.com/shorts/0kNpnjPpf1c"
+                                                                        },
+                                                                    #endif
+                                                                        BK::Divider{}
+                                                                    }
+                                                                  });
+    if (!reply.ok) {
+        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
+    }
+    ASSERT_TRUE(reply.ok);
+}
+
 
