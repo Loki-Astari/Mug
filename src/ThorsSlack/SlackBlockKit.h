@@ -1,6 +1,7 @@
 #ifndef THORSANVIL_SLACK_BLOCKKIT_H
 #define THORSANVIL_SLACK_BLOCKKIT_H
 
+#include "SlackAPI_Chat.h"
 #include "ThorsSlackConfig.h"
 #include "ThorSerialize/Serialize.h"
 #include "ThorSerialize/PolymorphicMarker.h"
@@ -19,6 +20,8 @@ namespace ThorsAnvil::Slack::BlockKit
 using OptString         = std::optional<std::string>;
 using OptInt            = std::optional<int>;
 using OptBool           = std::optional<bool>;
+using VecString         = std::vector<std::string>;
+using OptVecString      = std::optional<VecString>;
 
 template<typename T>
 using OptVector     = std::optional<std::vector<T>>;
@@ -61,6 +64,17 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     using VecOption = std::vector<Option>;
     using OptVecOption = std::optional<VecOption>;
+    struct Dispatch
+    {
+        OptVecString                trigger_actions_on; // An array of interaction types that you would like to receive a block_actions payload for. Should be one or both of:on_enter_pressed — payload is dispatched when user presses the enter key while the input is in focus. Hint text will appear underneath the input explaining to the user to press enter to submit.on_character_entered — payload is dispatched when a character is entered (or removed) in the input.
+    };
+    using OptDispatch = std::optional<Dispatch>;
+    struct Button
+    {
+        ElText                      text;           // A text object that defines the button's text. Can only be of type: plain_text. Maximum length for the text in this field is 75 characters.
+        std::string                 value;          // The value to send along with the interaction payload. Maximum length is 2000 characters.
+        OptString                   accessibility_label; // A label for longer descriptive text about a button element. This label will be read out by screen readers instead of the button text object. Maximum length is 75 characters.
+    };
     struct ElActButton
     {
         // https://docs.slack.dev/reference/block-kit/block-elements/button-element/
@@ -87,7 +101,7 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActCheckbox, checkboxes);
         ThorsAnvil_TypeFieldName(type);
     };
-    struct ElActDatepicker
+    struct ElActDatePicker
     {
         // https://docs.slack.dev/reference/block-kit/block-elements/date-picker-element/
         // std::string                 type;           // always "datepicker".
@@ -107,10 +121,31 @@ using OptVector     = std::optional<std::vector<T>>;
         OptInt                      initial_date_time; // The initial date and time that is selected when the element is loaded, represented as a UNIX timestamp in seconds. This should be in the format of 10 digits, for example 1628633820 represents the date and time August 10th, 2021 at 03:17pm PST.
         OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after a time is selected.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
-        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::OptActDatetimepicker, datetimepicker);
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActDatetimePicker, datetimepicker);
         ThorsAnvil_TypeFieldName(type);
     };
-    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatepicker, ElActDatetimePicker>;
+    struct ElActEMail
+    {
+        //https://docs.slack.dev/reference/block-kit/block-elements/email-input-element/
+        //std::string                 type;           // always "email_text_input"
+        OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
+        OptString                   initial_value;  // The initial value in the email input when it is loaded.
+        OptDispatch                 dispatch_action_config; // A dispatch configuration object that determines when during text input the element returns a block_actions payload.
+        OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
+        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown in the email input. Maximum length for the text in this field is 150 characters.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActEMail, email_text_input);
+        ThorsAnvil_TypeFieldName(type);
+    };
+    struct ElActFeedbackButton
+    {
+        //std::string                 type;           // always "feedback_buttons"
+        Button                      positive_button;// A button to indicate positive feedback. See button object fields below.
+        Button                      negative_button;// A button to indicate negative feedback. See button object fields below.
+        OptString                   action_id;      // An identifier for this action. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_id values in the containing block. Maximum length is 255 characters.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActFeedbackButton, feedback_buttons);
+        ThorsAnvil_TypeFieldName(type);
+    };
+    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActEMail, ElActFeedbackButton>;
     using OptElActive = std::optional<ElActive>;
 
     struct ElImg
@@ -453,10 +488,15 @@ using OptBlocks = std::optional<Blocks>;
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElText, type, text, emoji, verbatim);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Confirm, title, text, confirm, deny, style);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Option, text, value, description, url);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Dispatch, trigger_actions_on);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Button, text, value, accessibility_label);
+
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActButton, text, action_id, url, value, style, confirm, accessibility_label);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActCheckbox, action_id, options, initial_options, confirm, focus_on_load);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActDatepicker, action_id, initial_date, confirm, focus_on_load, placeholder);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActDatePicker, action_id, initial_date, confirm, focus_on_load, placeholder);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActDatetimePicker, action_id, initial_date_time, confirm, focus_on_load);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActEMail, action_id, initial_value, dispatch_action_config, focus_on_load, placeholder);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActFeedbackButton, positive_button, negative_button, action_id);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElBut);
