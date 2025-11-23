@@ -13,6 +13,7 @@
 #include <sys/_pthread/_pthread_types.h>
 #include <type_traits>
 #include <vector>
+#include <initializer_list>
 
 namespace ThorsAnvil::Slack::BlockKit
 {
@@ -87,6 +88,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptElTextPlain              description;    // A plain_text text object that defines a line of descriptive text shown below the text field beside a single selectable item in a select menu, multi-select menu, checkbox group, radio button group, or overflow menu. Checkbox group and radio button group items can also use mrkdwn formatting. Maximum length for the text within this field is 75 characters.
         OptString                   url;            // A URL to load in the user's browser when the option is clicked. The url attribute is only available in overflow menus. Maximum length for this field is 3000 characters. If you're using url, you'll still receive an interaction payload and will need to send an acknowledgement response.
     };
+
     using OptElOption = std::optional<ElOption>;
     using VecElOption = std::vector<ElOption>;
     using OptVecElOption = std::optional<VecElOption>;
@@ -127,6 +129,9 @@ using OptVector     = std::optional<std::vector<T>>;
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActCheckbox, checkboxes);
         ThorsAnvil_TypeFieldName(type);
+
+        ElActCheckbox& addOption(ElOption val)                           {options.emplace_back(std::move(val));return *this;}
+        ElActCheckbox& addOption(std::initializer_list<ElOption> val)    {options.insert(std::end(options), std::move(val));return *this;}
     };
     struct ElActDatePicker
     {
@@ -160,6 +165,9 @@ using OptVector     = std::optional<std::vector<T>>;
         OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a menu item is selected.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActOverflowMenu, overflow);
         ThorsAnvil_TypeFieldName(type);
+
+        ElActOverflowMenu& addOption(ElOption val)                           {options.emplace_back(std::move(val));return *this;}
+        ElActOverflowMenu& addOption(std::initializer_list<ElOption> val)    {options.insert(std::end(options), std::move(val));return *this;}
     };
     struct ElActRadioButton
     {
@@ -172,6 +180,9 @@ using OptVector     = std::optional<std::vector<T>>;
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActRadioButton, radio_buttons);
         ThorsAnvil_TypeFieldName(type);
+
+        ElActRadioButton& addOption(ElOption val)                           {options.emplace_back(std::move(val));return *this;}
+        ElActRadioButton& addOption(std::initializer_list<ElOption> val)    {options.insert(std::end(options), std::move(val));return *this;}
     };
     struct ElActSelectMenu
     {
@@ -186,6 +197,9 @@ using OptVector     = std::optional<std::vector<T>>;
         OptElTextPlain              placeholder;    // A plain_text only text object that defines the placeholder text shown on the menu. Maximum length for the text in this field is 150 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, static_select);
         ThorsAnvil_TypeFieldName(type);
+
+        ElActSelectMenu& addOption(ElOption val)                           {options.emplace_back(std::move(val));return *this;}
+        ElActSelectMenu& addOption(std::initializer_list<ElOption> val)    {options.insert(std::end(options), std::move(val));return *this;}
     };
     struct ElActTimePicker
     {
@@ -536,6 +550,19 @@ struct RichText
     OptString                   block_id;
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::RichText, rich_text);
     ThorsAnvil_TypeFieldName(type);
+
+    RichText& addSection(std::initializer_list<std::string> val);
+    RichText& addSection(std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val);
+    RichText& addList(ListType type, std::initializer_list<std::string> val);
+    RichText& addList(ListType type, std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val);
+    RichText& addPreForm(int border, std::initializer_list<std::string> val);
+    RichText& addPreForm(int border, std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val);
+    RichText& addPreForm(std::initializer_list<std::string> val);
+    RichText& addPreForm(std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val);
+    RichText& addQuote(int border, std::initializer_list<std::string> val);
+    RichText& addQuote(int border, std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val);
+    RichText& addQuote(std::initializer_list<std::string> val);
+    RichText& addQuote(std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val);
 };
 using OptRichText = std::optional<RichText>;
 /* OUT OF ODER:
@@ -570,7 +597,6 @@ struct Section
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Section, section);
     ThorsAnvil_TypeFieldName(type);
 };
-
 using ElCell = RichText;
 using ElRow = std::vector<ElCell>;
 using ElTable = std::vector<ElRow>;
@@ -627,6 +653,159 @@ struct Input
 using Block = std::variant<Actions, Context, ContextActions, Divider, File, Header, Image, Input, Markdown, RichText, Section, Table, Video>;
 using Blocks = std::vector<Block>;
 using OptBlocks = std::optional<Blocks>;
+
+
+inline ElOption makeOptionPlain(std::string text, std::string value)                            {return ElOption{.text=ElText{.type=plain_text, .text=std::move(text)}, .value=std::move(value)};}
+inline ElOption makeOptionPlain(std::string text, std::string value, std::string description)   {return ElOption{.text=ElText{.type=plain_text, .text=std::move(text)},.value=std::move(value),.description=ElTextPlain{.text=std::move(description)}};}
+inline ElOption makeOptionMarkD(std::string text, std::string value)                            {return ElOption{.text=ElText{.type=mrkdwn, .text=std::move(text)}, .value=std::move(value)};}
+inline ElOption makeOptionMarkD(std::string text, std::string value, std::string description)   {return ElOption{.text=ElText{.type=mrkdwn, .text=std::move(text)},.value=std::move(value),.description=ElTextPlain{.text=std::move(description)}};}
+inline
+InfoText makeInfoText(std::initializer_list<bool> const& init)
+{
+    InfoText    result;
+    if (std::size(init) > 0) {
+        result.bold = std::data(init)[0];
+    }
+    if (std::size(init) > 1) {
+        result.italic = std::data(init)[1];
+    }
+    if (std::size(init) > 2) {
+        result.strike = std::data(init)[2];
+    }
+    if (std::size(init) > 3) {
+        result.code = std::data(init)[3];
+    }
+    return result;
+}
+inline
+RichTextSection makeRichTextSection(std::initializer_list<std::string> elements)
+{
+    RichTextSection result;
+    for (auto& val: elements) {
+        result.elements.emplace_back(ElRtText{.text=std::move(val)});
+    };
+    return result;
+}
+inline
+RichTextSection makeRichTextSection(std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> elements)
+{
+    RichTextSection result;
+    for (auto& val: elements) {
+        result.elements.emplace_back(
+            ElRtText{
+                .text=std::move(val.first),
+                .style=makeInfoText(val.second)
+            }
+        );
+    };
+    return result;
+}
+inline
+RichTextList makeRichTextList(ListType type, std::initializer_list<std::string> elements)
+{
+    RichTextList result{.style = type};
+    for (auto& val: elements) {
+        result.elements.emplace_back(makeRichTextSection({std::move(val)}));
+    };
+    return result;
+}
+inline
+RichTextList makeRichTextList(ListType type, std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> elements)
+{
+    RichTextList result{.style = type};
+    for (auto& val: elements) {
+        result.elements.emplace_back(makeRichTextSection({std::move(val)}));
+    };
+    return result;
+}
+inline
+RichTextPreformatted makeRichTextPreForm(std::initializer_list<std::string> elements)
+{
+    RichTextPreformatted result;
+    for (auto& val: elements) {
+        result.elements.emplace_back(ElRtText{.text = std::move(val)});
+    };
+    return result;
+}
+inline
+RichTextPreformatted makeRichTextPreForm(std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> elements)
+{
+    RichTextPreformatted result;
+    for (auto& val: elements) {
+        result.elements.emplace_back(ElRtText{.text = std::move(val.first), .style = makeInfoText(val.second)});
+    };
+    return result;
+}
+inline
+RichTextPreformatted makeRichTextPreForm(int border, std::initializer_list<std::string> elements)
+{
+    RichTextPreformatted result{.border = border};
+    for (auto& val: elements) {
+        result.elements.emplace_back(ElRtText{.text = std::move(val)});
+    };
+    return result;
+}
+inline
+RichTextPreformatted makeRichTextPreForm(int border, std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> elements)
+{
+    RichTextPreformatted result{.border = border};
+    for (auto& val: elements) {
+        result.elements.emplace_back(ElRtText{.text = std::move(val.first), .style = makeInfoText(val.second)});
+    };
+    return result;
+}
+inline
+RichTextQuote makeRichTextQuote(std::initializer_list<std::string> elements)
+{
+    RichTextQuote result;
+    for (auto& val: elements) {
+        result.elements.emplace_back(ElRtText{.text = std::move(val)});
+    };
+    return result;
+}
+inline
+RichTextQuote makeRichTextQuote(std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> elements)
+{
+    RichTextQuote result;
+    for (auto& val: elements) {
+        result.elements.emplace_back(ElRtText{.text = std::move(val.first), .style = makeInfoText(val.second)});
+    };
+    return result;
+}
+inline
+RichTextQuote makeRichTextQuote(int border, std::initializer_list<std::string> elements)
+{
+    RichTextQuote result{.border = border};
+    for (auto& val: elements) {
+        result.elements.emplace_back(ElRtText{.text = std::move(val)});
+    };
+    return result;
+}
+inline
+RichTextQuote makeRichTextQuote(int border, std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> elements)
+{
+    RichTextQuote result{.border = border};
+    for (auto& val: elements) {
+        result.elements.emplace_back(ElRtText{.text = std::move(val.first), .style = makeInfoText(val.second)});
+    };
+    return result;
+}
+inline RichText& RichText::addSection(std::initializer_list<std::string> val)                                                          {elements.emplace_back(makeRichTextSection(std::move(val)));return *this;}
+inline RichText& RichText::addSection(std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val)                  {elements.emplace_back(makeRichTextSection(std::move(val)));return *this;}
+inline RichText& RichText::addList(ListType type, std::initializer_list<std::string> val)                                              {elements.emplace_back(makeRichTextList(type, std::move(val)));return *this;}
+inline RichText& RichText::addList(ListType type, std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val)      {elements.emplace_back(makeRichTextList(type, std::move(val)));return *this;}
+inline RichText& RichText::addPreForm(int border, std::initializer_list<std::string> val)                                              {elements.emplace_back(makeRichTextPreForm(border, std::move(val)));return *this;}
+inline RichText& RichText::addPreForm(int border, std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val)      {elements.emplace_back(makeRichTextPreForm(border, std::move(val)));return *this;}
+inline RichText& RichText::addPreForm(std::initializer_list<std::string> val)                                                          {elements.emplace_back(makeRichTextPreForm(std::move(val)));return *this;}
+inline RichText& RichText::addPreForm(std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val)                  {elements.emplace_back(makeRichTextPreForm(std::move(val)));return *this;}
+inline RichText& RichText::addQuote(int border, std::initializer_list<std::string> val)                                                {elements.emplace_back(makeRichTextQuote(border, std::move(val)));return *this;}
+inline RichText& RichText::addQuote(int border, std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val)        {elements.emplace_back(makeRichTextQuote(border, std::move(val)));return *this;}
+inline RichText& RichText::addQuote(std::initializer_list<std::string> val)                                                            {elements.emplace_back(makeRichTextQuote(std::move(val)));return *this;}
+inline RichText& RichText::addQuote(std::initializer_list<std::pair<std::string, std::initializer_list<bool>>> val)                    {elements.emplace_back(makeRichTextQuote(std::move(val)));return *this;}
+template<typename T> inline
+Section makeSectionPlain(T text)    {return Section{.text = ElText{.type=TextType::plain_text,.text=std::move(text)}};}
+template<typename T> inline
+Section makeSectionMarkD(T text)    {return Section{.text = ElText{.type=TextType::mrkdwn,.text=std::move(text)}};}
 
 }
 

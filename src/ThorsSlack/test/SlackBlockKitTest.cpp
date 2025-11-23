@@ -16,54 +16,14 @@ using ThorsAnvil::Slack::API::Chat::PostMessage;
 
 extern SlackClient             client;
 
-#if 0
-Tested:
-=======
-    ThorsAnvil::Slack::BlockKit::ElActive
-    ThorsAnvil::Slack::BlockKit::ElImg
-    ThorsAnvil::Slack::BlockKit::ElBut
-    ThorsAnvil::Slack::BlockKit::ElText
-    ThorsAnvil::Slack::BlockKit::ElSlackFile
-    ThorsAnvil::Slack::BlockKit::ElInput
-    // -- Rich Text
-    ThorsAnvil::Slack::BlockKit::InfoStyle
-    ThorsAnvil::Slack::BlockKit::InfoText
-    //---
-    ThorsAnvil::Slack::BlockKit::RichTextPreformatted
-    ThorsAnvil::Slack::BlockKit::RichTextQuote
-    // -- Rich Text
-    ThorsAnvil::Slack::BlockKit::ElRow
-    ThorsAnvil::Slack::BlockKit::ElColInfo
-    /// ----
-    ThorsAnvil::Slack::BlockKit::Actions
-    ThorsAnvil::Slack::BlockKit::Context
-    ThorsAnvil::Slack::BlockKit::Context_Actions
-*   ThorsAnvil::Slack::BlockKit::Divider
-    ThorsAnvil::Slack::BlockKit::File
-    ThorsAnvil::Slack::BlockKit::Header
-    ThorsAnvil::Slack::BlockKit::Image
-    ThorsAnvil::Slack::BlockKit::Input
-    ThorsAnvil::Slack::BlockKit::Markdown
-    ThorsAnvil::Slack::BlockKit::RichText
-*   ThorsAnvil::Slack::BlockKit::Section
-    ThorsAnvil::Slack::BlockKit::Table
-    ThorsAnvil::Slack::BlockKit::Video
-#endif
-
 TEST(SlackBlockKitTest, Block_Section_ElText)
 {
     PostMessage::Reply      reply = client.sendMessage(PostMessage{
                                                             .channel = "C09RU2URYMS",
                                                             .blocks = BK::Blocks{
-                                                                        BK::Section{
-                                                                            .text = BK::ElText{
-                                                                                        .type = BK::mrkdwn,
-                                                                                        .text = "Section With Text"}
-                                                                            },
-                                                                        BK::Divider{},
-                                                                        BK::Section{
-                                                                            .text = BK::ElText{.type = BK::plain_text, .text = "More Text after a divider"}
-                                                                        }
+                                                                BK::makeSectionMarkD("Section With Text"),
+                                                                BK::Divider{},
+                                                                BK::makeSectionPlain("More Text after a divider")
                                                             }
                                                        });
     if (!reply.ok) {
@@ -89,17 +49,7 @@ TEST(SlackBlockKitTest, Block_RichText_Section_Text)
 {
     PostMessage::Reply      reply = client.sendMessage(PostMessage{
                                                             .channel = "C09RU2URYMS",
-                                                            .blocks = BK::Blocks{
-                                                                        BK::RichText{
-                                                                            .elements = {
-                                                                                BK::RichTextSection{
-                                                                                    .elements = {
-                                                                                        BK::ElRtText{.text = "Rich Text: Section", .style = BK::InfoText{true,true,true,true}}
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                            }
+                                                            .blocks = BK::Blocks{BK::RichText{}.addSection({{"Rich Text: Section", {true, true, true, true}}})}
                                                        });
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
@@ -127,22 +77,7 @@ TEST(SlackBlockKitTest, Block_RichText_ListBullet_Section_Text)
 {
     PostMessage::Reply      reply = client.sendMessage(PostMessage{
                                                             .channel = "C09RU2URYMS",
-                                                            .blocks = BK::Blocks{
-                                                                        BK::RichText{
-                                                                            .elements = {
-                                                                                BK::RichTextList{
-                                                                                    .style = BK::bullet,
-                                                                                    .elements = {
-                                                                                        BK::RichTextSection{
-                                                                                            .elements = {
-                                                                                                BK::ElRtText{.text = "Rich Text: List-bullet", .style = BK::InfoText{true,true,true,true}}
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                            }
+                                                            .blocks = BK::Blocks{BK::RichText{}.addList(BK::bullet, {{"Rich Text: List-bullet",{true,false,true,false}}})}
                                                        });
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
@@ -164,31 +99,16 @@ TEST(SlackBlockKitTest, Block_RichText_ListBullet_Section_Text)
 
     EXPECT_EQ("Rich Text: List-bullet", rtext.text);
     EXPECT_TRUE(rtext.style->bold);
-    EXPECT_TRUE(rtext.style->italic);
+    EXPECT_FALSE(rtext.style->italic);
     EXPECT_TRUE(rtext.style->strike);
-    EXPECT_TRUE(rtext.style->code);
+    EXPECT_FALSE(rtext.style->code);
 }
 
 TEST(SlackBlockKitTest, Block_RichText_ListOrder_Section_Text)
 {
     PostMessage::Reply      reply = client.sendMessage(PostMessage{
                                                             .channel = "C09RU2URYMS",
-                                                            .blocks = BK::Blocks{
-                                                                        BK::RichText{
-                                                                            .elements = {
-                                                                                BK::RichTextList{
-                                                                                    .style = BK::ordered,
-                                                                                    .elements = {
-                                                                                        BK::RichTextSection{
-                                                                                            .elements = {
-                                                                                                BK::ElRtText{.text = "Rich Text: List-ordered", .style = BK::InfoText{true,true,true,true}}
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                            }
+                                                            .blocks = BK::Blocks{BK::RichText{}.addList(BK::ordered, {{"Rich Text: List-ordered",{false,true,false,true}}})}
                                                        });
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
@@ -209,27 +129,17 @@ TEST(SlackBlockKitTest, Block_RichText_ListOrder_Section_Text)
     BK::ElRtText&           rtext = std::get<BK::ElRtText>(section.elements[0]);
 
     EXPECT_EQ("Rich Text: List-ordered", rtext.text);
-    EXPECT_TRUE(rtext.style->bold);
+    EXPECT_FALSE(rtext.style->bold);
     EXPECT_TRUE(rtext.style->italic);
-    EXPECT_TRUE(rtext.style->strike);
+    EXPECT_FALSE(rtext.style->strike);
     EXPECT_TRUE(rtext.style->code);
 }
 
 TEST(SlackBlockKitTest, Block_RichText_Pre_Formatted)
 {
-    PostMessage     message = {.channel = "C09RU2URYMS",
-                                                                   .blocks = BK::Blocks{
-                                                                        BK::RichText{
-                                                                            .elements = {
-                                                                                BK::RichTextPreformatted{
-                                                                                    .elements = {
-                                                                                        BK::ElRtText{.text = "Rich Text PreFormatted Test", .style = BK::InfoText{true,true,true,true}}
-                                                                                    },
-                                                                                    .border=1
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
+    PostMessage     message = {
+                                .channel = "C09RU2URYMS",
+                                .blocks = BK::Blocks{BK::RichText{}.addPreForm(1, {{"Rich Text PreFormaatted Test", {true, true, false,false}}})}
                               };
     PostMessage::Reply      reply = client.sendMessage(message);
     if (!reply.ok) {
@@ -240,20 +150,10 @@ TEST(SlackBlockKitTest, Block_RichText_Pre_Formatted)
 
 TEST(SlackBlockKitTest, Block_RichText_QUOTE)
 {
-    PostMessage::Reply      reply = client.sendMessage(PostMessage{.channel = "C09RU2URYMS",
-                                                                   .blocks = BK::Blocks{
-                                                                        BK::RichText{
-                                                                            .elements = {
-                                                                                BK::RichTextQuote{
-                                                                                    .elements = {
-                                                                                        BK::ElRtText{.text = "Rich Text Quote", .style = BK::InfoText{true,true,true,true}}
-                                                                                    },
-                                                                                    .border=1
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                  });
+    PostMessage::Reply      reply = client.sendMessage(PostMessage{
+                                                            .channel = "C09RU2URYMS",
+                                                            .blocks = BK::Blocks{BK::RichText{}.addQuote(1, {{"Rich Text Quote", {true, false, false, true}}})}
+                                                       });
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
     }
@@ -306,18 +206,7 @@ TEST(SlackBlockKitTest, BlockAllRichTextElements)
 TEST(SlackBlockKitTest, Block_RichText_Failure)
 {
     PostMessage::Reply      reply = client.sendMessage(PostMessage{.channel = "C09RU2URYMS",
-                                                                   .blocks = BK::Blocks{
-                                                                        BK::RichText{
-                                                                            .elements = {
-                                                                                BK::RichTextQuote{
-                                                                                    .elements = {
-                                                                                        BK::ElRtText{.text = "Rich Text Quote", .style = BK::InfoText{true,true,true,true}}
-                                                                                    },
-                                                                                    .border=3 // Invalid Value should result in an error.
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
+                                                                   .blocks = BK::Blocks{BK::RichText{}.addQuote(3, {{"Rich Text Quote", {true, true, true, true}}})}
                                                                   });
     if (reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
@@ -378,42 +267,30 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Actions{
                                                                             .elements = {
                                                                                 BK::ElActButton{.text = BK::ElText{.text = "Push"}, .value="Clicked"}
-                                                                                , BK::ElActCheckbox{
-                                                                                    .options = {
-                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElTextPlain{.text="The description 1"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElTextPlain{.text="The description 2"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElTextPlain{.text="The description 3"}}
-                                                                                    }
-                                                                                }
+                                                                                , BK::ElActCheckbox{}.addOption({
+                                                                                        BK::makeOptionPlain("Opt 1", "V1", "The description 1"),
+                                                                                        BK::makeOptionPlain("Opt 2", "V2", "The description 2"),
+                                                                                        BK::makeOptionPlain("Opt 3", "V3", "The description 3"),
+                                                                                })
                                                                                 , BK::ElActDatePicker{.placeholder=BK::ElTextPlain{.text="Pick a date"}}
                                                                                 , BK::ElActDatetimePicker{.initial_date_time=-21636000}
-                                                                                , BK::ElActOverflowMenu{
-                                                                                    .options = {
-                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElTextPlain{.text="The description 1"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElTextPlain{.text="The description 2"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElTextPlain{.text="The description 3"}}
-                                                                                    }
-                                                                                }
+                                                                                , BK::ElActOverflowMenu{}.addOption(BK::makeOptionPlain("Opt 1", "V1", "The description 1")).addOption(BK::makeOptionPlain("Opt 2", "V2", "The description 2")).addOption(BK::makeOptionPlain("Opt 3", "V3", "The description 3"))
                                                                             }
                                                                         },
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Actions"}},
                                                                         BK::Actions{
                                                                             .elements = {
-                                                                                BK::ElActRadioButton {
-                                                                                    .options = {
-                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElTextPlain{.text="The description 1"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElTextPlain{.text="The description 2"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElTextPlain{.text="The description 3"}}
-                                                                                    }
-                                                                                }
-                                                                                , BK::ElActSelectMenu{
-                                                                                    .options = {
-                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElTextPlain{.text="The description 1"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElTextPlain{.text="The description 2"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElTextPlain{.text="The description 3"}}
-                                                                                    }
-                                                                                }
+                                                                                BK::ElActRadioButton{}.addOption({
+                                                                                        BK::makeOptionPlain("Opt 1", "V1", "The description 1"),
+                                                                                        BK::makeOptionPlain("Opt 2", "V2", "The description 2"),
+                                                                                        BK::makeOptionPlain("Opt 3", "V3", "The description 3"),
+                                                                                })
+                                                                                , BK::ElActSelectMenu{}.addOption({
+                                                                                        BK::makeOptionPlain("Opt 1", "V1", "The description 1"),
+                                                                                        BK::makeOptionPlain("Opt 2", "V2", "The description 2"),
+                                                                                        BK::makeOptionPlain("Opt 3", "V3", "The description 3"),
+                                                                                })
                                                                                 , BK::ElActTimePicker{}
                                                                             }
                                                                         },
@@ -465,13 +342,11 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Section{.text = BK::ElText{.text="Input"}},
                                                                         BK::Input{
                                                                             .label=BK::ElText{.text="User Input: Checkbox"},
-                                                                            .element=BK::ElActCheckbox{
-                                                                                .options={
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElTextPlain{.text="Description1"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElTextPlain{.text="Description2"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElTextPlain{.text="Description3"}}
-                                                                                }
-                                                                            },
+                                                                            .element=BK::ElActCheckbox{}.addOption({
+                                                                                    BK::makeOptionPlain("Option 1", "1", "The description1"),
+                                                                                    BK::makeOptionPlain("Option 2", "2", "The description2"),
+                                                                                    BK::makeOptionPlain("Option 3", "3", "The description3"),
+                                                                            }),
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
                                                                         BK::Input{
@@ -486,13 +361,11 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         },
                                                                         BK::Input{
                                                                             .label=BK::ElText{.text="User Input: RadioButton"},
-                                                                            .element=BK::ElActRadioButton{
-                                                                                .options={
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElTextPlain{.text="Description1"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElTextPlain{.text="Description2"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElTextPlain{.text="Description3"}}
-                                                                                }
-                                                                            },
+                                                                            .element=BK::ElActRadioButton{}.addOption({
+                                                                                    BK::makeOptionPlain("Option1", "1", "The description1"),
+                                                                                    BK::makeOptionPlain("Option2", "2", "The description2"),
+                                                                                    BK::makeOptionPlain("Option3", "3", "The description3"),
+                                                                            }),
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
                                                                         BK::Input{
@@ -536,13 +409,11 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
 #endif
                                                                         BK::Input{
                                                                             .label=BK::ElText{.text="User Input: Select Menu"},
-                                                                            .element=BK::ElActSelectMenu{
-                                                                                .options={
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElTextPlain{.text="Description1"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElTextPlain{.text="Description2"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElTextPlain{.text="Description3"}}
-                                                                                }
-                                                                            },
+                                                                            .element=BK::ElActSelectMenu{}.addOption({
+                                                                                    BK::makeOptionPlain("Option1", "1", "The description1"),
+                                                                                    BK::makeOptionPlain("Option2", "2", "The description2"),
+                                                                                    BK::makeOptionPlain("Option3", "3", "The description3"),
+                                                                            }),
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
                                                                         BK::Input{
@@ -560,7 +431,7 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Markdown{.text="**MarkDown** Bold?"},
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="RichText"}},
-                                                                        BK::RichText{.elements = {BK::RichTextQuote{.elements = {BK::ElRtText{.text = "Rich Text Quote", .style = BK::InfoText{true,true,false,false}}}}}},
+                                                                        BK::RichText{}.addQuote({{"Rich Text Quote", {false,true,false,true}}}),
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Section"}},
                                                                         BK::Section{.text = BK::ElText{.text="This is the section test!!"}},
@@ -569,19 +440,19 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Table{
                                                                             .rows = {
                                                                                 {
-                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-1-1"}}}}},
-                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-1-2"}}}}},
-                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-1-3"}}}}}
+                                                                                    BK::RichText{}.addSection({"C-1-1"}),
+                                                                                    BK::RichText{}.addSection({"C-1-2"}),
+                                                                                    BK::RichText{}.addSection({"C-1-3"}),
                                                                                 },
                                                                                 {
-                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-2-1"}}}}},
-                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-2-2"}}}}},
-                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-2-3"}}}}}
+                                                                                    BK::RichText{}.addSection({"C-2-1"}),
+                                                                                    BK::RichText{}.addSection({"C-2-2"}),
+                                                                                    BK::RichText{}.addSection({"C-2-3"}),
                                                                                 },
                                                                                 {
-                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-3-1"}}}}},
-                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-3-2"}}}}},
-                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-3-3"}}}}}
+                                                                                    BK::RichText{}.addSection({"C-3-1"}),
+                                                                                    BK::RichText{}.addSection({"C-3-2"}),
+                                                                                    BK::RichText{}.addSection({"C-3-3"}),
                                                                                 }
                                                                             },
                                                                             .column_settings = BK::VecElColInfo{
