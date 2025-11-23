@@ -482,7 +482,7 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Input: TODO - ELInput"}},
                                                                         BK::Input{
-                                                                            .label=BK::ElText{.text="User Input"},
+                                                                            .label=BK::ElText{.text="User Input: Checkbox"},
                                                                             .element=BK::ElActCheckbox{
                                                                                 .options={
                                                                                     BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElText{.text="Description1"}},
@@ -493,17 +493,17 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
                                                                         BK::Input{
-                                                                            .label=BK::ElText{.text="User Input"},
+                                                                            .label=BK::ElText{.text="User Input: DatePicker"},
                                                                             .element=BK::ElActDatePicker{},
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
                                                                         BK::Input{
-                                                                            .label=BK::ElText{.text="User Input"},
+                                                                            .label=BK::ElText{.text="User Input: DateTimePicker"},
                                                                             .element=BK::ElActDatetimePicker{},
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
                                                                         BK::Input{
-                                                                            .label=BK::ElText{.text="User Input"},
+                                                                            .label=BK::ElText{.text="User Input: RadioButton"},
                                                                             .element=BK::ElActRadioButton{
                                                                                 .options={
                                                                                     BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElText{.text="Description1"}},
@@ -511,6 +511,11 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                                     BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElText{.text="Description3"}}
                                                                                 }
                                                                             },
+                                                                            .hint=BK::ElText{.text="Hinty"}
+                                                                        },
+                                                                        BK::Input{
+                                                                            .label=BK::ElText{.text="User Input: Email"},
+                                                                            .element=BK::ElActEMail{},
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
                                                                         BK::Divider{},

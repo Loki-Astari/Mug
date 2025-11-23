@@ -31,18 +31,6 @@ using OptVector     = std::optional<std::vector<T>>;
 // See Blocks Below.
 
 /* Not available for Actions.
-    struct ElActEMail
-    {
-        //https://docs.slack.dev/reference/block-kit/block-elements/email-input-element/
-        //std::string                 type;           // always "email_text_input"
-        OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
-        OptString                   initial_value;  // The initial value in the email input when it is loaded.
-        OptDispatch                 dispatch_action_config; // A dispatch configuration object that determines when during text input the element returns a block_actions payload.
-        OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
-        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown in the email input. Maximum length for the text in this field is 150 characters.
-        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActEMail, email_text_input);
-        ThorsAnvil_TypeFieldName(type);
-    };
     struct ElActFileInput
     {
         // https://docs.slack.dev/reference/block-kit/block-elements/file-input-element/
@@ -247,6 +235,18 @@ using OptVector     = std::optional<std::vector<T>>;
         OptString                   style;          // Decorates buttons with alternative visual color schemes. Use this option with restraint.primary gives buttons a green outline and text, ideal for affirmation or confirmation actions. primary should only be used for one button within a set.danger gives buttons a red outline and text, and should be used when the action is destructive. Use danger even more sparingly than primary.If you don't include this field, the default button style will be used.
         OptString                   accessibility_label;    // A label for longer descriptive text about a button element. This label will be read out by screen readers instead of the button text object. Maximum length is 75 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActWorkflowButton, workflow_button);
+        ThorsAnvil_TypeFieldName(type);
+    };
+    struct ElActEMail
+    {
+        //https://docs.slack.dev/reference/block-kit/block-elements/email-input-element/
+        //std::string                 type;           // always "email_text_input"
+        OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
+        OptString                   initial_value;  // The initial value in the email input when it is loaded.
+        OptElDispatch               dispatch_action_config; // A dispatch configuration object that determines when during text input the element returns a block_actions payload.
+        OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
+        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown in the email input. Maximum length for the text in this field is 150 characters.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActEMail, email_text_input);
         ThorsAnvil_TypeFieldName(type);
     };
     using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu, ElActTimePicker, ElActWorkflowButton>;
@@ -586,7 +586,7 @@ struct Video
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Video, video);
     ThorsAnvil_TypeFieldName(type);
 };
-using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, /*ElActEMail,*/ /*ElActFileInput,*/ /*ElActMultiMenuSelect,*/ /*ElActNumberInput,*/ /*ElActPlainTextInput,*/ ElActRadioButton>;
+using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActEMail, /*ElActFileInput,*/ /*ElActMultiMenuSelect,*/ /*ElActNumberInput,*/ /*ElActPlainTextInput,*/ ElActRadioButton>;
 struct Input
 {
     // https://docs.slack.dev/reference/block-kit/blocks/input-block/
@@ -632,6 +632,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActRadioButton, action_id, o
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, action_id, options, option_groups, initial_option, confirm, focus_on_load, placeholder);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActTimePicker, action_id, initial_time, confirm, focus_on_load, placeholder, timezone);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActWorkflowButton, text, workflow, action_id, style, accessibility_label);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActEMail, action_id, initial_value, dispatch_action_config, focus_on_load, placeholder);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg, alt_text, image_url, slack_file);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElSlackFile, url, id);
