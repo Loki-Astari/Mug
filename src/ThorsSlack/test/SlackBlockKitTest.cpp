@@ -568,6 +568,11 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             .element=BK::ElActTimePicker{},
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
+                                                                        BK::Input{
+                                                                            .label=BK::ElText{.text="User Input: URL Input"},
+                                                                            .element=BK::ElActURLInput{},
+                                                                            .hint=BK::ElText{.text="Hinty"}
+                                                                        },
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Markdown"}},
                                                                         BK::Markdown{.text="**MarkDown** Bold?"},

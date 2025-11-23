@@ -277,6 +277,17 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActPlainTextInput, plain_text_input);
         ThorsAnvil_TypeFieldName(type);
     };
+    struct ElActURLInput
+    {
+        // std::string                 type;           // always "url_text_input"
+        OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
+        OptString                   initial_value;  // The initial value in the URL input when it is loaded.
+        OptElDispatch               dispatch_action_config; // A dispatch configuration object that determines when during text input the element returns a block_actions payload.
+        OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
+        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown in the URL input. Maximum length for the text in this field is 150 characters.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActURLInput, url_text_input);
+        ThorsAnvil_TypeFieldName(type);
+    };
     using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu, ElActTimePicker, ElActWorkflowButton>;
     using OptElActive = std::optional<ElActive>;
 
@@ -626,7 +637,7 @@ struct Video
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Video, video);
     ThorsAnvil_TypeFieldName(type);
 };
-using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActEMail, ElActNumberInput, ElActPlainTextInput, ElActRadioButton/*, ElActRichTextInput*/, ElActSelectMenu, ElActTimePicker>;
+using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActEMail, ElActNumberInput, ElActPlainTextInput, ElActRadioButton/*, ElActRichTextInput*/, ElActSelectMenu, ElActTimePicker, ElActURLInput>;
 struct Input
 {
     // https://docs.slack.dev/reference/block-kit/blocks/input-block/
@@ -677,6 +688,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActEMail, action_id, initial
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActNumberInput, is_decimal_allowed, action_id, initial_value, min_value, max_value, dispatch_action_config, focus_on_load, placeholder);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActPlainTextInput, action_id, initial_value, multiline, min_length, max_length, dispatch_action_config, focus_on_load, placeholder);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActRichTextInput, action_id, initial_value, dispatch_action_config, focus_on_load, placeholder);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActURLInput, action_id, initial_value, dispatch_action_config, focus_on_load, placeholder);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg, alt_text, image_url, slack_file);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElSlackFile, url, id);
