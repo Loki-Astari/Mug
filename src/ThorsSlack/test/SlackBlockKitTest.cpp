@@ -563,6 +563,11 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             },
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
+                                                                        BK::Input{
+                                                                            .label=BK::ElText{.text="User Input: Time Picker"},
+                                                                            .element=BK::ElActTimePicker{},
+                                                                            .hint=BK::ElText{.text="Hinty"}
+                                                                        },
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Markdown"}},
                                                                         BK::Markdown{.text="**MarkDown** Bold?"},

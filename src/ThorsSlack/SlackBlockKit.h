@@ -626,7 +626,7 @@ struct Video
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Video, video);
     ThorsAnvil_TypeFieldName(type);
 };
-using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActEMail, ElActNumberInput, ElActPlainTextInput, ElActRadioButton/*, ElActRichTextInput*/, ElActSelectMenu>;
+using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActEMail, ElActNumberInput, ElActPlainTextInput, ElActRadioButton/*, ElActRichTextInput*/, ElActSelectMenu, ElActTimePicker>;
 struct Input
 {
     // https://docs.slack.dev/reference/block-kit/blocks/input-block/
