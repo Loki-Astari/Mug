@@ -480,7 +480,7 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Section{.text = BK::ElText{.text="Image"}},
                                                                         BK::Image{.alt_text="An image", .image_url="https://marvelofficial.com/wp-content/uploads/2020/10/1030357-247x296.jpg", .title=BK::ElText{.text="Thors Hammer"}},
                                                                         BK::Divider{},
-                                                                        BK::Section{.text = BK::ElText{.text="Input: TODO - ELInput"}},
+                                                                        BK::Section{.text = BK::ElText{.text="Input"}},
                                                                         BK::Input{
                                                                             .label=BK::ElText{.text="User Input: Checkbox"},
                                                                             .element=BK::ElActCheckbox{
