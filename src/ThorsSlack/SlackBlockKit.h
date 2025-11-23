@@ -431,13 +431,14 @@ using OptVector     = std::optional<std::vector<T>>;
     using ElRichTextObj = std::variant<RichTextSection, RichTextList, RichTextPreformatted, RichTextQuote>;
     using VecElRichTextObj = std::vector<ElRichTextObj>;
 
-    struct ElRow
-    {
-    };
 
     struct ElColInfo
     {
+        OptString               align;          // The alignment for items in this column. Can be left, center, or right. Defaults to left if not defined.
+        OptBool                 is_wrapped;     // Whether the contents of this column should be wrapped or not. Defaults to false if not defined.
     };
+    using VecElColInfo = std::vector<ElColInfo>;
+    using OptVecElColInfo = std::optional<VecElColInfo>;
 
 // Section 2:
 // Different Types of Blocks
@@ -565,15 +566,19 @@ struct Section
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Section, section);
     ThorsAnvil_TypeFieldName(type);
 };
+
+using ElCell = RichText;
+using ElRow = std::vector<ElCell>;
+using ElTable = std::vector<ElRow>;
 struct Table
 {
     // https://docs.slack.dev/reference/block-kit/blocks/table-block/
     //std::string                 type;           // Always "table".
     OptString                   block_id;
-    std::vector<ElRow>          rows;           // An array consisting of table rows.
+    ElTable                     rows;           // An array consisting of table rows.
                                                 // Maximum 100 rows.
                                                 // Each row object is an array with a max of 20 table cells. Table cells can have a type of raw_text or rich_text.
-    OptVector<ElColInfo>        column_settings;// An array describing column behavior.
+    OptVecElColInfo             column_settings;// An array describing column behavior.
                                                 // If there are fewer items in the column_settings array than there are columns in the table, then the items in the the column_settings array will
                                                 // describe the same number of columns in the table as there are in the array itself. Any additional columns will have the default behavior.
                                                 // Maximum 20 items. See below for column settings schema.
@@ -649,8 +654,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::RichTextList, style, elements,
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::RichTextPreformatted, elements, border);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::RichTextQuote, elements, border);
 // -- Rich Text
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElRow);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElColInfo);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElColInfo, align, is_wrapped);
 /// ----
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Actions, elements);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Context, elements);

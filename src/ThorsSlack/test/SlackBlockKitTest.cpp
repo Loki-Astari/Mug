@@ -492,7 +492,29 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Section{.text = BK::ElText{.text="Section"}},
                                                                         BK::Section{.text = BK::ElText{.text="This is the section test!!"}},
                                                                         BK::Divider{},
-                                                                        BK::Section{.text = BK::ElText{.text="Table: TODO"}},
+                                                                        BK::Section{.text = BK::ElText{.text="Table"}},
+                                                                        BK::Table{
+                                                                            .rows = {
+                                                                                {
+                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-1-1"}}}}},
+                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-1-2"}}}}},
+                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-1-3"}}}}}
+                                                                                },
+                                                                                {
+                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-2-1"}}}}},
+                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-2-2"}}}}},
+                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-2-3"}}}}}
+                                                                                },
+                                                                                {
+                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-3-1"}}}}},
+                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-3-2"}}}}},
+                                                                                    BK::RichText{.elements = {BK::RichTextSection{.elements = {BK::ElRtText{.text = "C-3-3"}}}}}
+                                                                                }
+                                                                            },
+                                                                            .column_settings = BK::VecElColInfo{
+                                                                                BK::ElColInfo{.align="left"},BK::ElColInfo{.align="center"},BK::ElColInfo{.align="right"}
+                                                                            }
+                                                                        },
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Video:TODO"}},
                                                                     #if 0
