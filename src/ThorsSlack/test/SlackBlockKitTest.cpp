@@ -327,6 +327,22 @@ TEST(SlackBlockKitTest, Block_RichText_Failure)
 
 TEST(SlackBlockKitTest, Block_Action_Button)
 {
+    PostMessage     message{    .channel = "C09RU2URYMS",
+                                .blocks = BK::Blocks{
+                                    BK::Context{
+                                        .elements = {
+                                            BK::ElImg{
+                                                .alt_text = "Alternative Text 1",
+                                                .image_url = "https://images.unsplash.com/photo-1486365227551-f3f90034a57c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            },
+                                            BK::ElImg{
+                                                .alt_text = "Alternative Text 2",
+                                                .image_url = "https://images.unsplash.com/photo-1606567595334-d39972c85dbe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            }
+                                        }
+                                    },
+                                }
+                           };
 #if 0
     PostMessage     message{    .channel = "C09RU2URYMS",
                                 .blocks = BK::Blocks{
@@ -337,19 +353,20 @@ TEST(SlackBlockKitTest, Block_Action_Button)
                                     },
                                 }
                            };
-    BK::Actions& actions = std::get<BK::Actions>(message.blocks.value()[0]);
+#endif
+    BK::Context& actions = std::get<BK::Context>(message.blocks.value()[0]);
     std::cerr << "Count: " << actions.elements.size() << "\n";
 
     ThorsAnvil::Serialize::PrinterConfig config{ThorsAnvil::Serialize::OutputType::Stream};
     std::cerr << ThorsAnvil::Serialize::jsonExporter(message) << "\n"
               << ThorsAnvil::Serialize::jsonExporter(message, config) << "\n"
               << "Size: " << ThorsAnvil::Serialize::jsonStreanSize(message) << "\n";
-
     PostMessage::Reply      reply = client.sendMessage(message);
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
     }
     ASSERT_TRUE(reply.ok);
+#if 0
 #endif
 }
 TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
@@ -384,7 +401,7 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Actions"}},
                                                                         BK::Actions{
-.elements = {
+                                                                            .elements = {
                                                                                 BK::ElActRadioButton {
                                                                                     .options = {
                                                                                         BK::Option{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElText{.text="The description 1"}}
@@ -419,7 +436,19 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             }
                                                                         },
                                                                         BK::Divider{},
-                                                                        BK::Section{.text = BK::ElText{.text="Context: TODO"}},
+                                                                        BK::Section{.text = BK::ElText{.text="Context"}},
+                                                                        BK::Context{
+                                                                            .elements = {
+                                                                                BK::ElImg{
+                                                                                    .alt_text = "Alternative Text 1",
+                                                                                    .image_url = "https://images.unsplash.com/photo-1486365227551-f3f90034a57c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                                                                },
+                                                                                BK::ElImg{
+                                                                                    .alt_text = "Alternative Text 2",
+                                                                                    .image_url = "https://images.unsplash.com/photo-1606567595334-d39972c85dbe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                                                                }
+                                                                            }
+                                                                        },
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Context Actions: TODO"}},
                                                                         BK::Divider{},

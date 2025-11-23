@@ -64,10 +64,34 @@ using OptVector     = std::optional<std::vector<T>>;
     };
 */
     enum TextType { /*vera-ignore*/ plain_text, mrkdwn};
+    struct ElTextPlain
+    {
+        // https://docs.slack.dev/reference/block-kit/composition-objects/text-object
+        // TextType                    type = TextType::mrkdwn;           // Can be one of "plain_text" or "mrkdwn"
+        std::string                 text;           // The text for the block. This field accepts any of the standard text formatting markup when type is mrkdwn. The minimum length is 1 and maximum length is 3000 characters.
+        OptBool                     emoji;          // Indicates whether emojis in a text field should be escaped into the colon emoji format. This field is only usable when type is plain_text.
+        OptBool                     verbatim;       // When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed.
+                                                    // When set to true, Slack will continue to process all markdown formatting and manual parsing strings, but it won’t modify any plain-text content. For example, channel names will not be hyperlinked.
+                                                    // This field is only usable when type is mrkdwn.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElTextMarkDown, plain_text);
+        ThorsAnvil_TypeFieldName(type);
+    };
+    struct ElTextMarkDown
+    {
+        // https://docs.slack.dev/reference/block-kit/composition-objects/text-object
+        //TextType                    type = TextType::mrkdwn;           // Can be one of "plain_text" or "mrkdwn"
+        std::string                 text;           // The text for the block. This field accepts any of the standard text formatting markup when type is mrkdwn. The minimum length is 1 and maximum length is 3000 characters.
+        OptBool                     emoji;          // Indicates whether emojis in a text field should be escaped into the colon emoji format. This field is only usable when type is plain_text.
+        OptBool                     verbatim;       // When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed.
+                                                    // When set to true, Slack will continue to process all markdown formatting and manual parsing strings, but it won’t modify any plain-text content. For example, channel names will not be hyperlinked.
+                                                    // This field is only usable when type is mrkdwn.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElTextMarkDown, mrkdwn);
+        ThorsAnvil_TypeFieldName(type);
+    };
     struct ElText
     {
         // https://docs.slack.dev/reference/block-kit/composition-objects/text-object
-        TextType                    type;           // Can be one of "plain_text" or "mrkdwn"
+        TextType                    type; // = TextType::mrkdwn;           // Can be one of "plain_text" or "mrkdwn"
         std::string                 text;           // The text for the block. This field accepts any of the standard text formatting markup when type is mrkdwn. The minimum length is 1 and maximum length is 3000 characters.
         OptBool                     emoji;          // Indicates whether emojis in a text field should be escaped into the colon emoji format. This field is only usable when type is plain_text.
         OptBool                     verbatim;       // When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed.
@@ -237,11 +261,23 @@ using OptVector     = std::optional<std::vector<T>>;
     using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu, ElActTimePicker, ElActWorkflowButton>;
     using OptElActive = std::optional<ElActive>;
 
+    struct ImageFile
+    {
+        OptString                   url;            // This URL can be the url_private or the permalink of the Slack file.
+        OptString                   id;             // Slack ID of the file.
+    };
+    using OptImageFile = std::optional<ImageFile>;
     struct ElImg
     {
-        // see: https://docs.slack.dev/reference/block-kit/block-elements/image-element
-        // or   https://docs.slack.dev/reference/block-kit/composition-objects/text-object
+        // https://docs.slack.dev/reference/block-kit/block-elements/image-element
+        // std::string                 type;           // always "image"
+        std::string                 alt_text;       // A plain-text summary of the image. This should not contain any markup.
+        OptString                   image_url;      // The URL for a publicly hosted image. You must provide either an image_url or slack_file. Maximum length for this field is 3000 characters.
+        OptImageFile                slack_file;     // A Slack image file object that defines the source of the image.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElImage, image);
+        ThorsAnvil_TypeFieldName(type);
     };
+    using ElImgItem = std::variant<ElImg, ElTextPlain, ElTextMarkDown>;
 
     struct ElBut
     {
@@ -425,7 +461,7 @@ struct Context
 {
     // https://docs.slack.dev/reference/block-kit/blocks/context-block/
     //std::string                 type;           // always "context"
-    std::vector<ElImg>          elements;       // Max 10 elements
+    std::vector<ElImgItem>      elements;       // Max 10 elements
                                                 // An array of image elements and text objects.
     OptString                   block_id;
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Context, context);
@@ -574,6 +610,8 @@ using OptBlocks = std::optional<Blocks>;
 
 }
 
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElTextPlain, text, emoji, verbatim);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElTextMarkDown, text, emoji, verbatim);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElText, type, text, emoji, verbatim);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Confirm, title, text, confirm, deny, style);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Option, text, value, description, url);
@@ -582,6 +620,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Button, text, value, accessibi
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::NameValue, name, value);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Trigger, url, customizable_input_parameters);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Workflow, trigger);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ImageFile, url, id);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActButton, text, action_id, url, value, style, confirm, accessibility_label);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActCheckbox, action_id, options, initial_options, confirm, focus_on_load);
@@ -593,7 +632,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, action_id, op
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActTimePicker, action_id, initial_time, confirm, focus_on_load, placeholder, timezone);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActWorkflowButton, text, workflow, action_id, style, accessibility_label);
 
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg, alt_text, image_url, slack_file);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElBut);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElSlackFile, url, id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElInput);
