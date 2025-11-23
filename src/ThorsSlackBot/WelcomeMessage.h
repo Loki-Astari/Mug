@@ -2,6 +2,7 @@
 #define THORSANVIL_SLACK_WELCOME_MESSAGE_H
 
 #include "ThorsSlack/SlackAPI_Chat.h"
+#include "ThorsSlack/SlackBlockKit.h"
 #include <ctime>
 #include <string>
 
@@ -34,9 +35,12 @@ class WelcomeMessage
         {
             return {    .channel = channel,
                         .text = "Plop",
-                        .blocks = BlockKit::Blocks{startText, divider, getReactionTask()},
-                        //.blocks = API::Chat::Blocks{{"section", {"mrkdwn", R"(Welcome to this awesome channel! -- *Get started by completing the tasks!*)"}}},
-                        //.blocks = API::Chat::Blocks{{"section", {"plain_text", "Hello world"}}},
+                        .blocks = BlockKit::Blocks
+                        {
+                            startText,
+                            divider,
+                            getReactionTask()
+                        },
                         .icon_emoji = iconEmoji,
                         .username = "Welcome Robot!",
                    };
@@ -50,7 +54,7 @@ class WelcomeMessage
             }
             std::string text = checkmark + " *React to this message!*";
 
-            return BlockKit::Section{.text = BlockKit::ElText{.type = BlockKit::mrkdwn, .text = text}};
+            return BlockKit::makeSectionMarkD(std::move(text));
         }
 };
 
