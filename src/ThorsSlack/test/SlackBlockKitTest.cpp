@@ -534,6 +534,24 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             },
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
+#if 0
+                                                                        BK::Input{
+                                                                            .label=BK::ElText{.text="User Input: Rich Text Input"},
+                                                                            .element=BK::ElActRichTextInput{
+                                                                                .action_id="rich_text_input-action"
+                                                                                .initial_value=BK::RichText{
+                                                                                    .elements ={
+                                                                                        BK::RichTextSection{
+                                                                                            .elements={
+                                                                                                BK::ElRtColor{.value="#00FF00"}
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }*/
+                                                                            },
+                                                                            .hint=BK::ElText{.text="Hinty"}
+                                                                        },
+#endif
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Markdown"}},
                                                                         BK::Markdown{.text="**MarkDown** Bold?"},

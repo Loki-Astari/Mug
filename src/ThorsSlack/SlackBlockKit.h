@@ -560,6 +560,18 @@ struct RichText
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::RichText, rich_text);
     ThorsAnvil_TypeFieldName(type);
 };
+using OptRichText = std::optional<RichText>;
+struct ElActRichTextInput
+{
+    // std::string                 type;           // always "rich_text_input"
+    std::string                 action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique in the containing block. Maximum length is 255 characters.
+    OptRichText                 initial_value;  // The initial value in the rich text input when it is loaded.
+    OptElDispatch               dispatch_action_config; // A dispatch configuration object that determines when during text input the element returns a block_actions payload.
+    OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
+    OptElText                   placeholder;    // A plain_text object that defines the placeholder text shown in the plain-text input. Maximum length for the text in this field is 150 characters.
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActRichTextInput, rich_text_input);
+    ThorsAnvil_TypeFieldName(type);
+};
 struct Section
 {
     // https://docs.slack.dev/reference/block-kit/blocks/section-block/
@@ -614,7 +626,7 @@ struct Video
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Video, video);
     ThorsAnvil_TypeFieldName(type);
 };
-using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActEMail, ElActNumberInput, ElActPlainTextInput, ElActRadioButton>;
+using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActEMail, ElActNumberInput, ElActPlainTextInput, ElActRadioButton/*, ElActRichTextInput*/>;
 struct Input
 {
     // https://docs.slack.dev/reference/block-kit/blocks/input-block/
@@ -664,6 +676,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActEMail, action_id, initial
 // ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActFileInput, action_id, filetypes, max_files);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActNumberInput, is_decimal_allowed, action_id, initial_value, min_value, max_value, dispatch_action_config, focus_on_load, placeholder);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActPlainTextInput, action_id, initial_value, multiline, min_length, max_length, dispatch_action_config, focus_on_load, placeholder);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActRichTextInput, action_id, initial_value, dispatch_action_config, focus_on_load, placeholder);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg, alt_text, image_url, slack_file);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElSlackFile, url, id);
