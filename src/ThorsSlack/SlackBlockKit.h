@@ -43,6 +43,7 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElTextMarkDown, plain_text);
         ThorsAnvil_TypeFieldName(type);
     };
+    using OptElTextPlain = std::optional<ElTextPlain>;
     struct ElTextMarkDown
     {
         // https://docs.slack.dev/reference/block-kit/composition-objects/text-object
@@ -71,10 +72,10 @@ using OptVector     = std::optional<std::vector<T>>;
     struct ElConfirm
     {
         // https://docs.slack.dev/reference/block-kit/composition-objects/confirmation-dialog-object
-        ElText                      title;          // A plain_text text object that defines the dialog's title. Maximum length for this field is 100 characters.
-        ElText                      text;           // A plain_text text object that defines the explanatory text that appears in the confirm dialog. Maximum length for the text in this field is 300 characters.
-        ElText                      confirm;        // A plain_text text object to define the text of the button that confirms the action. Maximum length for the text in this field is 30 characters.
-        ElText                      deny;           // A plain_text text object to define the text of the button that cancels the action. Maximum length for the text in this field is 30 characters.
+        ElTextPlain                 title;          // A plain_text text object that defines the dialog's title. Maximum length for this field is 100 characters.
+        ElTextPlain                 text;           // A plain_text text object that defines the explanatory text that appears in the confirm dialog. Maximum length for the text in this field is 300 characters.
+        ElTextPlain                 confirm;        // A plain_text text object to define the text of the button that confirms the action. Maximum length for the text in this field is 30 characters.
+        ElTextPlain                 deny;           // A plain_text text object to define the text of the button that cancels the action. Maximum length for the text in this field is 30 characters.
         OptString                   style;          // Defines the color scheme applied to the confirm button. A value of danger will display the button with a red background on desktop, or red text on mobile. A value of primary will display the button with a green background on desktop, or blue text on mobile. If this field is not provided, the default value will be primary.
     };
     using OptElConfirm = std::optional<ElConfirm>;
@@ -83,7 +84,7 @@ using OptVector     = std::optional<std::vector<T>>;
         // https://docs.slack.dev/reference/block-kit/composition-objects/option-object
         ElText                      text;           // A text object that defines the text shown in the option on the menu. Overflow, select, and multi-select menus can only use plain_text objects, while radio buttons and checkboxes can use mrkdwn text objects. Maximum length for the text in this field is 75 characters.
         std::string                 value;          // A unique string value that will be passed to your app when this option is chosen. Maximum length for this field is 150 characters.
-        OptElText                   description;    // A plain_text text object that defines a line of descriptive text shown below the text field beside a single selectable item in a select menu, multi-select menu, checkbox group, radio button group, or overflow menu. Checkbox group and radio button group items can also use mrkdwn formatting. Maximum length for the text within this field is 75 characters.
+        OptElTextPlain              description;    // A plain_text text object that defines a line of descriptive text shown below the text field beside a single selectable item in a select menu, multi-select menu, checkbox group, radio button group, or overflow menu. Checkbox group and radio button group items can also use mrkdwn formatting. Maximum length for the text within this field is 75 characters.
         OptString                   url;            // A URL to load in the user's browser when the option is clicked. The url attribute is only available in overflow menus. Maximum length for this field is 3000 characters. If you're using url, you'll still receive an interaction payload and will need to send an acknowledgement response.
     };
     using OptElOption = std::optional<ElOption>;
@@ -135,7 +136,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptString                   initial_date;   // The initial date that is selected when the element is loaded. This should be in the format YYYY-MM-DD.
         OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a date is selected.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
-        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown on the datepicker. Maximum length for the text in this field is 150 characters.
+        OptElTextPlain              placeholder;    // A plain_text only text object that defines the placeholder text shown on the datepicker. Maximum length for the text in this field is 150 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::OptActDatepicker, datepicker);
         ThorsAnvil_TypeFieldName(type);
     };
@@ -182,7 +183,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptElOption                 initial_option; // A single option that exactly matches one of the options within options or option_groups. This option will be selected when the menu initially loads.
         OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a menu item is selected.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
-        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown on the menu. Maximum length for the text in this field is 150 characters.
+        OptElTextPlain              placeholder;    // A plain_text only text object that defines the placeholder text shown on the menu. Maximum length for the text in this field is 150 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, static_select);
         ThorsAnvil_TypeFieldName(type);
     };
@@ -194,7 +195,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptString                   initial_time;   // The initial time that is selected when the element is loaded. This should be in the format HH:mm, where HH is the 24-hour format of an hour (00 to 23) and mm is minutes with leading zeros (00 to 59), for example 22:25 for 10:25pm.
         OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a time is selected.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
-        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown on the time picker. Maximum length for the text in this field is 150 characters.
+        OptElTextPlain              placeholder;    // A plain_text only text object that defines the placeholder text shown on the time picker. Maximum length for the text in this field is 150 characters.
         OptString                   timezone;       // A string in the IANA format, e.g. "America/Chicago". The timezone is displayed to end users as hint text underneath the time picker. It is also passed to the app upon certain interactions, such as view_submission.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActTimePicker, timepicker);
         ThorsAnvil_TypeFieldName(type);
@@ -207,7 +208,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptString                   initial_value;  // The initial value in the email input when it is loaded.
         OptElDispatch               dispatch_action_config; // A dispatch configuration object that determines when during text input the element returns a block_actions payload.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
-        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown in the email input. Maximum length for the text in this field is 150 characters.
+        OptElTextPlain              placeholder;    // A plain_text only text object that defines the placeholder text shown in the email input. Maximum length for the text in this field is 150 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActEMail, email_text_input);
         ThorsAnvil_TypeFieldName(type);
     };
@@ -222,7 +223,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptString                   max_value;      // The maximum value, cannot be less than min_value.
         OptElDispatch               dispatch_action_config; // A dispatch configuration object that determines when during text input the element returns a block_actions payload.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
-        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown in the number input. Maximum length for the text in this field is 150 characters.
+        OptElTextPlain              placeholder;    // A plain_text only text object that defines the placeholder text shown in the number input. Maximum length for the text in this field is 150 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActNumberInput, number_input);
         ThorsAnvil_TypeFieldName(type);
     };
@@ -237,7 +238,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptInt                      max_length;     // The maximum length of input that the user can provide. If the user provides more, they will receive an error. Acceptable values for this field are between 1 and 3000, inclusive.
         OptElDispatch               dispatch_action_config; // A dispatch configuration object that determines when during text input the element returns a block_actions payload.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
-        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown in the plain-text input. Maximum length for the text in this field is 150 characters.
+        OptElTextPlain              placeholder;    // A plain_text only text object that defines the placeholder text shown in the plain-text input. Maximum length for the text in this field is 150 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActPlainTextInput, plain_text_input);
         ThorsAnvil_TypeFieldName(type);
     };
@@ -249,7 +250,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptString                   initial_value;  // The initial value in the URL input when it is loaded.
         OptElDispatch               dispatch_action_config; // A dispatch configuration object that determines when during text input the element returns a block_actions payload.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
-        OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown in the URL input. Maximum length for the text in this field is 150 characters.
+        OptElTextPlain              placeholder;    // A plain_text only text object that defines the placeholder text shown in the URL input. Maximum length for the text in this field is 150 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActURLInput, url_text_input);
         ThorsAnvil_TypeFieldName(type);
     };
@@ -501,7 +502,7 @@ struct Header
 {
     // https://docs.slack.dev/reference/block-kit/blocks/header-block/
     //std::string                 type;           // always "header"
-    ElText               text;           // The text for the block, in the form of a plain_text text object. Maximum length for the text in this field is 150 characters.
+    ElTextPlain                 text;           // The text for the block, in the form of a plain_text text object. Maximum length for the text in this field is 150 characters.
     OptString                   block_id;
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Header, header);
     ThorsAnvil_TypeFieldName(type);
@@ -547,7 +548,7 @@ struct ElActRichTextInput
     OptRichText                 initial_value;  // The initial value in the rich text input when it is loaded.
     OptElDispatch               dispatch_action_config; // A dispatch configuration object that determines when during text input the element returns a block_actions payload.
     OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
-    OptElText                   placeholder;    // A plain_text object that defines the placeholder text shown in the plain-text input. Maximum length for the text in this field is 150 characters.
+    OptElTextPlain              placeholder;    // A plain_text object that defines the placeholder text shown in the plain-text input. Maximum length for the text in this field is 150 characters.
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActRichTextInput, rich_text_input);
     ThorsAnvil_TypeFieldName(type);
 };
@@ -595,10 +596,10 @@ struct Video
     std::string                 alt_text;       // A tooltip for the video. Required for accessibility
     OptString                   author_name;    // Author name to be displayed. Must be less than 50 characters.
     OptString                   block_id;
-    OptElText                   description;    // Description for video in the form of a text object that must have type of plain_text. text within must be less than 200 characters.
+    OptElTextPlain              description;    // Description for video in the form of a text object that must have type of plain_text. text within must be less than 200 characters.
     OptString                   provider_icon_url; // Icon for the video provider, e.g. YouTube icon.
     OptString                   provider_name;  // The originating application or domain of the video, e.g. YouTube.
-    ElText                      title;          // Video title in the form of a text object that must have type of plain_text. text within must be less than 200 characters.
+    ElTextPlain                 title;          // Video title in the form of a text object that must have type of plain_text. text within must be less than 200 characters.
     OptString                   title_url;      // Hyperlink for the title text. Must correspond to the non-embeddable URL for the video. Must go to an HTTPS URL.
     std::string                 thumbnail_url;  // The thumbnail image URL
     std::string                 video_url;      // The URL to be embedded. Must match any existing unfurl domains within the app and point to a HTTPS URL.

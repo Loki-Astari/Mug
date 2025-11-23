@@ -380,18 +380,18 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                                 BK::ElActButton{.text = BK::ElText{.text = "Push"}, .value="Clicked"}
                                                                                 , BK::ElActCheckbox{
                                                                                     .options = {
-                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElText{.text="The description 1"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElText{.text="The description 2"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElText{.text="The description 3"}}
+                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElTextPlain{.text="The description 1"}}
+                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElTextPlain{.text="The description 2"}}
+                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElTextPlain{.text="The description 3"}}
                                                                                     }
                                                                                 }
-                                                                                , BK::ElActDatePicker{.placeholder=BK::ElText{.text="Pick a date"}}
+                                                                                , BK::ElActDatePicker{.placeholder=BK::ElTextPlain{.text="Pick a date"}}
                                                                                 , BK::ElActDatetimePicker{.initial_date_time=-21636000}
                                                                                 , BK::ElActOverflowMenu{
                                                                                     .options = {
-                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElText{.text="The description 1"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElText{.text="The description 2"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElText{.text="The description 3"}}
+                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElTextPlain{.text="The description 1"}}
+                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElTextPlain{.text="The description 2"}}
+                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElTextPlain{.text="The description 3"}}
                                                                                     }
                                                                                 }
                                                                             }
@@ -402,16 +402,16 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             .elements = {
                                                                                 BK::ElActRadioButton {
                                                                                     .options = {
-                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElText{.text="The description 1"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElText{.text="The description 2"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElText{.text="The description 3"}}
+                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElTextPlain{.text="The description 1"}}
+                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElTextPlain{.text="The description 2"}}
+                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElTextPlain{.text="The description 3"}}
                                                                                     }
                                                                                 }
                                                                                 , BK::ElActSelectMenu{
                                                                                     .options = {
-                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElText{.text="The description 1"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElText{.text="The description 2"}}
-                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElText{.text="The description 3"}}
+                                                                                        BK::ElOption{.text=BK::ElText{.text="Opt 1"},.value="V1",.description=BK::ElTextPlain{.text="The description 1"}}
+                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 2"},.value="V2",.description=BK::ElTextPlain{.text="The description 2"}}
+                                                                                        , BK::ElOption{.text=BK::ElText{.text="Opt 3"},.value="V3",.description=BK::ElTextPlain{.text="The description 3"}}
                                                                                     }
                                                                                 }
                                                                                 , BK::ElActTimePicker{}
@@ -457,7 +457,7 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Section{.text = BK::ElText{.text="Divider"}},
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Header"}},
-                                                                        BK::Header{.text = BK::ElText{.text = "Header Text"}},
+                                                                        BK::Header{.text = BK::ElTextPlain{.text = "Header Text"}},
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Image"}},
                                                                         BK::Image{.alt_text="An image", .image_url="https://marvelofficial.com/wp-content/uploads/2020/10/1030357-247x296.jpg", .title=BK::ElText{.text="Thors Hammer"}},
@@ -467,9 +467,9 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             .label=BK::ElText{.text="User Input: Checkbox"},
                                                                             .element=BK::ElActCheckbox{
                                                                                 .options={
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElText{.text="Description1"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElText{.text="Description2"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElText{.text="Description3"}}
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElTextPlain{.text="Description1"}},
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElTextPlain{.text="Description2"}},
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElTextPlain{.text="Description3"}}
                                                                                 }
                                                                             },
                                                                             .hint=BK::ElText{.text="Hinty"}
@@ -488,9 +488,9 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             .label=BK::ElText{.text="User Input: RadioButton"},
                                                                             .element=BK::ElActRadioButton{
                                                                                 .options={
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElText{.text="Description1"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElText{.text="Description2"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElText{.text="Description3"}}
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElTextPlain{.text="Description1"}},
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElTextPlain{.text="Description2"}},
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElTextPlain{.text="Description3"}}
                                                                                 }
                                                                             },
                                                                             .hint=BK::ElText{.text="Hinty"}
@@ -538,9 +538,9 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             .label=BK::ElText{.text="User Input: Select Menu"},
                                                                             .element=BK::ElActSelectMenu{
                                                                                 .options={
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElText{.text="Description1"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElText{.text="Description2"}},
-                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElText{.text="Description3"}}
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElTextPlain{.text="Description1"}},
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElTextPlain{.text="Description2"}},
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElTextPlain{.text="Description3"}}
                                                                                 }
                                                                             },
                                                                             .hint=BK::ElText{.text="Hinty"}
