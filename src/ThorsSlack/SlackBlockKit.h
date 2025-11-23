@@ -43,15 +43,6 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActEMail, email_text_input);
         ThorsAnvil_TypeFieldName(type);
     };
-    struct ElActFeedbackButton
-    {
-        //std::string                 type;           // always "feedback_buttons"
-        Button                      positive_button;// A button to indicate positive feedback. See button object fields below.
-        Button                      negative_button;// A button to indicate negative feedback. See button object fields below.
-        OptString                   action_id;      // An identifier for this action. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_id values in the containing block. Maximum length is 255 characters.
-        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActFeedbackButton, feedback_buttons);
-        ThorsAnvil_TypeFieldName(type);
-    };
     struct ElActFileInput
     {
         // https://docs.slack.dev/reference/block-kit/block-elements/file-input-element/
@@ -101,7 +92,7 @@ using OptVector     = std::optional<std::vector<T>>;
     using OptElText     = std::optional<ElText>;
     using OptElTexts    = std::optional<std::vector<ElText>>;
 
-    struct Confirm
+    struct ElConfirm
     {
         // https://docs.slack.dev/reference/block-kit/composition-objects/confirmation-dialog-object
         ElText                      title;          // A plain_text text object that defines the dialog's title. Maximum length for this field is 100 characters.
@@ -110,8 +101,8 @@ using OptVector     = std::optional<std::vector<T>>;
         ElText                      deny;           // A plain_text text object to define the text of the button that cancels the action. Maximum length for the text in this field is 30 characters.
         OptString                   style;          // Defines the color scheme applied to the confirm button. A value of danger will display the button with a red background on desktop, or red text on mobile. A value of primary will display the button with a green background on desktop, or blue text on mobile. If this field is not provided, the default value will be primary.
     };
-    using OptConfirm = std::optional<Confirm>;
-    struct Option
+    using OptElConfirm = std::optional<ElConfirm>;
+    struct ElOption
     {
         // https://docs.slack.dev/reference/block-kit/composition-objects/option-object
         ElText                      text;           // A text object that defines the text shown in the option on the menu. Overflow, select, and multi-select menus can only use plain_text objects, while radio buttons and checkboxes can use mrkdwn text objects. Maximum length for the text in this field is 75 characters.
@@ -119,34 +110,34 @@ using OptVector     = std::optional<std::vector<T>>;
         OptElText                   description;    // A plain_text text object that defines a line of descriptive text shown below the text field beside a single selectable item in a select menu, multi-select menu, checkbox group, radio button group, or overflow menu. Checkbox group and radio button group items can also use mrkdwn formatting. Maximum length for the text within this field is 75 characters.
         OptString                   url;            // A URL to load in the user's browser when the option is clicked. The url attribute is only available in overflow menus. Maximum length for this field is 3000 characters. If you're using url, you'll still receive an interaction payload and will need to send an acknowledgement response.
     };
-    using OptOption = std::optional<Option>;
-    using VecOption = std::vector<Option>;
-    using OptVecOption = std::optional<VecOption>;
-    struct Dispatch
+    using OptElOption = std::optional<ElOption>;
+    using VecElOption = std::vector<ElOption>;
+    using OptVecElOption = std::optional<VecElOption>;
+    struct ElDispatch
     {
         OptVecString                trigger_actions_on; // An array of interaction types that you would like to receive a block_actions payload for. Should be one or both of:on_enter_pressed — payload is dispatched when user presses the enter key while the input is in focus. Hint text will appear underneath the input explaining to the user to press enter to submit.on_character_entered — payload is dispatched when a character is entered (or removed) in the input.
     };
-    using OptDispatch = std::optional<Dispatch>;
-    struct Button
+    using OptElDispatch = std::optional<ElDispatch>;
+    struct ElButton
     {
         ElText                      text;           // A text object that defines the button's text. Can only be of type: plain_text. Maximum length for the text in this field is 75 characters.
         std::string                 value;          // The value to send along with the interaction payload. Maximum length is 2000 characters.
         OptString                   accessibility_label; // A label for longer descriptive text about a button element. This label will be read out by screen readers instead of the button text object. Maximum length is 75 characters.
     };
-    struct NameValue
+    struct ElNameValue
     {
         std::string                 name;
         std::string                 value;
     };
-    using VecNameValue = std::vector<NameValue>;
-    struct Trigger
+    using VecElNameValue = std::vector<ElNameValue>;
+    struct ElTrigger
     {
         std::string                 url;
-        VecNameValue                customizable_input_parameters;
+        VecElNameValue              customizable_input_parameters;
     };
-    struct Workflow
+    struct ElWorkflow
     {
-        Trigger                     trigger;        // A trigger object that contains information about a workflow's trigger.
+        ElTrigger                   trigger;        // A trigger object that contains information about a workflow's trigger.
     };
     struct ElActButton
     {
@@ -157,7 +148,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptString                   url;            // A URL to load in the user's browser when the button is clicked. Maximum length is 3000 characters. If you're using url, you'll still receive an interaction payload and will need to send an acknowledgement response.
         OptString                   value;          // The value to send along with the interaction payload. Maximum length is 2000 characters.
         OptString                   style;          // Decorates buttons with alternative visual color schemes. Use this option with restraint.primary gives buttons a green outline and text, ideal for affirmation or confirmation actions. primary should only be used for one button within a set.danger gives buttons a red outline and text, and should be used when the action is destructive. Use danger even more sparingly than primary.If you don't include this field, the default button style will be used.
-        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog after the button is clicked.
+        OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog after the button is clicked.
         OptString                   accessibility_label; // A label for longer descriptive text about a button element. This label will be read out by screen readers instead of the button text object. Maximum length is 75 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActButton, button);
         ThorsAnvil_TypeFieldName(type);
@@ -167,9 +158,9 @@ using OptVector     = std::optional<std::vector<T>>;
         // https://docs.slack.dev/reference/block-kit/block-elements/checkboxes-element/
         //std::string                 type;           // always "checkboxes".
         OptString                   action_id;      // An identifier for the action triggered when the checkbox group is changed. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
-        VecOption                   options;        // An array of option objects. A maximum of 10 options are allowed.
-        OptVecOption                initial_options;// An array of option objects that exactly matches one or more of the options within options. These options will be selected when the checkbox group initially loads.
-        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after clicking one of the checkboxes in this element.
+        VecElOption                 options;        // An array of option objects. A maximum of 10 options are allowed.
+        OptVecElOption              initial_options;// An array of option objects that exactly matches one or more of the options within options. These options will be selected when the checkbox group initially loads.
+        OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after clicking one of the checkboxes in this element.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActCheckbox, checkboxes);
         ThorsAnvil_TypeFieldName(type);
@@ -180,7 +171,7 @@ using OptVector     = std::optional<std::vector<T>>;
         // std::string                 type;           // always "datepicker".
         OptString                   action_id;      // An identifier for the action triggered when a menu option is selected. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
         OptString                   initial_date;   // The initial date that is selected when the element is loaded. This should be in the format YYYY-MM-DD.
-        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after a date is selected.
+        OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a date is selected.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
         OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown on the datepicker. Maximum length for the text in this field is 150 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::OptActDatepicker, datepicker);
@@ -192,7 +183,7 @@ using OptVector     = std::optional<std::vector<T>>;
         //std::string                 type;           // always "datetimepicker"
         OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
         OptInt                      initial_date_time; // The initial date and time that is selected when the element is loaded, represented as a UNIX timestamp in seconds. This should be in the format of 10 digits, for example 1628633820 represents the date and time August 10th, 2021 at 03:17pm PST.
-        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after a time is selected.
+        OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a time is selected.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActDatetimePicker, datetimepicker);
         ThorsAnvil_TypeFieldName(type);
@@ -202,8 +193,8 @@ using OptVector     = std::optional<std::vector<T>>;
         // https://docs.slack.dev/reference/block-kit/block-elements/overflow-menu-element/
         //std::string                 type;           // always "overflow"
         OptString                   action_id;      // An identifier for the action triggered when a menu option is selected. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
-        VecOption                   options;        // An array of up to five option objects to display in the menu.
-        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after a menu item is selected.
+        VecElOption                 options;        // An array of up to five option objects to display in the menu.
+        OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a menu item is selected.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActOverflowMenu, overflow);
         ThorsAnvil_TypeFieldName(type);
     };
@@ -212,9 +203,9 @@ using OptVector     = std::optional<std::vector<T>>;
         // https://docs.slack.dev/reference/block-kit/block-elements/radio-button-group-element/
         // std::string                 type;           // always "radio_buttons".
         OptString                   action_id;      // An identifier for the action triggered when the radio button group is changed. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
-        VecOption                   options;        // An array of option objects. A maximum of 10 options are allowed.
-        OptOption                   initial_option; // An option object that exactly matches one of the options within options. This option will be selected when the radio button group initially loads.
-        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after clicking one of the radio buttons in this element.
+        VecElOption                 options;        // An array of option objects. A maximum of 10 options are allowed.
+        OptElOption                 initial_option; // An option object that exactly matches one of the options within options. This option will be selected when the radio button group initially loads.
+        OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after clicking one of the radio buttons in this element.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActRadioButton, radio_buttons);
         ThorsAnvil_TypeFieldName(type);
@@ -224,10 +215,10 @@ using OptVector     = std::optional<std::vector<T>>;
         // https://docs.slack.dev/reference/block-kit/block-elements/select-menu-element/
         //std::string                 type;           // always "static_select"
         OptString                   action_id;      // An identifier for the action triggered when a menu option is selected. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
-        VecOption                   options;        // An array of option objects. Maximum number of options is 100. If option_groups is specified, this field should not be.
-        OptVecOption                option_groups;  // An array of option group objects. Maximum number of option groups is 100. If options is specified, this field should not be.
-        OptOption                   initial_option; // A single option that exactly matches one of the options within options or option_groups. This option will be selected when the menu initially loads.
-        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after a menu item is selected.
+        VecElOption                 options;        // An array of option objects. Maximum number of options is 100. If option_groups is specified, this field should not be.
+        OptVecElOption              option_groups;  // An array of option group objects. Maximum number of option groups is 100. If options is specified, this field should not be.
+        OptElOption                 initial_option; // A single option that exactly matches one of the options within options or option_groups. This option will be selected when the menu initially loads.
+        OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a menu item is selected.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
         OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown on the menu. Maximum length for the text in this field is 150 characters.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, static_select);
@@ -239,7 +230,7 @@ using OptVector     = std::optional<std::vector<T>>;
         //std::string                 type;           // always "timepicker"
         OptString                   action_id;      // An identifier for the action triggered when a time is selected. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
         OptString                   initial_time;   // The initial time that is selected when the element is loaded. This should be in the format HH:mm, where HH is the 24-hour format of an hour (00 to 23) and mm is minutes with leading zeros (00 to 59), for example 22:25 for 10:25pm.
-        OptConfirm                  confirm;        // A confirm object that defines an optional confirmation dialog that appears after a time is selected.
+        OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a time is selected.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
         OptElText                   placeholder;    // A plain_text only text object that defines the placeholder text shown on the time picker. Maximum length for the text in this field is 150 characters.
         OptString                   timezone;       // A string in the IANA format, e.g. "America/Chicago". The timezone is displayed to end users as hint text underneath the time picker. It is also passed to the app upon certain interactions, such as view_submission.
@@ -251,7 +242,7 @@ using OptVector     = std::optional<std::vector<T>>;
         // https://docs.slack.dev/reference/block-kit/block-elements/workflow-button-element/
         // std::string                 type;           // always "workflow_button"
         ElText                      text;           // A text object that defines the button's text. Can only be of type: plain_text. text may truncate with ~30 characters. Maximum length for the text in this field is 75 characters.
-        Workflow                    workflow;       // A workflow object that contains details about the workflow that will run when the button is clicked.
+        ElWorkflow                  workflow;       // A workflow object that contains details about the workflow that will run when the button is clicked.
         std::string                 action_id;      // An identifier for the action. Use this when you receive an interaction payload to identify the source of the action. Every action_id in a block should be unique. Maximum length is 255 characters.
         OptString                   style;          // Decorates buttons with alternative visual color schemes. Use this option with restraint.primary gives buttons a green outline and text, ideal for affirmation or confirmation actions. primary should only be used for one button within a set.danger gives buttons a red outline and text, and should be used when the action is destructive. Use danger even more sparingly than primary.If you don't include this field, the default button style will be used.
         OptString                   accessibility_label;    // A label for longer descriptive text about a button element. This label will be read out by screen readers instead of the button text object. Maximum length is 75 characters.
@@ -261,30 +252,33 @@ using OptVector     = std::optional<std::vector<T>>;
     using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu, ElActTimePicker, ElActWorkflowButton>;
     using OptElActive = std::optional<ElActive>;
 
-    struct ImageFile
+    struct ElImageFile
     {
         OptString                   url;            // This URL can be the url_private or the permalink of the Slack file.
         OptString                   id;             // Slack ID of the file.
     };
-    using OptImageFile = std::optional<ImageFile>;
+    using OptElImageFile = std::optional<ElImageFile>;
     struct ElImg
     {
         // https://docs.slack.dev/reference/block-kit/block-elements/image-element
         // std::string                 type;           // always "image"
         std::string                 alt_text;       // A plain-text summary of the image. This should not contain any markup.
         OptString                   image_url;      // The URL for a publicly hosted image. You must provide either an image_url or slack_file. Maximum length for this field is 3000 characters.
-        OptImageFile                slack_file;     // A Slack image file object that defines the source of the image.
+        OptElImageFile              slack_file;     // A Slack image file object that defines the source of the image.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElImage, image);
         ThorsAnvil_TypeFieldName(type);
     };
     using ElImgItem = std::variant<ElImg, ElTextPlain, ElTextMarkDown>;
 
-    struct ElBut
+    struct ElFeedbackButton
     {
-        // see: https://docs.slack.dev/reference/block-kit/block-elements/feedback-buttons-element
-        // or   https://docs.slack.dev/reference/block-kit/block-elements/icon-button-element
+        //std::string                 type;           // always "feedback_buttons"
+        ElButton                    positive_button;// A button to indicate positive feedback. See button object fields below.
+        ElButton                    negative_button;// A button to indicate negative feedback. See button object fields below.
+        OptString                   action_id;      // An identifier for this action. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_id values in the containing block. Maximum length is 255 characters.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElFeedbackButton, feedback_buttons);
+        ThorsAnvil_TypeFieldName(type);
     };
-
     struct ElSlackFile
     {
         // https://docs.slack.dev/reference/block-kit/composition-objects/slack-file-object
@@ -467,11 +461,11 @@ struct Context
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Context, context);
     ThorsAnvil_TypeFieldName(type);
 };
-struct Context_Actions
+struct ContextActions
 {
     // https://docs.slack.dev/reference/block-kit/blocks/context-actions-block/
     //std::string                 type;           // always "context_actions"
-    std::vector<ElBut>          elements;       // Max 5 elements.
+    std::vector<ElFeedbackButton> elements;       // Max 5 elements.
                                                 // An array of feedback buttons elements and icon button elements.
     OptString                   block_id;
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Context_Actions, context_actions);
@@ -604,7 +598,7 @@ struct Video
     ThorsAnvil_TypeFieldName(type);
 };
 
-using Block = std::variant<Actions, Context, Context_Actions, Divider, File, Header, Image, Input, Markdown, RichText, Section, Table, Video>;
+using Block = std::variant<Actions, Context, ContextActions, Divider, File, Header, Image, Input, Markdown, RichText, Section, Table, Video>;
 using Blocks = std::vector<Block>;
 using OptBlocks = std::optional<Blocks>;
 
@@ -613,14 +607,15 @@ using OptBlocks = std::optional<Blocks>;
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElTextPlain, text, emoji, verbatim);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElTextMarkDown, text, emoji, verbatim);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElText, type, text, emoji, verbatim);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Confirm, title, text, confirm, deny, style);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Option, text, value, description, url);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Dispatch, trigger_actions_on);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Button, text, value, accessibility_label);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::NameValue, name, value);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Trigger, url, customizable_input_parameters);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Workflow, trigger);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ImageFile, url, id);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElConfirm, title, text, confirm, deny, style);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElOption, text, value, description, url);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElDispatch, trigger_actions_on);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElButton, text, value, accessibility_label);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElNameValue, name, value);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElTrigger, url, customizable_input_parameters);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElWorkflow, trigger);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImageFile, url, id);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElFeedbackButton, positive_button, negative_button, action_id);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActButton, text, action_id, url, value, style, confirm, accessibility_label);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActCheckbox, action_id, options, initial_options, confirm, focus_on_load);
@@ -633,7 +628,6 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActTimePicker, action_id, in
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActWorkflowButton, text, workflow, action_id, style, accessibility_label);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg, alt_text, image_url, slack_file);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElBut);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElSlackFile, url, id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElInput);
 // -- Rich Text
@@ -660,7 +654,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElColInfo);
 /// ----
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Actions, elements);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Context, elements);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Context_Actions, elements);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ContextActions, elements);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Divider);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::File, external_id, source);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Header, text);
