@@ -518,13 +518,14 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             .element=BK::ElActEMail{},
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
-#if 0
                                                                         BK::Input{
-                                                                            .label=BK::ElText{.text="User Input: FileInput"},
-                                                                            .element=BK::ElActFileInput{},
+                                                                            .label=BK::ElText{.text="User Input: Number Input"},
+                                                                            .element=BK::ElActNumberInput{
+                                                                                .min_value="10",
+                                                                                .max_value="24"
+                                                                            },
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
-#endif
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Markdown"}},
                                                                         BK::Markdown{.text="**MarkDown** Bold?"},
