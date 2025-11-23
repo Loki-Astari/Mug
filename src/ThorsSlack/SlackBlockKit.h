@@ -30,18 +30,6 @@ using OptVector     = std::optional<std::vector<T>>;
 // Objects used by Blocks.
 // See Blocks Below.
 
-/* Not available for Actions.
-    struct ElActFileInput
-    {
-        // https://docs.slack.dev/reference/block-kit/block-elements/file-input-element/
-        //std::string                 type;           // always "file_input"
-        OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
-        OptVecString                filetypes;      // An array of valid file extensions that will be accepted for this element. All file extensions will be accepted if filetypes is not specified. This validation is provided for convenience only, and you should perform your own file type validation based on what you expect to receive.
-        OptInt                      max_files;      // Maximum number of files that can be uploaded for this file_input element. Minimum of 1, maximum of 10. Defaults to 10 if not specified.
-        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActFileInput, file_input);
-        ThorsAnvil_TypeFieldName(type);
-    };
-*/
     enum TextType { /*vera-ignore*/ plain_text, mrkdwn};
     struct ElTextPlain
     {
@@ -249,6 +237,18 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActEMail, email_text_input);
         ThorsAnvil_TypeFieldName(type);
     };
+#if 0
+    struct ElActFileInput
+    {
+        // https://docs.slack.dev/reference/block-kit/block-elements/file-input-element/
+        //std::string                 type;           // always "file_input"
+        OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
+        OptVecString                filetypes;      // An array of valid file extensions that will be accepted for this element. All file extensions will be accepted if filetypes is not specified. This validation is provided for convenience only, and you should perform your own file type validation based on what you expect to receive.
+        OptInt                      max_files;      // Maximum number of files that can be uploaded for this file_input element. Minimum of 1, maximum of 10. Defaults to 10 if not specified.
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActFileInput, file_input);
+        ThorsAnvil_TypeFieldName(type);
+    };
+#endif
     using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu, ElActTimePicker, ElActWorkflowButton>;
     using OptElActive = std::optional<ElActive>;
 
@@ -586,7 +586,7 @@ struct Video
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Video, video);
     ThorsAnvil_TypeFieldName(type);
 };
-using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActEMail, /*ElActFileInput,*/ /*ElActMultiMenuSelect,*/ /*ElActNumberInput,*/ /*ElActPlainTextInput,*/ ElActRadioButton>;
+using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActEMail, /*ElActNumberInput,*/ /*ElActPlainTextInput,*/ ElActRadioButton>;
 struct Input
 {
     // https://docs.slack.dev/reference/block-kit/blocks/input-block/
@@ -633,6 +633,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, action_id, op
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActTimePicker, action_id, initial_time, confirm, focus_on_load, placeholder, timezone);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActWorkflowButton, text, workflow, action_id, style, accessibility_label);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActEMail, action_id, initial_value, dispatch_action_config, focus_on_load, placeholder);
+// ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActFileInput, action_id, filetypes, max_files);
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg, alt_text, image_url, slack_file);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElSlackFile, url, id);
