@@ -552,6 +552,17 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                             .hint=BK::ElText{.text="Hinty"}
                                                                         },
 #endif
+                                                                        BK::Input{
+                                                                            .label=BK::ElText{.text="User Input: Select Menu"},
+                                                                            .element=BK::ElActSelectMenu{
+                                                                                .options={
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElText{.text="Description1"}},
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElText{.text="Description2"}},
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElText{.text="Description3"}}
+                                                                                }
+                                                                            },
+                                                                            .hint=BK::ElText{.text="Hinty"}
+                                                                        },
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Markdown"}},
                                                                         BK::Markdown{.text="**MarkDown** Bold?"},
