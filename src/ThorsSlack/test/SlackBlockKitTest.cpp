@@ -353,7 +353,6 @@ TEST(SlackBlockKitTest, Block_Action_Button)
                                     },
                                 }
                            };
-#endif
     BK::Context& actions = std::get<BK::Context>(message.blocks.value()[0]);
     std::cerr << "Count: " << actions.elements.size() << "\n";
 
@@ -366,7 +365,6 @@ TEST(SlackBlockKitTest, Block_Action_Button)
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
     }
     ASSERT_TRUE(reply.ok);
-#if 0
 #endif
 }
 TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
@@ -417,22 +415,6 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                                     }
                                                                                 }
                                                                                 , BK::ElActTimePicker{}
-#if 0
-// TODO: Need to implement workflows before this becomes useful.
-                                                                                , BK::ElActWorkflowButton{
-                                                                                    .text = BK::ElText{.text = "Workflow"},
-                                                                                    .workflow = BK::Workflow{
-                                                                                        .trigger = {
-                                                                                            .url = "https://slack.com/shortcuts/Ft0123ABC456/321...zyx",
-                                                                                            .customizable_input_parameters ={
-                                                                                                BK::NameValue{"input_parameter_a", "Value for input param A"},
-                                                                                                BK::NameValue{"input_parameter_b", "Value for input param B"}
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    .action_id = "Action",
-                                                                                }
-#endif
                                                                             }
                                                                         },
                                                                         BK::Divider{},

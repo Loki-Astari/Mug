@@ -91,6 +91,7 @@ using OptVector     = std::optional<std::vector<T>>;
     using OptVecElOption = std::optional<VecElOption>;
     struct ElDispatch
     {
+        // https://docs.slack.dev/reference/block-kit/composition-objects/dispatch-action-configuration-object
         OptVecString                trigger_actions_on; // An array of interaction types that you would like to receive a block_actions payload for. Should be one or both of:on_enter_pressed — payload is dispatched when user presses the enter key while the input is in focus. Hint text will appear underneath the input explaining to the user to press enter to submit.on_character_entered — payload is dispatched when a character is entered (or removed) in the input.
     };
     using OptElDispatch = std::optional<ElDispatch>;
@@ -99,21 +100,6 @@ using OptVector     = std::optional<std::vector<T>>;
         ElText                      text;           // A text object that defines the button's text. Can only be of type: plain_text. Maximum length for the text in this field is 75 characters.
         std::string                 value;          // The value to send along with the interaction payload. Maximum length is 2000 characters.
         OptString                   accessibility_label; // A label for longer descriptive text about a button element. This label will be read out by screen readers instead of the button text object. Maximum length is 75 characters.
-    };
-    struct ElNameValue
-    {
-        std::string                 name;
-        std::string                 value;
-    };
-    using VecElNameValue = std::vector<ElNameValue>;
-    struct ElTrigger
-    {
-        std::string                 url;
-        VecElNameValue              customizable_input_parameters;
-    };
-    struct ElWorkflow
-    {
-        ElTrigger                   trigger;        // A trigger object that contains information about a workflow's trigger.
     };
     struct ElActButton
     {
@@ -213,18 +199,6 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActTimePicker, timepicker);
         ThorsAnvil_TypeFieldName(type);
     };
-    struct ElActWorkflowButton
-    {
-        // https://docs.slack.dev/reference/block-kit/block-elements/workflow-button-element/
-        // std::string                 type;           // always "workflow_button"
-        ElText                      text;           // A text object that defines the button's text. Can only be of type: plain_text. text may truncate with ~30 characters. Maximum length for the text in this field is 75 characters.
-        ElWorkflow                  workflow;       // A workflow object that contains details about the workflow that will run when the button is clicked.
-        std::string                 action_id;      // An identifier for the action. Use this when you receive an interaction payload to identify the source of the action. Every action_id in a block should be unique. Maximum length is 255 characters.
-        OptString                   style;          // Decorates buttons with alternative visual color schemes. Use this option with restraint.primary gives buttons a green outline and text, ideal for affirmation or confirmation actions. primary should only be used for one button within a set.danger gives buttons a red outline and text, and should be used when the action is destructive. Use danger even more sparingly than primary.If you don't include this field, the default button style will be used.
-        OptString                   accessibility_label;    // A label for longer descriptive text about a button element. This label will be read out by screen readers instead of the button text object. Maximum length is 75 characters.
-        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActWorkflowButton, workflow_button);
-        ThorsAnvil_TypeFieldName(type);
-    };
     struct ElActEMail
     {
         //https://docs.slack.dev/reference/block-kit/block-elements/email-input-element/
@@ -237,20 +211,9 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActEMail, email_text_input);
         ThorsAnvil_TypeFieldName(type);
     };
-#if 0
-    struct ElActFileInput
-    {
-        // https://docs.slack.dev/reference/block-kit/block-elements/file-input-element/
-        //std::string                 type;           // always "file_input"
-        OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
-        OptVecString                filetypes;      // An array of valid file extensions that will be accepted for this element. All file extensions will be accepted if filetypes is not specified. This validation is provided for convenience only, and you should perform your own file type validation based on what you expect to receive.
-        OptInt                      max_files;      // Maximum number of files that can be uploaded for this file_input element. Minimum of 1, maximum of 10. Defaults to 10 if not specified.
-        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActFileInput, file_input);
-        ThorsAnvil_TypeFieldName(type);
-    };
-#endif
     struct ElActNumberInput
     {
+        // https://docs.slack.dev/reference/block-kit/block-elements/number-input-element/
         //std::string                 type;           // always "number_input"
         bool                        is_decimal_allowed; // Decimal numbers are allowed if is_decimal_allowed= true, set the value to false otherwise.
         OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
@@ -265,6 +228,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElActPlainTextInput
     {
+        // https://docs.slack.dev/reference/block-kit/block-elements/plain-text-input-element/
         // std::string                 type;           // always "plain_text_input"
         OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
         OptString                   initial_value;  // The initial value in the plain-text input when it is loaded.
@@ -279,6 +243,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElActURLInput
     {
+        // https://docs.slack.dev/reference/block-kit/block-elements/url-input-element/
         // std::string                 type;           // always "url_text_input"
         OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
         OptString                   initial_value;  // The initial value in the URL input when it is loaded.
@@ -288,11 +253,12 @@ using OptVector     = std::optional<std::vector<T>>;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActURLInput, url_text_input);
         ThorsAnvil_TypeFieldName(type);
     };
-    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu, ElActTimePicker, ElActWorkflowButton>;
+    using ElActive  = std::variant<ElActButton, ElActCheckbox, ElActDatePicker, ElActDatetimePicker, ElActOverflowMenu, ElActRadioButton, ElActSelectMenu, ElActTimePicker>;
     using OptElActive = std::optional<ElActive>;
 
     struct ElImageFile
     {
+        // https://docs.slack.dev/reference/block-kit/composition-objects/slack-file-object
         OptString                   url;            // This URL can be the url_private or the permalink of the Slack file.
         OptString                   id;             // Slack ID of the file.
     };
@@ -311,6 +277,7 @@ using OptVector     = std::optional<std::vector<T>>;
 
     struct ElFeedbackButton
     {
+        // https://docs.slack.dev/reference/block-kit/block-elements/feedback-buttons-element
         //std::string                 type;           // always "feedback_buttons"
         ElButton                    positive_button;// A button to indicate positive feedback. See button object fields below.
         ElButton                    negative_button;// A button to indicate negative feedback. See button object fields below.
@@ -326,39 +293,23 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     using OptElSlackFile  = std::optional<ElSlackFile>;
 
-    struct ElInput
-    {
-        // One of:
-        // https://docs.slack.dev/reference/block-kit/block-elements/checkboxes-element/
-        // https://docs.slack.dev/reference/block-kit/block-elements/date-picker-element/
-        // https://docs.slack.dev/reference/block-kit/block-elements/datetime-picker-element/
-        // https://docs.slack.dev/reference/block-kit/block-elements/email-input-element/
-        // https://docs.slack.dev/reference/block-kit/block-elements/file-input-element/
-        // https://docs.slack.dev/reference/block-kit/block-elements/multi-select-menus-element
-        // https://docs.slack.dev/reference/block-kit/block-elements/number-input-element/
-        // https://docs.slack.dev/reference/block-kit/block-elements/plain-text-input-element/
-        // https://docs.slack.dev/reference/block-kit/block-elements/radio-button-element
-        // https://docs.slack.dev/reference/block-kit/block-elements/rich-text-input-element/
-        // https://docs.slack.dev/reference/block-kit/block-elements/select-menu-element/
-        // https://docs.slack.dev/reference/block-kit/block-elements/time-picker-element/
-        // https://docs.slack.dev/reference/block-kit/block-elements/url-input-element/
-    };
-
     struct InfoStyle
     {
-         OptBool    bold;
-         OptBool    italic;
-         OptBool    strike;
-         OptBool    highlight;
-         OptBool    client_highlight;
-         OptBool    unlink;
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
+        OptBool     bold;
+        OptBool     italic;
+        OptBool     strike;
+        OptBool     highlight;
+        OptBool     client_highlight;
+        OptBool     unlink;
     };
     struct InfoText
     {
-        bool    bold;
-        bool    italic;
-        bool    strike;
-        bool    code;
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
+        bool        bold;
+        bool        italic;
+        bool        strike;
+        bool        code;
     };
     using OptInfoStyle = std::optional<InfoStyle>;
     using OptInfoText = std::optional<InfoText>;
@@ -366,6 +317,7 @@ using OptVector     = std::optional<std::vector<T>>;
     enum BroadcastType {/*vera-ignore*/here, channel, everyone};
     struct ElRtBroadcast
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         BroadcastType       range;      // The range of the broadcast; value can be here, channel, or everyone.
                                         // Using here notifies only the active members of a channel; channel notifies all members of a channel;
                                         // everyone notifies every person in the #general channel.
@@ -374,7 +326,8 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElRtColor
     {
-        // This provides a colour block!
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
+        // This provides a color block!
         std::string         value;      // The hex value for the color.
                                         // Must be proceeded by # => #FF0000 => Red
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElRtColor, color);
@@ -382,6 +335,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElRtChannel
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         std::string         channel_id; // The ID of the channel to be mentioned.
         OptInfoStyle        style;      // An object of six optional boolean properties that dictate style: bold, italic, strike, highlight, client_highlight, and unlink.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElRtChannel, channel);
@@ -389,6 +343,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElRtDate
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         std::time_t         timestamp;  // A Unix timestamp for the date to be displayed in seconds.
         std::string         format;     // A template string containing curly-brace-enclosed tokens to substitute your provided timestamp. See details below.
         OptString           url;        // URL to link the entire format string to.
@@ -398,6 +353,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElRtEmoji
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         std::string         name;       // The name of the emoji; i.e. "wave" or "wave::skin-tone-2".
         OptString           unicode;    // Represents the unicode code point of the emoji, where applicable.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElRtEmoji, emoji);
@@ -405,6 +361,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElRtLink
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         std::string         url;        // The link's url.
         OptString           text;       // The text shown to the user (instead of the url). If no text is provided, the url is used.
         OptBool             unsafe;     // Indicates whether the link is safe.
@@ -414,6 +371,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElRtText
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         std::string         text;       // The text shown to the user.
         OptInfoText         style;      // An object containing four boolean fields, none of which are required: bold, italic, strike, and code.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElRtText, text);
@@ -421,6 +379,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElRtUser
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         std::string         user_id;    // The ID of the user to be mentioned.
         OptInfoStyle        style;      // An object of six optional boolean properties that dictate style: bold, italic, strike, highlight, client_highlight, and unlink.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElRtUser, user);
@@ -428,6 +387,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElRtUserGroup
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         std::string         usergroup_id;   // The ID of the user group to be mentioned.
         OptInfoStyle        style;          // An object of six optional boolean properties that dictate style: bold, italic, strike, highlight, client_highlight, and unlink.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElRtUserGroup, usergroup);
@@ -437,6 +397,7 @@ using OptVector     = std::optional<std::vector<T>>;
     using VecRtElement = std::vector<RtElement>;
     struct RichTextSection
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         VecRtElement            elements;
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::RichTextSection, rich_text_section);
         ThorsAnvil_TypeFieldName(type);
@@ -445,6 +406,7 @@ using OptVector     = std::optional<std::vector<T>>;
     enum ListType {/*vera-ignore*/bullet, ordered};
     struct RichTextList
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         ListType                style;      // Either "bullet" or "ordered"
         VecRichTextSection      elements;   // An array of rich_text_section objects containing two properties: type, which is "rich_text_section", and elements, which is an array of rich text element objects.
         OptInt                  indent;     // Number of pixels to indent the list.
@@ -455,6 +417,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct RichTextPreformatted
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         VecRtElement            elements;   // An array of rich text elements.
         OptInt                  border;     // Number of pixels of border thickness. (1 or 0)
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::RichTextPreformatted, rich_text_preformatted);
@@ -462,6 +425,7 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct RichTextQuote
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/rich-text-block#element-types
         VecRtElement            elements;   // An array of rich text elements.
         OptInt                  border;     // Number of pixels of border thickness. (1 or 0)
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::RichTextQuote, rich_text_quote);
@@ -473,6 +437,7 @@ using OptVector     = std::optional<std::vector<T>>;
 
     struct ElColInfo
     {
+        // https://docs.slack.dev/reference/block-kit/blocks/table-block/
         OptString               align;          // The alignment for items in this column. Can be left, center, or right. Defaults to left if not defined.
         OptBool                 is_wrapped;     // Whether the contents of this column should be wrapped or not. Defaults to false if not defined.
     };
@@ -572,6 +537,9 @@ struct RichText
     ThorsAnvil_TypeFieldName(type);
 };
 using OptRichText = std::optional<RichText>;
+/* OUT OF ODER:
+ * Needs the Rich Text Element
+ */
 struct ElActRichTextInput
 {
     // std::string                 type;           // always "rich_text_input"
@@ -668,9 +636,6 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElConfirm, title, text, confir
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElOption, text, value, description, url);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElDispatch, trigger_actions_on);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElButton, text, value, accessibility_label);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElNameValue, name, value);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElTrigger, url, customizable_input_parameters);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElWorkflow, trigger);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImageFile, url, id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElFeedbackButton, positive_button, negative_button, action_id);
 
@@ -682,9 +647,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActOverflowMenu, action_id, 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActRadioButton, action_id, options, initial_option, confirm, focus_on_load);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActSelectMenu, action_id, options, option_groups, initial_option, confirm, focus_on_load, placeholder);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActTimePicker, action_id, initial_time, confirm, focus_on_load, placeholder, timezone);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActWorkflowButton, text, workflow, action_id, style, accessibility_label);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActEMail, action_id, initial_value, dispatch_action_config, focus_on_load, placeholder);
-// ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActFileInput, action_id, filetypes, max_files);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActNumberInput, is_decimal_allowed, action_id, initial_value, min_value, max_value, dispatch_action_config, focus_on_load, placeholder);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActPlainTextInput, action_id, initial_value, multiline, min_length, max_length, dispatch_action_config, focus_on_load, placeholder);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActRichTextInput, action_id, initial_value, dispatch_action_config, focus_on_load, placeholder);
@@ -692,7 +655,6 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElActURLInput, action_id, init
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElImg, alt_text, image_url, slack_file);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElSlackFile, url, id);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElInput);
 // -- Rich Text
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::InfoStyle, bold, italic, strike, highlight, client_highlight, unlink);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::InfoText, bold, italic, strike, code);
