@@ -376,7 +376,7 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                    .blocks = BK::Blocks{
                                                                         BK::Section{.text = BK::ElText{.text="Selection with all Elements"}},
                                                                         BK::Divider{},
-                                                                        BK::Section{.text = BK::ElText{.text="Actions: TODO"}},
+                                                                        BK::Section{.text = BK::ElText{.text="Actions"}},
                                                                         BK::Actions{
                                                                             .elements = {
                                                                                 BK::ElActButton{.text = BK::ElText{.text = "Push"}, .value="Clicked"}
@@ -481,7 +481,17 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
                                                                         BK::Image{.alt_text="An image", .image_url="https://marvelofficial.com/wp-content/uploads/2020/10/1030357-247x296.jpg", .title=BK::ElText{.text="Thors Hammer"}},
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Input: TODO - ELInput"}},
-                                                                        // BK::Input{.label=BK::ElText{.text="User Input"}, .element = BK::ElInput{}, .hint=BK::ElText{.text="Hinty"}},
+                                                                        BK::Input{
+                                                                            .label=BK::ElText{.text="User Input"},
+                                                                            .element=BK::ElActCheckbox{
+                                                                                .options={
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option1"},.value="1",.description=BK::ElText{.text="Description1"}},
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option2"},.value="2",.description=BK::ElText{.text="Description2"}},
+                                                                                    BK::ElOption{.text=BK::ElText{.text="Option3"},.value="3",.description=BK::ElText{.text="Description3"}}
+                                                                                }
+                                                                            },
+                                                                            .hint=BK::ElText{.text="Hinty"}
+                                                                        },
                                                                         BK::Divider{},
                                                                         BK::Section{.text = BK::ElText{.text="Markdown"}},
                                                                         BK::Markdown{.text="**MarkDown** Bold?"},

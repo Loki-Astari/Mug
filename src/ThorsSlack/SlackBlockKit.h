@@ -514,22 +514,6 @@ struct Image
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Image, image);
     ThorsAnvil_TypeFieldName(type);
 };
-struct Input
-{
-    // https://docs.slack.dev/reference/block-kit/blocks/input-block/
-    //std::string                 type;           // always "input".
-    ElText                      label;          // A label that appears above an input element in the form of a text object that must have type of plain_text. Maximum length for the text in this field is 2000 characters.
-    ElInput                     element;        // A block element. See above for full list.
-    OptBool                     dispatch_action;// A boolean that indicates whether or not the use of elements in this block should dispatch a block_actions payload.
-                                                // Defaults to false.
-                                                // This field is incompatible with the file_input block element. If dispatch_action is set to true and a file_input block element is provided, an unsupported type error will be raised.
-    OptString                   block_id;
-    OptElText                   hint;           // An optional hint that appears below an input element in a lighter grey. It must be a text object with a type of plain_text. Maximum length for the text in this field is 2000 characters.
-    OptBool                     optional;       // A boolean that indicates whether the input element may be empty when a user submits the modal.
-                                                // Defaults to false.
-    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Input, input);
-    ThorsAnvil_TypeFieldName(type);
-};
 struct Markdown
 {
     // https://docs.slack.dev/reference/block-kit/blocks/markdown-block/
@@ -600,6 +584,23 @@ struct Video
     std::string                 thumbnail_url;  // The thumbnail image URL
     std::string                 video_url;      // The URL to be embedded. Must match any existing unfurl domains within the app and point to a HTTPS URL.
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Video, video);
+    ThorsAnvil_TypeFieldName(type);
+};
+using InputElement = std::variant<ElActCheckbox, ElActDatePicker, ElActDatetimePicker, /*ElActEMail,*/ /*ElActFileInput,*/ /*ElActMultiMenuSelect,*/ /*ElActNumberInput,*/ /*ElActPlainTextInput,*/ ElActRadioButton>;
+struct Input
+{
+    // https://docs.slack.dev/reference/block-kit/blocks/input-block/
+    //std::string                 type;           // always "input".
+    ElText                      label;          // A label that appears above an input element in the form of a text object that must have type of plain_text. Maximum length for the text in this field is 2000 characters.
+    InputElement                element;        // A block element. See above for full list.
+    OptBool                     dispatch_action;// A boolean that indicates whether or not the use of elements in this block should dispatch a block_actions payload.
+                                                // Defaults to false.
+                                                // This field is incompatible with the file_input block element. If dispatch_action is set to true and a file_input block element is provided, an unsupported type error will be raised.
+    OptString                   block_id;
+    OptElText                   hint;           // An optional hint that appears below an input element in a lighter grey. It must be a text object with a type of plain_text. Maximum length for the text in this field is 2000 characters.
+    OptBool                     optional;       // A boolean that indicates whether the input element may be empty when a user submits the modal.
+                                                // Defaults to false.
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Input, input);
     ThorsAnvil_TypeFieldName(type);
 };
 
