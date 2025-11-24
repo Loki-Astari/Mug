@@ -7,8 +7,7 @@
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 #include "ThorsSlack/SlackClient.h"
-#include "ThorsSlack/SlackEvent_Message.h"
-#include "ThorsSlack/SlackEvent_Challenge.h"
+#include "ThorsSlack/Event.h"
 #include <string>
 #include <map>
 
@@ -23,8 +22,8 @@ class SlackBot: public ThorsAnvil::ThorsChalice::ChalicePlugin
         std::map<std::pair<std::string, std::string>, WelcomeMessage>   welcomeMessages;
 
         bool validateRequest(ThorsAnvil::Nisse::HTTP::Request& request);
-        void handleUrlVerification(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Slack::Event::Challenge::Event const& event, ThorsAnvil::Nisse::HTTP::Response& response);
-        void handleEventCallback(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Slack::Event::Message::Event const& event, ThorsAnvil::Nisse::HTTP::Response& response);
+        void handleUrlVerification(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Slack::Event::EventURLVerification const& event, ThorsAnvil::Nisse::HTTP::Response& response);
+        void handleEventCallback(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Slack::Event::EventCallback const& event, ThorsAnvil::Nisse::HTTP::Response& response);
         void handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response);
         void handleCommand(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response);
 

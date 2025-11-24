@@ -66,12 +66,12 @@ bool SlackBot::validateRequest(NisHTTP::Request& request)
     return ThorsAnvil::Crypto::hexdigest<ThorsAnvil::Crypto::Sha256>(digest) == std::string_view{std::begin(sig) + versionNext, std::end(sig)};
 }
 
-void SlackBot::handleUrlVerification(NisHTTP::Request& /*request*/, ThorsAnvil::Slack::Event::Challenge::Event const& event, NisHTTP::Response& response)
+void SlackBot::handleUrlVerification(NisHTTP::Request& /*request*/, ThorsAnvil::Slack::Event::EventURLVerification const& event, NisHTTP::Response& response)
 {
     NisHTTP::HeaderResponse  headers;
     headers.add("Content-Type", "application/json; charset=utf-8");
 
-    ThorsAnvil::Slack::Event::Challenge::Response   reply{event.challenge};
+    ThorsAnvil::Slack::Event::ResponseURLVerification   reply{event.challenge};
 
     std::size_t         challangeBackSize = Ser::jsonStreanSize(reply);
 
@@ -97,24 +97,30 @@ void SlackBot::sendWelcomeMessage(std::string const& channel, std::string const&
     }
 }
 
-void SlackBot::handleEventCallback(NisHTTP::Request& /*request*/, ThorsAnvil::Slack::Event::Message::Event const& event, NisHTTP::Response& /*response*/)
+void SlackBot::handleEventCallback(NisHTTP::Request& /*request*/, ThorsAnvil::Slack::Event::EventCallback const& event, NisHTTP::Response& /*response*/)
 {
-    std::string const& userId = event.event.user;
+    std::cerr << ThorsAnvil::Serialize::jsonExporter(event) << "\n";
+    ThorsAnvil::Slack::Event::Message const& message = std::get<ThorsAnvil::Slack::Event::Message>(event.event);
+    std::string const& userId = message.user;
+    std::cerr << "User: " << userId << " Bot: " << botId << "\n";
     if ((userId != "") && (userId != botId)) {
+        std::cerr << "Send Message\n";
         ++messageCount[userId];
         //std::string const&  channel = event.event.channel;
         std::string channel = "@" + userId;
-        std::string         text = "I see: " + event.event.text;
+        std::string         text = "I see: " + message.text;
 
         client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage{.channel = channel, .text = text}, NisHTTP::Method::POST);
-        if (event.event.text == "start") {
-            sendWelcomeMessage(event.event.channel, userId);
+        if (message.text == "start") {
+            std::cerr << "Send Welcome\n";
+            sendWelcomeMessage(message.channel, userId);
         }
     }
 }
 
 void SlackBot::handleEvent(NisHTTP::Request& request, NisHTTP::Response& response)
 {
+    std::cerr << "Got EVENT\n";
     /*
      * TODO:
      * =====
@@ -129,22 +135,25 @@ void SlackBot::handleEvent(NisHTTP::Request& request, NisHTTP::Response& respons
 
     using NisHTTP::HeaderResponse;
     using namespace std::string_literals;
-    //std::cerr << "Recieved: Message\n";
-    //std::cerr << request << "\n";
+    std::cerr << "Recieved: Message\n";
+    std::cerr << request << "\n";
 
     std::string_view    body = request.preloadStreamIntoBuffer();
     if (body.find(R"("type":"url_verification")") != std::string_view::npos) {
-        ThorsAnvil::Slack::Event::Challenge::Event   event;
+        std::cerr << "URL VERIFICATION\n";
+        ThorsAnvil::Slack::Event::EventURLVerification   event;
         request.body() >> ThorsAnvil::Serialize::jsonImporter(event);
         handleUrlVerification(request, event, response);
         return;
     }
     if (body.find(R"("type":"event_callback")") != std::string_view::npos) {
-        ThorsAnvil::Slack::Event::Message::Event    event;
+        std::cerr << "CALL BACK\n";
+        ThorsAnvil::Slack::Event::EventCallback    event;
         request.body() >> ThorsAnvil::Serialize::jsonImporter(event);
         handleEventCallback(request, event, response);
         return;
     }
+    std::cerr << "UNKNOWN\n";
     response.setStatus(404);
 }
 
