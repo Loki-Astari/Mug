@@ -21,8 +21,8 @@
 #include <ctime>
 
 
-const Environment     environment("/Users/martinyork/Repo/ThorsChalice/src/ThorsSlackBot/.slackenv");
-SlackBot    slackBot;
+const Environment   environment("/Users/martinyork/Repo/ThorsChalice/src/ThorsSlackBot/.slackenv");
+SlackBot            slackBot;
 
 extern "C" void* chaliceFunction()
 {
@@ -65,7 +65,6 @@ void SlackBot::handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request& /*re
     std::string const& userId = event.user;
     if ((userId != "") && (userId != botId)) {
         ++messageCount[userId];
-        //std::string const&  channel = event.event.channel;
         std::string channel = "@" + userId;
         std::string         text = "I see: " + event.text;
 
@@ -75,9 +74,20 @@ void SlackBot::handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request& /*re
         }
     }
 }
-void SlackBot::handleCallbackReactionAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::ReactionAdded const& /*event*/)
+void SlackBot::handleCallbackReactionAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::ReactionAdded const& event)
 {
     ThorsLogDebug("SlackBot", "handleCallbackReactionAddedEvent", "Recievent Reaction Add Event");
+
+    std::string const& channel = event.item.channel;
+    std::string const& user = event.user;
+
+    auto find = welcomeMessages.find(std::make_pair(channel, user));
+    if (find == std::end(welcomeMessages)) {
+        return;
+    }
+    find->second.markCompleted();
+    auto resp = client.sendMessage(find->second.getMessage());
+    find->second.settime(std::stol(resp.ts.value()));
 }
 
 void SlackBot::handleCommand(NisHTTP::Request& request, NisHTTP::Response& response)

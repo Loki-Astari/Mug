@@ -45,6 +45,9 @@ class WelcomeMessage
                         .username = "Welcome Robot!",
                    };
         }
+
+        void markCompleted()            {completed = true;}
+        void settime(std::time_t time)  {timestamp = time;}
     private:
         BlockKit::Section getReactionTask()
         {
