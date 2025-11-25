@@ -1,7 +1,6 @@
 #ifndef THORSANVIL_SLACK_BLOCKKIT_H
 #define THORSANVIL_SLACK_BLOCKKIT_H
 
-#include "SlackAPI_Chat.h"
 #include "ThorsSlackConfig.h"
 #include "ThorSerialize/Serialize.h"
 #include "ThorSerialize/PolymorphicMarker.h"
