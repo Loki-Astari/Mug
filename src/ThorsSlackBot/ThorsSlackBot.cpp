@@ -71,6 +71,15 @@ void SlackBot::handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request& /*re
         client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage{.channel = channel, .text = text}, NisHTTP::Method::POST);
         if (event.text == "start") {
             sendWelcomeMessage(event.channel, userId);
+            return;
+        }
+        if (event.text.find("POP")) {
+            client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage
+                               {
+                                    .channel = event.channel,
+                                    .text = "We saw a bad work!!!",
+                                    .thread_ts = event.ts,
+                               });
         }
     }
 }
