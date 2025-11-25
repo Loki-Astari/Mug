@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include <variant>
 
+#if !defined(DISABLE_TEST) || (DISABLE_TEST == 0)
+
 #include "Environment.h"
 #include "SlackClient.h"
 #include "APIChatPostMessage.h"
@@ -483,4 +485,5 @@ TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
     ASSERT_TRUE(reply.ok);
 }
 
+#endif
 

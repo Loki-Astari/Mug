@@ -1,5 +1,5 @@
-#ifndef THORSANVIL_SLACK_API_AUTH_H
-#define THORSANVIL_SLACK_API_AUTH_H
+#ifndef THORSANVIL_SLACK_API_AUTH_TEST_H
+#define THORSANVIL_SLACK_API_AUTH_TEST_H
 
 #include "ThorsSlackConfig.h"
 #include "ThorSerialize/Traits.h"

@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include <variant>
 
+#if !defined(DISABLE_TEST) || (DISABLE_TEST == 0)
+
 #include "Environment.h"
 #include "SlackClient.h"
 #include "APIChatPostMessage.h"
@@ -120,4 +122,4 @@ TEST(APIChatPostMessageTest, MessageWithBadJSON)
     ASSERT_FALSE(reply.ok);
     EXPECT_TRUE(reply.error.has_value());
 }
-
+#endif
