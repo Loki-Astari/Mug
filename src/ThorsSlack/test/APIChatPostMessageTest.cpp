@@ -3,7 +3,7 @@
 
 #include "Environment.h"
 #include "SlackClient.h"
-#include "SlackAPI_Chat.h"
+#include "APIChatPostMessage.h"
 #include "ThorSerialize/JsonThor.h"
 #include "SlackBlockKit.h"
 
@@ -62,7 +62,7 @@ Tested:
     ThorsAnvil::Slack::BlockKit::Video
 #endif
 
-TEST(SlackAPI_ChatTEST, SimpleText)
+TEST(APIChatPostMessageTest, SimpleText)
 {
     PostMessage::Reply      reply = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."});
     ASSERT_TRUE(reply.ok);
@@ -79,7 +79,7 @@ TEST(SlackAPI_ChatTEST, SimpleText)
     EXPECT_EQ("I hope the tour went well, Mr. Wonka.", rtext.text);
 }
 
-TEST(SlackAPI_ChatTEST, Block_Section_ElText)
+TEST(APIChatPostMessageTest, Block_Section_ElText)
 {
     PostMessage::Reply      reply = client.sendMessage(PostMessage{
                                                             .channel = "C09RU2URYMS",
@@ -114,7 +114,7 @@ TEST(SlackAPI_ChatTEST, Block_Section_ElText)
     EXPECT_EQ("Here we go", section2.text.value().text);
 }
 
-TEST(SlackAPI_ChatTest, MessageWithBadJSON)
+TEST(APIChatPostMessageTest, MessageWithBadJSON)
 {
     PostMessage::Reply      reply = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "Json does not support new line\n"});
     ASSERT_FALSE(reply.ok);

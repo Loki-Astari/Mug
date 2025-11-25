@@ -3,7 +3,6 @@
 
 #include "ThorsSlackConfig.h"
 #include "ThorsSlack/Event.h"
-#include "SlackBlockKit.h"
 #include "EventCallback.h"
 #include "EventCallbackMessage.h"
 #include "EventURLVerification.h"
@@ -14,7 +13,16 @@
 #include "NisseHTTP/Response.h"
 #include "ThorsCrypto/hmac.h"
 #include "ThorSerialize/Logging.h"
+
 #include <string>
+#include <string_view>
+#include <variant>
+#include <algorithm>
+#include <cmath>
+#include <ctime>
+#if defined(DEBUG) && (DEBUG != 0)
+#incude <iostream>
+#endif
 
 namespace ThorsAnvil::ThorsSlack
 {
@@ -91,7 +99,7 @@ void SlackPlugin::handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAn
     ThorsLogDebug("SlackPlugin", "handleEvent", "Message Recieved: ", request);
 
     ThorsAnvil::Slack::Event::Event     event;
-#if 0
+#if defined(DEBUG) && (DEBUG != 0)
     std::istream&                       stream = request.body();
     std::string     line;
     while (std::getline(stream, line)) {

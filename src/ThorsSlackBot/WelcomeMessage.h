@@ -1,10 +1,13 @@
 #ifndef THORSANVIL_SLACK_WELCOME_MESSAGE_H
 #define THORSANVIL_SLACK_WELCOME_MESSAGE_H
 
-#include "ThorsSlack/SlackAPI_Chat.h"
+#include "ThorsSlackBotConfig.h"
+#include "ThorsSlack/APIChatPostMessage.h"
 #include "ThorsSlack/SlackBlockKit.h"
-#include <ctime>
+
+#include <utility>
 #include <string>
+#include <ctime>
 
 namespace ThorsAnvil::Slack
 {

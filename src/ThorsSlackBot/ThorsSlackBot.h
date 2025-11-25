@@ -1,16 +1,16 @@
 #ifndef THORSANVIL_SLACK_THORSSLACKBOT_H
 #define THORSANVIL_SLACK_THORSSLACKBOT_H
 
-#include "../ThorsChalice/DLLib.h"
-#include "Environment.h"
-#include "ThorsSlack/EventCallbackReactionAdded.h"
+#include "ThorsSlackBotConfig.h"
 #include "WelcomeMessage.h"
-#include "NisseHTTP/Request.h"
-#include "NisseHTTP/Response.h"
-#include "ThorsSlack/Event.h"
+#include "ThorsSlack/EventCallbackReactionAdded.h"
+#include "ThorsSlack/EventCallbackMessage.h"
 #include "ThorsSlack/SlackClient.h"
 #include "ThorsSlack/SlackPlugin.h"
-#include "ThorsSlack/Event.h"
+#include "ThorsChalice/DLLib.h"
+#include "NisseHTTP/Request.h"
+#include "NisseHTTP/Response.h"
+
 #include <string>
 #include <map>
 

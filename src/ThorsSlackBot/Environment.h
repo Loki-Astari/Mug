@@ -2,8 +2,8 @@
 #define THORSANVIL_SLACKCLI_ENVIRONMENT_H
 
 #include "ThorsSlackBotConfig.h"
-#include <string>
 #include "ThorSerialize/Traits.h"
+#include <string>
 
 struct Environment
 {

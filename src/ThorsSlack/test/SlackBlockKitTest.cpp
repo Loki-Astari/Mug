@@ -3,7 +3,7 @@
 
 #include "Environment.h"
 #include "SlackClient.h"
-#include "SlackAPI_Chat.h"
+#include "APIChatPostMessage.h"
 #include "ThorSerialize/JsonThor.h"
 #include "ThorSerialize/PrinterConfig.h"
 #include "SlackBlockKit.h"

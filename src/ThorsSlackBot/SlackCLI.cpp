@@ -1,12 +1,9 @@
 #include "Environment.h"
 #include "ThorsSlack/SlackClient.h"
-#include "ThorsSlack/SlackAPI_Chat.h"
-#include "ThorsSlack/SlackBlockKit.h"
+#include "ThorsSlack/APIChatPostMessage.h"
 #include "ThorSerialize/JsonThor.h"
-#include "ThorSerialize/PrinterConfig.h"
 
 using namespace std::literals::string_literals;
-namespace BK = ThorsAnvil::Slack::BlockKit;
 
 int main()
 {

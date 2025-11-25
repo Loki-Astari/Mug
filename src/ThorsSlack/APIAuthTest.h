@@ -3,7 +3,6 @@
 
 #include "ThorsSlackConfig.h"
 #include "ThorSerialize/Traits.h"
-#include "ThorSerialize/SerUtil.h"
 
 #include <string>
 
