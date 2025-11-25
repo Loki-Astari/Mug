@@ -5,6 +5,7 @@
 #include "ThorSerialize/JsonThor.h"
 #include "ThorSerialize/ParserConfig.h"
 #include "ThorSerialize/Traits.h"
+#include "ThorSerialize/Logging.h"
 #include "ThorsCrypto/hash.h"
 #include "ThorsCrypto/hmac.h"
 #include "ThorsSlack/EventCallback.h"
@@ -20,6 +21,7 @@
 #include <ctime>
 
 
+const Environment     environment("/Users/martinyork/Repo/ThorsChalice/src/ThorsSlackBot/.slackenv");
 SlackBot    slackBot;
 
 extern "C" void* chaliceFunction()
@@ -30,10 +32,8 @@ extern "C" void* chaliceFunction()
 namespace Ser       = ThorsAnvil::Serialize;
 namespace NisHTTP   = ThorsAnvil::Nisse::HTTP;
 
-const Environment     environment("/Users/martinyork/Repo/ThorsChalice/src/ThorsSlackBot/.slackenv");
-
 SlackBot::SlackBot()
-    : SlackPlugin(environment.slackToken)
+    : SlackPlugin(environment.slackSecret)
     , client(environment.slackToken)
     , botId{client.sendMessage(ThorsAnvil::Slack::API::Auth::Test{}).user_id}
 {}
@@ -61,6 +61,7 @@ void SlackBot::sendWelcomeMessage(std::string const& channel, std::string const&
 
 void SlackBot::handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::Message const& event)
 {
+    ThorsLogDebug("SlackBot", "handleCallbackMessageEvent", "Recievent Message Event");
     std::string const& userId = event.user;
     if ((userId != "") && (userId != botId)) {
         ++messageCount[userId];
@@ -76,10 +77,12 @@ void SlackBot::handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request& /*re
 }
 void SlackBot::handleCallbackReactionAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::ReactionAdded const& /*event*/)
 {
+    ThorsLogDebug("SlackBot", "handleCallbackReactionAddedEvent", "Recievent Reaction Add Event");
 }
 
 void SlackBot::handleCommand(NisHTTP::Request& request, NisHTTP::Response& response)
 {
+    ThorsLogDebug("SlackBot", "handleCommand", "Recievent Command");
     std::string const& userId = request.variables()["user_id"];
     std::string const& channel = request.variables()["channel_id"];
 

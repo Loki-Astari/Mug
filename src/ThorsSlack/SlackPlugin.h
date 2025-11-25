@@ -2,6 +2,7 @@
 #define THORSANVIL_SLACK_SLACKPLUGIN_H
 
 #include "ThorsSlackConfig.h"
+#include "ThorsSlack/Event.h"
 #include "SlackBlockKit.h"
 #include "EventCallback.h"
 #include "EventCallbackMessage.h"
@@ -12,6 +13,7 @@
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 #include "ThorsCrypto/hmac.h"
+#include "ThorSerialize/Logging.h"
 #include <string>
 
 namespace ThorsAnvil::ThorsSlack
@@ -19,9 +21,9 @@ namespace ThorsAnvil::ThorsSlack
 
 class SlackPlugin: public ThorsAnvil::ThorsChalice::ChalicePlugin
 {
-        std::string  slackToken;
+        std::string_view  slackSecret;
     public:
-        SlackPlugin(std::string const& slackToken);
+        SlackPlugin(std::string_view slackSecret);
 
     protected:
         void handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response);
@@ -32,8 +34,16 @@ class SlackPlugin: public ThorsAnvil::ThorsChalice::ChalicePlugin
         void handleURLVerificationEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::EventURLVerification const& event);
 
         void handleCallbackEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::EventCallback const& event);
-        virtual void handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::Message const& /*event*/)             {}
-        virtual void handleCallbackReactionAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::ReactionAdded const& /*event*/) {}
+        virtual void handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::Message const& /*event*/)
+        {
+            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method");
+            response.setStatus(501);
+        }
+        virtual void handleCallbackReactionAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::ReactionAdded const& /*event*/)
+        {
+            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method");
+            response.setStatus(501);
+        }
 
 
         struct VisitorEvent
@@ -57,8 +67,8 @@ class SlackPlugin: public ThorsAnvil::ThorsChalice::ChalicePlugin
 };
 
 inline
-SlackPlugin::SlackPlugin(std::string const& slackToken)
-    : slackToken(slackToken)
+SlackPlugin::SlackPlugin(std::string_view slackSecret)
+    : slackSecret(slackSecret)
 {}
 
 inline
@@ -78,8 +88,7 @@ void SlackPlugin::handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAn
 #if 1
     using ThorsAnvil::Nisse::HTTP::HeaderResponse;
     using namespace std::string_literals;
-    std::cerr << "Recieved: Message\n";
-    std::cerr << request << "\n";
+    ThorsLogDebug("SlackPlugin", "handleEvent", "Message Recieved: ", request);
 
     ThorsAnvil::Slack::Event::Event     event;
 #if 0
@@ -95,7 +104,7 @@ void SlackPlugin::handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAn
     ThorsAnvil::Serialize::ParserConfig config;
     config.setIdentifyDynamicClass([&](ThorsAnvil::Serialize::DataInputStream&){return getEventType(request, response, found);});
     request.body() >> ThorsAnvil::Serialize::jsonImporter(event, config);
-    std::cerr << "Body\n" << ThorsAnvil::Serialize::jsonExporter(event) << "\n----------\n";
+    ThorsLogDebugWithData(event, "SlackPlugin", "handleEvent", "Message Body: ");
 
     std::visit(VisitorEvent{*this, request, response}, event);
 #endif
@@ -137,7 +146,7 @@ bool SlackPlugin::validateRequest(ThorsAnvil::Nisse::HTTP::Request& request)
 
     ThorsAnvil::Crypto::Digest<ThorsAnvil::Crypto::Sha256>      digest;
     {
-        HMac hmac(slackToken, digest);
+        HMac hmac(slackSecret, digest);
         hmac.appendData(std::string_view{std::begin(sig), std::begin(sig) + versionEnd});
         hmac.appendData(":"s);
         hmac.appendData(timestampStr);
@@ -147,7 +156,9 @@ bool SlackPlugin::validateRequest(ThorsAnvil::Nisse::HTTP::Request& request)
         hmac.appendData(body);
     }
     std::size_t versionNext = versionEnd + (versionEnd == std::size(sig) ? 0 : 1);
-    return ThorsAnvil::Crypto::hexdigest<ThorsAnvil::Crypto::Sha256>(digest) == std::string_view{std::begin(sig) + versionNext, std::end(sig)};
+    bool result = (ThorsAnvil::Crypto::hexdigest<ThorsAnvil::Crypto::Sha256>(digest) == std::string_view{std::begin(sig) + versionNext, std::end(sig)});
+    ThorsLogDebug("SlackPlugin", "validateRequest", "Request Validation: ", (result ? "OK": "FAIL"));
+    return result;
 }
 
 inline
@@ -157,12 +168,15 @@ std::string SlackPlugin::getEventType(ThorsAnvil::Nisse::HTTP::Request& request,
         found = true;
         std::string_view    body = request.preloadStreamIntoBuffer();
         if (body.find(R"("type":"url_verification")") != std::string_view::npos) {
+            ThorsLogDebug("SlackPlugin", "getEventType", "Found: url_verification");
             return "url_verification";
         }
         if (body.find(R"("type":"event_callback")") != std::string_view::npos) {
+            ThorsLogDebug("SlackPlugin", "getEventType", "Found: event_callback");
             return "event_callback";
         }
     }
+    ThorsLogDebug("SlackPlugin", "getEventType", "Found: Fallback object members");
     return "";
 }
 
@@ -170,6 +184,7 @@ std::string SlackPlugin::getEventType(ThorsAnvil::Nisse::HTTP::Request& request,
 inline
 void SlackPlugin::handleURLVerificationEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::EventURLVerification const& event)
 {
+    ThorsLogDebug("SlackPlugin", "handleURLVerificationEvent", "Sending URL Verification");
     ThorsAnvil::Nisse::HTTP::HeaderResponse  headers;
     headers.add("Content-Type", "application/json; charset=utf-8");
 
@@ -185,6 +200,7 @@ void SlackPlugin::handleURLVerificationEvent(ThorsAnvil::Nisse::HTTP::Request& /
 inline
 void SlackPlugin::handleCallbackEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::EventCallback const& event)
 {
+    ThorsLogDebug("SlackPlugin", "handleCallbackEvent", "Handling callback event");
     std::visit(VisitorCallbackEvent{*this, request, response}, event.event);
 }
 }
