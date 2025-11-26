@@ -1,14 +1,11 @@
 #include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
-#include <variant>
 
 #if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
 
-#include "Environment.h"
 #include "SlackClient.h"
 #include "APIChatScheduleMessage.h"
-#include "ThorSerialize/JsonThor.h"
 #include "SlackBlockKit.h"
 
 using namespace std::literals::string_literals;
