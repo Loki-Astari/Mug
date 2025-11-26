@@ -29,16 +29,17 @@ TEST(APIChatScheduledMessagesListTest, SimpleListTest)
 
     ScheduledMessagesList::Reply    reply3 = client.sendMessage(ScheduledMessagesList{.channel = "C09RU2URYMS"});
 
+    if (!reply3.ok) {
+        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply3);
+    }
     ASSERT_TRUE(reply3.ok);
     ASSERT_EQ(2, reply3.scheduled_messages.size() - originalSize);
     // Can tell the order.
     // But both should be in there
-    EXPECT_TRUE(
-            (reply1.scheduled_message_id == reply3.scheduled_messages[originalSize].id) || (reply1.scheduled_message_id == reply3.scheduled_messages[originalSize + 1].id)
-    );
-    EXPECT_TRUE(
-            (reply2.scheduled_message_id == reply3.scheduled_messages[originalSize].id) || (reply2.scheduled_message_id == reply3.scheduled_messages[originalSize + 1].id)
-    );
+    auto find1 = std::find_if(std::begin(reply3.scheduled_messages), std::end(reply3.scheduled_messages), [&reply1](auto const& val){return val.id == reply1.scheduled_message_id;});
+    auto find2 = std::find_if(std::begin(reply3.scheduled_messages), std::end(reply3.scheduled_messages), [&reply2](auto const& val){return val.id == reply2.scheduled_message_id;});
+    EXPECT_TRUE(find1 != std::end(reply3.scheduled_messages));
+    EXPECT_TRUE(find2 != std::end(reply3.scheduled_messages));
 }
 
 #endif

@@ -42,6 +42,9 @@ TEST(APIChatUpdateTest, SimpleText)
             .text = "Update text.",
     });
 
+    if (!reply1.ok) {
+        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply1);
+    }
     EXPECT_TRUE(reply1.ok);
     ASSERT_TRUE(reply1.message.has_value());
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply1.message->blocks[0]));

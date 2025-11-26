@@ -57,6 +57,9 @@ TEST(APIChatPostMessageTest, Block_Section_ElText)
                                                                         }
                                                             }
                                                        });
+    if (!reply.ok) {
+        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
+    }
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(reply.message.has_value());
     ASSERT_EQ(3, reply.message->blocks.size());

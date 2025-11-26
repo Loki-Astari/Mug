@@ -246,12 +246,8 @@ TEST(SlackBlockKitTest, Block_Action_Button)
                                 }
                            };
     BK::Context& actions = std::get<BK::Context>(message.blocks.value()[0]);
-    std::cerr << "Count: " << actions.elements.size() << "\n";
 
     ThorsAnvil::Serialize::PrinterConfig config{ThorsAnvil::Serialize::OutputType::Stream};
-    std::cerr << ThorsAnvil::Serialize::jsonExporter(message) << "\n"
-              << ThorsAnvil::Serialize::jsonExporter(message, config) << "\n"
-              << "Size: " << ThorsAnvil::Serialize::jsonStreanSize(message) << "\n";
     PostMessage::Reply      reply = client.sendMessage(message);
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);

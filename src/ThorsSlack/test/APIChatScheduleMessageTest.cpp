@@ -20,6 +20,9 @@ TEST(APIChatScheduleMessageTest, SimpleText)
 {
     ScheduleMessage::Reply      reply = client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."});
 
+    if (!reply.ok) {
+        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
+    }
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(reply.message.has_value());
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message->blocks[0]));

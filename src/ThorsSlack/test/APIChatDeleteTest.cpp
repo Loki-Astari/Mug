@@ -17,7 +17,6 @@ using ThorsAnvil::Slack::API::Chat::Delete;
 
 extern SlackClient             client;
 
-#define DISABLE_TEST 0
 #if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
 TEST(APIChatDeleteTest, SimpleText)
@@ -37,12 +36,15 @@ TEST(APIChatDeleteTest, SimpleText)
     EXPECT_EQ("I hope the tour went well, Mr. Wonka.", rtext.text);
 
     using namespace std::chrono_literals;
-    std::this_thread::sleep_for(5s);
+    std::this_thread::sleep_for(2s);
     Delete::Reply      reply1 = client.sendMessage(Delete {
             .channel = "C09RU2URYMS",
             .ts = reply.message.value().ts,
     });
 
+    if (!reply1.ok) {
+        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply1);
+    }
     EXPECT_TRUE(reply1.ok);
 }
 
