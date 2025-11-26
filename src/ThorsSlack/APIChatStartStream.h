@@ -2,8 +2,10 @@
 #define THORSANVIL_SLACK_API_CHAT_START_STREAM_H
 
 
+#include "ThorSerialize/Traits.h"
 #include "ThorsSlackConfig.h"
 #include "APIChat.h"
+#include <string>
 
 namespace ThorsAnvil::Slack::API::Chat
 {
@@ -11,8 +13,19 @@ namespace ThorsAnvil::Slack::API::Chat
 // Documentation: https://docs.slack.dev/reference/methods/chat.startstream
 #if 0
 // TODO. Needs payed account to test and validate.
+Expected Response:
+{
+  "ok": true,
+  "channel": "C123ABC456",
+  "ts": "1503435956.000247"
+}
 #endif
 
+struct StartStreamReply: public API::Reply
+{
+    std::string             channel;
+    std::string             ts;
+};
 struct StartStream
 {
     static constexpr char const* api = "https://slack.com/api/chat.startStream";
@@ -28,6 +41,7 @@ struct StartStream
 
 }
 
+ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::StartStreamReply, channel, ts);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::StartStream, channel, thread_ts, markdown_text, recipient_user_id, recipient_team_id);
 
 #endif

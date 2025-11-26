@@ -68,18 +68,6 @@ struct ScheduledMessageReply: public API::Reply
     Message             message;
 };
 
-struct Payload
-{
-    std::string                 id;
-    std::string                 title;
-};
-
-struct Metadata
-{
-    std::string                 event_type;
-    Payload                     event_payload;
-};
-using OptMetadata = std::optional<Metadata>;
 
 struct ScheduleMessage
 {
@@ -109,8 +97,6 @@ struct ScheduleMessage
 }
 
 ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::ScheduledMessageReply, scheduled_message_id, channel, post_at, message);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Payload, id, title);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Metadata, event_type, event_payload);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::ScheduleMessage, channel, post_at, as_user, attachments, blocks, link_names, markdown_text, parse, reply_broadcast, text, thread_ts, unfurl_links, unfurl_media, metadata);
 
 #endif

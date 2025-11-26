@@ -42,10 +42,25 @@ struct Message
 };
 using OptMessage = std::optional<Message>;
 
+struct Payload
+{
+    std::string                 id;
+    std::string                 title;
+};
+
+struct Metadata
+{
+    std::string                 event_type;
+    Payload                     event_payload;
+};
+using OptMetadata = std::optional<Metadata>;
+
 }
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::BotIcon, image_36, image_48, image_72);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::BotProfile, id, app_id, user_id, name, icons, deleted, updated, team_id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Payload, id, title);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Metadata, event_type, event_payload);
 
 #endif
