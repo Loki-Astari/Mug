@@ -1,4 +1,3 @@
-#include "ThorSerialize/JsonThor.h"
 #include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
@@ -7,19 +6,17 @@
 
 #include "SlackClient.h"
 #include "APIChatScheduleMessage.h"
-#include "APIChatDeleteScheduledMessage.h"
 #include "APIChatScheduledMessagesList.h"
 
 using namespace std::literals::string_literals;
 
 using ThorsAnvil::Slack::SlackClient;
 using ThorsAnvil::Slack::API::Chat::ScheduleMessage;
-using ThorsAnvil::Slack::API::Chat::DeleteScheduledMessage;
 using ThorsAnvil::Slack::API::Chat::ScheduledMessagesList;
 
 extern SlackClient             client;
 
-TEST(APIChatScheduledMessagesListTest, DeleteAScheduledMessage)
+TEST(APIChatScheduledMessagesListTest, SimpleListTest)
 {
     ScheduledMessagesList::Reply    reply0 = client.sendMessage(ScheduledMessagesList{.channel = "C09RU2URYMS"});
     std::size_t originalSize = reply0.scheduled_messages.size();
@@ -34,8 +31,14 @@ TEST(APIChatScheduledMessagesListTest, DeleteAScheduledMessage)
 
     ASSERT_TRUE(reply3.ok);
     ASSERT_EQ(2, reply3.scheduled_messages.size() - originalSize);
-    EXPECT_EQ(reply1.scheduled_message_id, reply3.scheduled_messages[originalSize + 1].id);
-    EXPECT_EQ(reply2.scheduled_message_id, reply3.scheduled_messages[originalSize + 0].id);
+    // Can tell the order.
+    // But both should be in there
+    EXPECT_TRUE(
+            (reply1.scheduled_message_id == reply3.scheduled_messages[originalSize].id) || (reply1.scheduled_message_id == reply3.scheduled_messages[originalSize + 1].id)
+    );
+    EXPECT_TRUE(
+            (reply2.scheduled_message_id == reply3.scheduled_messages[originalSize].id) || (reply2.scheduled_message_id == reply3.scheduled_messages[originalSize + 1].id)
+    );
 }
 
 #endif
