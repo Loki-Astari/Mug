@@ -1,3 +1,4 @@
+#include "ThorsSlackConfig.h"
 #include "ThorSerialize/JsonThor.h"
 #include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
@@ -17,14 +18,13 @@ using ThorsAnvil::Slack::API::Chat::DeleteScheduledMessage;
 
 extern SlackClient             client;
 
-TEST(APIChatScheduleMessageTest, DeleteAScheduledMessage)
+TEST(APIChatDeleteScheduledMessageTest, DeleteAScheduledMessage)
 {
     ScheduleMessage::Reply          reply1 = client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."});
 
     ASSERT_TRUE(reply1.ok);
 
     DeleteScheduledMessage::Reply   reply2 = client.sendMessage(DeleteScheduledMessage{.channel = "C09RU2URYMS", .scheduled_message_id = reply1.scheduled_message_id});
-    std::cerr << ThorsAnvil::Serialize::jsonExporter(reply2);
 
     ASSERT_TRUE(reply2.ok);
 }

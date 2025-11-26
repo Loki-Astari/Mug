@@ -36,7 +36,7 @@ namespace ThorsAnvil::Slack::API::Chat
 }
 #endif
 
-struct ScheduledMessageItem
+struct ScheduledMessagesItem
 {
     std::string                         id;
     std::string                         channel_id;
@@ -50,16 +50,16 @@ struct Cursor
     std::string                         next_cursor;
 };
 
-struct ScheduledMessageListReply: public API::Reply
+struct ScheduledMessagesListReply: public API::Reply
 {
-    std::vector<ScheduledMessageItem>   scheduled_messages;
+    std::vector<ScheduledMessagesItem>  scheduled_messages;
     Cursor                              next_cursor;
 };
-struct ScheduledMessageList
+struct ScheduledMessagesList
 {
     static constexpr char const* api = "https://slack.com/api/chat.scheduledMessages.list";
     static constexpr bool hasBody = true;
-    using Reply = ScheduledMessageListReply;
+    using Reply = ScheduledMessagesListReply;
 
     OptString       channel;            // The channel of the scheduled messages
     OptString       cursor;             // For pagination purposes, this is the cursor value returned from a previous call to chat.scheduledmessages.list indicating where you want to start this call from.
@@ -72,9 +72,9 @@ struct ScheduledMessageList
 
 }
 
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::ScheduledMessageItem, id, channel_id, post_at, date_created, text);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::ScheduledMessagesItem, id, channel_id, post_at, date_created, text);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Cursor, next_cursor);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::ScheduledMessageListReply, scheduled_messages, next_cursor);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::ScheduledMessageList, channel, cursor, latest, limit, oldest, team_id);
+ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::ScheduledMessagesListReply, scheduled_messages, next_cursor);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::ScheduledMessagesList, channel, cursor, latest, limit, oldest, team_id);
 
 #endif
