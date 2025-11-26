@@ -65,7 +65,7 @@ struct ScheduledMessageReply: public API::Reply
     std::string         scheduled_message_id;
     std::string         channel;
     std::time_t         post_at;
-    Message             message;
+    OptMessage          message;
 };
 
 
