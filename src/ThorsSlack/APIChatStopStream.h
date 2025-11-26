@@ -14,6 +14,7 @@ namespace ThorsAnvil::Slack::API::Chat
 // Documentation: https://docs.slack.dev/reference/methods/chat.stopStream
 #if 0
 // TODO. Needs payed account to test and validate.
+Expected Response:
 {
   "ok": true,
   "channel": "C123ABC456",
@@ -32,7 +33,7 @@ namespace ThorsAnvil::Slack::API::Chat
 struct StopStreamReply: public API::Reply
 {
     std::string             channel;
-    std::time_t             ts;
+    std::string             ts;
     OptMessage              message;
 };
 struct StopStream

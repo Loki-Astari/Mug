@@ -13,12 +13,19 @@ namespace ThorsAnvil::Slack::API::Chat
 
 // Documentation: https://docs.slack.dev/reference/methods/chat.appendStream
 #if 0
+// TODO. Needs payed account to test and validate.
+Expected Response:
+{
+  "ok": true,
+  "channel": "C123ABC456",
+  "ts": "1503435956.000247"
+}
 #endif
 
 struct AppendStreamReply: public API::Reply
 {
     std::string             channel;
-    std::time_t             ts;
+    std::string             ts;
 };
 struct AppendStream
 {
