@@ -14,7 +14,7 @@ namespace ThorsAnvil::Slack::API::Chat
 // Documentation: https://docs.slack.dev/reference/methods/chat.appendStream
 #if 0
 // TODO. Needs payed account to test and validate.
-Expected Response:
+// Expected Response:
 {
   "ok": true,
   "channel": "C123ABC456",
