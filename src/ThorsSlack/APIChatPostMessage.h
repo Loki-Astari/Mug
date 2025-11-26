@@ -4,9 +4,6 @@
 
 #include "ThorsSlackConfig.h"
 #include "APIChat.h"
-#include "SlackBlockKit.h"
-#include "ThorSerialize/Traits.h"
-#include "ThorSerialize/SerUtil.h"
 
 namespace ThorsAnvil::Slack::API::Chat
 {
@@ -86,6 +83,7 @@ struct PostMessage
     static constexpr char const* api = "https://slack.com/api/chat.postMessage";
     static constexpr bool hasBody = true;
     using Reply = PostMessageReply;
+
     std::string                 channel;
     OptString                   text;
     BlockKit::OptBlocks         blocks;

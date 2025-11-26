@@ -5,12 +5,6 @@
 #include "ThorsSlackConfig.h"
 #include "API.h"
 #include "SlackBlockKit.h"
-#include "ThorSerialize/Traits.h"
-#include "ThorSerialize/SerUtil.h"
-
-#include <optional>
-#include <string>
-#include <vector>
 
 namespace ThorsAnvil::Slack::API::Chat
 {

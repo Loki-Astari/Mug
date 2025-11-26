@@ -4,22 +4,14 @@
 
 #include "ThorsSlackConfig.h"
 #include "APIChat.h"
-#include "ThorSerialize/Traits.h"
-#include "ThorSerialize/SerUtil.h"
-
-#include <ctime>
-#include <optional>
-#include <string>
 
 namespace ThorsAnvil::Slack::API::Chat
 {
 
 // Documentation: https://docs.slack.dev/reference/methods/chat.deletescheduledmessage
 #if 0
+{"ok":true}
 #endif
-
-using OptBool = std::optional<bool>;
-using OptString = std::optional<std::string>;
 
 struct DeleteScheduledMessage
 {
@@ -35,7 +27,6 @@ struct DeleteScheduledMessage
 
 }
 
-//ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::DeleteScheduledMessageReply,
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::DeleteScheduledMessage, channel, scheduled_message_id, as_user);
 
 #endif

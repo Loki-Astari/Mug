@@ -1,16 +1,9 @@
-#ifndef THORSANVIL_SLACK_API_CHAT_SCHEDULE_MESSAGE_HH
-#define THORSANVIL_SLACK_API_CHAT_SCHEDULE_MESSAGE_HH
+#ifndef THORSANVIL_SLACK_API_CHAT_SCHEDULE_MESSAGE_H
+#define THORSANVIL_SLACK_API_CHAT_SCHEDULE_MESSAGE_H
 
 
 #include "ThorsSlackConfig.h"
 #include "APIChat.h"
-#include "SlackBlockKit.h"
-#include "ThorSerialize/Traits.h"
-#include "ThorSerialize/SerUtil.h"
-
-#include <ctime>
-#include <optional>
-#include <string>
 
 namespace ThorsAnvil::Slack::API::Chat
 {
@@ -66,9 +59,6 @@ namespace ThorsAnvil::Slack::API::Chat
   }
 }
 #endif
-
-using OptBool = std::optional<bool>;
-using OptString = std::optional<std::string>;
 
 struct ScheduledMessageReply: public API::Reply
 {
