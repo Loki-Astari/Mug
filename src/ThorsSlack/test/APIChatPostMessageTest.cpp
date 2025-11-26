@@ -2,7 +2,6 @@
 #include "gtest/gtest.h"
 #include <variant>
 
-#if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
 
 #include "Environment.h"
@@ -20,51 +19,7 @@ using ThorsAnvil::Slack::API::Chat::PostMessage;
 Environment             environment("test/data/environment.json");
 SlackClient             client(environment.slackToken);
 
-#if 0
-Tested:
-=======
-    ThorsAnvil::Slack::BlockKit::ElActive
-    ThorsAnvil::Slack::BlockKit::ElImg
-    ThorsAnvil::Slack::BlockKit::ElBut
-    ThorsAnvil::Slack::BlockKit::ElText
-    ThorsAnvil::Slack::BlockKit::ElSlackFile
-    ThorsAnvil::Slack::BlockKit::ElInput
-    // -- Rich Text
-    ThorsAnvil::Slack::BlockKit::InfoStyle
-    ThorsAnvil::Slack::BlockKit::InfoText
-    // ---
-    ThorsAnvil::Slack::BlockKit::ElRtBroadcast
-    ThorsAnvil::Slack::BlockKit::ElRtColor
-    ThorsAnvil::Slack::BlockKit::ElRtChannel
-    ThorsAnvil::Slack::BlockKit::ElRtDate
-    ThorsAnvil::Slack::BlockKit::ElRtEmoji
-    ThorsAnvil::Slack::BlockKit::ElRtLink
-*   ThorsAnvil::Slack::BlockKit::ElRtText
-    ThorsAnvil::Slack::BlockKit::ElRtUser
-    ThorsAnvil::Slack::BlockKit::ElRtUserGroup
-    //---
-*   ThorsAnvil::Slack::BlockKit::RichTextSection
-*   ThorsAnvil::Slack::BlockKit::RichTextList
-    ThorsAnvil::Slack::BlockKit::RichTextPreformatted
-    ThorsAnvil::Slack::BlockKit::RichTextQuote
-    // -- Rich Text
-    ThorsAnvil::Slack::BlockKit::ElRow
-    ThorsAnvil::Slack::BlockKit::ElColInfo
-    /// ----
-    ThorsAnvil::Slack::BlockKit::Actions
-    ThorsAnvil::Slack::BlockKit::Context
-    ThorsAnvil::Slack::BlockKit::Context_Actions
-*   ThorsAnvil::Slack::BlockKit::Divider
-    ThorsAnvil::Slack::BlockKit::File
-    ThorsAnvil::Slack::BlockKit::Header
-    ThorsAnvil::Slack::BlockKit::Image
-    ThorsAnvil::Slack::BlockKit::Input
-    ThorsAnvil::Slack::BlockKit::Markdown
-    ThorsAnvil::Slack::BlockKit::RichText
-*   ThorsAnvil::Slack::BlockKit::Section
-    ThorsAnvil::Slack::BlockKit::Table
-    ThorsAnvil::Slack::BlockKit::Video
-#endif
+#if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
 TEST(APIChatPostMessageTest, SimpleText)
 {
