@@ -3,10 +3,12 @@
 
 
 #include "ThorsSlackConfig.h"
+#include "APIChat.h"
 #include "SlackBlockKit.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
 
+#include <ctime>
 #include <optional>
 #include <string>
 
@@ -15,31 +17,88 @@ namespace ThorsAnvil::Slack::API::Chat
 
 // Documentation: https://docs.slack.dev/reference/methods/chat.scheduleMessage
 #if 0
-// Example Reply
+{
+  "ok": true,
+  "scheduled_message_id": "Q09V4EK70JF",
+  "channel": "C09RU2URYMS",
+  "post_at": 1764134613,
+  "message":
+  {
+    "user": "U09S3D8R00Z",
+    "type": "message",
+    "bot_id": "B09RJ4A000K",
+    "app_id": "A09RQFXSEKC",
+    "text": "A timed message",
+    "team": "T095XJHH589",
+    "bot_profile":
+    {
+      "id": "B09RJ4A000K",
+      "deleted": false,
+      "name": "ThorsSlackBotOne",
+      "updated": 1762644664,
+      "app_id": "A09RQFXSEKC",
+      "user_id": "U09S3D8R00Z",
+      "icons":
+      {
+        "image_36": "https://a.slack-edge.com/80588/img/plugins/app/bot_36.png",
+        "image_48": "https://a.slack-edge.com/80588/img/plugins/app/bot_48.png",
+        "image_72": "https://a.slack-edge.com/80588/img/plugins/app/service_72.png"
+      },
+      "team_id": "T095XJHH589"
+    },
+    "blocks": [
+      {
+        "type": "rich_text",
+        "block_id": "IFjO",
+        "elements": [
+          {
+            "type": "rich_text_section",
+            "elements": [
+              {
+                "type": "text",
+                "text": "A timed message"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
 #endif
 
 using OptBool = std::optional<bool>;
 using OptString = std::optional<std::string>;
+
+struct ScheduledMessageReply: public API::Reply
+{
+    std::string         scheduled_message_id;
+    std::string         channel;
+    std::time_t         post_at;
+    Message             message;
+};
 
 struct Payload
 {
     std::string                 id;
     std::string                 title;
 };
+
 struct Metadata
 {
     std::string                 event_type;
     Payload                     event_payload;
 };
 using OptMetadata = std::optional<Metadata>;
+
 struct ScheduleMessage
 {
     static constexpr char const* api = "https://slack.com/api/chat.scheduleMessage";
     static constexpr bool hasBody = true;
-    using Reply = int;
+    using Reply = ScheduledMessageReply;
 
     std::string                 channel;                // Channel, private group, or DM channel to send message to. Can be an encoded ID, or a name. See below for more details.
-    int                         post_at;                // Unix timestamp representing the future time the message should post to Slack.
+    std::time_t                 post_at;                // Unix timestamp representing the future time the message should post to Slack.
 
     OptBool                     as_user;                // Set to true to post the message as the authed user, instead of as a bot. Defaults to false. Cannot be used by new Slack apps. See chat.postMessage.
     OptString                   attachments;            // A JSON-based array of structured attachments, presented as a URL-encoded string.
@@ -59,6 +118,7 @@ struct ScheduleMessage
 
 }
 
+ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::ScheduledMessageReply, scheduled_message_id, channel, post_at, message);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Payload, id, title);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Metadata, event_type, event_payload);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::ScheduleMessage, channel, post_at, as_user, attachments, blocks, link_names, markdown_text, parse, reply_broadcast, text, thread_ts, unfurl_links, unfurl_media, metadata);

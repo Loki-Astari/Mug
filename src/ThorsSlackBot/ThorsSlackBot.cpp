@@ -34,13 +34,6 @@ void SlackBot::registerHandlers(NisHttp::HTTPHandler& handler, std::string const
 {
     handler.addPath(NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request& request, NisHTTP::Response& response){handleEvent(request, response);});
     handler.addPath(NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request& request, NisHTTP::Response& response){handleCommand(request, response);});
-
-    client.sendMessage(ThorsAnvil::Slack::API::Chat::ScheduleMessage
-                       {
-                            .channel = "C09RU2URYMS",
-                            .post_at = static_cast<int>(time(nullptr) + 60),
-                            .text = "A timed message"
-                       });
 }
 
 void SlackBot::sendWelcomeMessage(std::string const& channel, std::string const& user)
