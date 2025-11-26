@@ -1,3 +1,4 @@
+#include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 #include "ThorsLogging/ThorsLogging.h"
 #include <iostream>
