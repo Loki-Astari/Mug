@@ -2,11 +2,8 @@
 #define THORSANVIL_SLACK_API_CHAT_POST_EPHEMERAL_H
 
 
-#include "API.h"
-#include "ThorSerialize/Traits.h"
 #include "ThorsSlackConfig.h"
 #include "APIChat.h"
-#include <string>
 
 namespace ThorsAnvil::Slack::API::Chat
 {

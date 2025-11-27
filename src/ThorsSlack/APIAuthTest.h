@@ -4,8 +4,6 @@
 #include "ThorsSlackConfig.h"
 #include "API.h"
 
-#include <string>
-
 namespace ThorsAnvil::Slack::API::Auth
 {
 

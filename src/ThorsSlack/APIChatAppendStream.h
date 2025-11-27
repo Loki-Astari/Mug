@@ -4,7 +4,6 @@
 
 #include "ThorsSlackConfig.h"
 #include "APIChat.h"
-#include <string>
 
 namespace ThorsAnvil::Slack::API::Chat
 {
