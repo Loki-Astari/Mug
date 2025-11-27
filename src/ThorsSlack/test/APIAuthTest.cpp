@@ -31,6 +31,7 @@ TEST(APIAuthTests, AuthTeamsList)
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
     }
     ASSERT_TRUE(reply.ok);
+    EXPECT_NE(0, reply.teams.size());   // At least your current team (may be more).
 }
 
 TEST(APIAuthTests, AuthRevoke)
