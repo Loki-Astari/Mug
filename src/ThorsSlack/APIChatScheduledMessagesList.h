@@ -46,11 +46,6 @@ struct ScheduledMessagesItem
     std::string                         text;
 };
 
-struct Cursor
-{
-    std::string                         next_cursor;
-};
-
 struct ScheduledMessagesListReply: public API::Reply
 {
     std::vector<ScheduledMessagesItem>  scheduled_messages;
@@ -74,7 +69,6 @@ struct ScheduledMessagesList
 }
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::ScheduledMessagesItem, id, channel_id, post_at, date_created, text);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Cursor, next_cursor);
 ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::ScheduledMessagesListReply, scheduled_messages, next_cursor);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::ScheduledMessagesList, channel, cursor, latest, limit, oldest, team_id);
 

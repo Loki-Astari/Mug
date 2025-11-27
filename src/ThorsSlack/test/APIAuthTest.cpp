@@ -15,8 +15,6 @@ using ThorsAnvil::Slack::API::Auth::Revoke;
 
 extern SlackClient             client;
 
-#undef DISABLE_TEST
-#define DISABLE_TEST 0
 #if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
 TEST(APIAuthTests, AuthTest)

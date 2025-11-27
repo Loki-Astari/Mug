@@ -38,6 +38,15 @@ struct BotProfile
     std::string                 team_id;
 };
 
+struct Reaction
+{
+    std::string                 name;
+    VecString                   users;
+    int                         count;
+};
+using VecReaction = std::vector<Reaction>;
+using OptVecReaction = std::optional<VecReaction>;
+
 struct Message
 {
     std::string                 user;
@@ -51,6 +60,7 @@ struct Message
     BlockKit::Blocks            blocks;
     OptVecString                pinned_to;
     OptString                   permalink;
+    OptVecReaction              reactions;
 };
 using OptMessage = std::optional<Message>;
 
@@ -70,13 +80,21 @@ struct Reply
     OptResponseMetaData         response_metadata;
 };
 
+struct Cursor
+{
+    std::string                         next_cursor;
+};
+
+
 }
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotIcon, image_36, image_48, image_72);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotProfile, id, app_id, user_id, name, icons, deleted, updated, team_id);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks, pinned_to, permalink);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reaction, name, users, count);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks, pinned_to, permalink, reactions);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ResponseMetadata, messages);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reply, ok, error, errors, warning, warnings, response_metadata);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Cursor, next_cursor);
 
 
 #endif
