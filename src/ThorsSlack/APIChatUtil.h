@@ -1,10 +1,10 @@
-#ifndef THORSANVIL_SLACK_API_CHAT_UNFURL_H
-#define THORSANVIL_SLACK_API_CHAT_UNFURL_H
+#ifndef THORSANVIL_SLACK_API_CHAT_GET_PERMALINK_H
+#define THORSANVIL_SLACK_API_CHAT_GET_PERMALINK_H
 
 
 #include "ThorsSlackConfig.h"
-#include "SlackBlockKit.h"
 #include "APIChat.h"
+#include "SlackBlockKit.h"
 
 namespace BK = ThorsAnvil::Slack::BlockKit;
 
@@ -12,6 +12,16 @@ namespace ThorsAnvil::Slack::API::Chat
 {
 
 #if 0
+Documentation: https://docs.slack.dev/reference/methods/chat.getpermalink
+Response:
+{
+    "channel": "C09RU2URYMS",
+    "permalink": "https://thorsanvilworkspace.slack.com/archives/C09RU2URYMS/p1764214542336409",
+    "ok": true
+}
+Documentation: https://docs.slack.dev/reference/methods/chat.memessage
+Response:
+{"ok":true,"channel":"C09RU2URYMS","ts":"1764218489.801069"}
 Documentation: https://docs.slack.dev/reference/methods/chat.unfurl/
 // TODO.
 // This code does not work.
@@ -19,22 +29,55 @@ Documentation: https://docs.slack.dev/reference/methods/chat.unfurl/
 // Need a working example of this in normal code to study its affects.
 #endif
 
-struct UnfurlReply: public API::Reply
+// Response Objects
+struct GetPermalinkReply: public API::Reply
 {
+    std::string             channel;
+    std::string             permalink;
+};
+
+struct MeMessageReply: public API::Reply
+{
+    std::string         channel;
+    std::string         ts;
 };
 
 struct UnfurlBlock
 {
     BK::Blocks          blocks;
 };
-
 using UnfurlURL = std::map<std::string, UnfurlBlock>;
 using OptUnfurlURL = std::optional<UnfurlURL>;
+
+
+// Action Objects
+struct GetPermalink
+{
+    static constexpr char const* api = "https://slack.com/api/chat.getPermalink";
+    static constexpr Method method = Method::GET;
+    using Reply = GetPermalinkReply;
+
+    std::string             channel;        // The ID of the conversation or channel containing the message
+    std::string             message_ts;     // A message's ts value, uniquely identifying it within a channel
+
+    std::string query() const {return buildQuery(std::tie("channel", channel), std::tie("message_ts", message_ts));}
+};
+
+struct MeMessage
+{
+    static constexpr char const* api = "https://slack.com/api/chat.meMessage";
+    static constexpr Method method = Method::POST;
+    using Reply = MeMessageReply;
+
+    std::string         channel;        // Channel to send message to. Can be a public channel, private group or IM channel. Can be an encoded ID, or a name.
+    std::string         text;           // Text of the message to send.
+};
+
 struct Unfurl
 {
     static constexpr char const* api = "https://slack.com/api/chat.unfurl";
     static constexpr Method method = Method::POST;
-    using Reply = UnfurlReply;
+    using Reply = API::Reply;
 
     OptString           channel;            // Channel ID of the message. Both channel and ts must be provided together, or unfurl_id and source must be provided together.
     OptString           ts;                 // Timestamp of the message to add unfurl behavior to.
@@ -50,8 +93,14 @@ struct Unfurl
 
 }
 
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::UnfurlReply);
+// Response objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::UnfurlBlock, blocks);
+ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::GetPermalinkReply, channel, permalink);
+ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::MeMessageReply, channel, ts);
+
+// Action objects
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::GetPermalink, channel, message_ts);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::MeMessage, channel, text);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::Unfurl, channel, ts, unfurls, user_auth_message, user_auth_required, user_auth_url, user_auth_blocks, unfurl_id, source, metadata);
 
 #endif
