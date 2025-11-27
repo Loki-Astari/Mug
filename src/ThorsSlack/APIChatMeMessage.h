@@ -23,7 +23,7 @@ struct MeMessageReply: public API::Reply
 struct MeMessage
 {
     static constexpr char const* api = "https://slack.com/api/chat.meMessage";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = MeMessageReply;
 
     std::string         channel;        // Channel to send message to. Can be a public channel, private group or IM channel. Can be an encoded ID, or a name.

@@ -26,7 +26,7 @@ struct DeleteReply: public API::Reply
 struct Delete
 {
     static constexpr char const* api = "https://slack.com/api/chat.delete";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = DeleteReply;
 
     std::string             channel;        // Channel containing the message to be deleted.

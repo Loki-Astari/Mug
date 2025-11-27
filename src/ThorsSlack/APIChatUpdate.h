@@ -74,7 +74,7 @@ struct UpdateReply: public API::Reply
 struct Update
 {
     static constexpr char const* api = "https://slack.com/api/chat.update";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = UpdateReply;
 
     std::string             channel;        // Channel containing the message to be updated. For direct messages, ensure that this value is a DM ID (starts with D) instead of a User ID (starts with either U or W).

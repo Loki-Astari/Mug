@@ -3,9 +3,11 @@
 
 #include "ThorsSlackConfig.h"
 #include "SlackBlockKit.h"
+#include "NisseHTTP/Util.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
 
+#include <sstream>
 #include <string>
 #include <vector>
 #include <optional>
@@ -18,6 +20,7 @@ using OptInt        = std::optional<int>;
 using OptString     = std::optional<std::string>;
 using VecString     = std::vector<std::string>;
 using OptVecString  = std::optional<std::vector<std::string>>;
+using Method        = ThorsAnvil::Nisse::HTTP::Method;
 
 struct BotIcon
 {
@@ -84,6 +87,42 @@ struct Cursor
 {
     std::string                         next_cursor;
 };
+
+// Primary template: By default, a type is not std::optional
+template<typename>
+constexpr bool is_optional_impl = false;
+
+// Partial specialization for std::optional<T>: This will be chosen when the type is std::optional
+template<typename T>
+constexpr bool is_optional_impl<std::optional<T>> = true;
+
+// Helper variable template to handle cv-qualifiers and references
+template<typename T>
+constexpr bool is_optional = is_optional_impl<std::remove_cvref_t<T>>; // C++20 and later
+
+template<typename Arg>
+void addQueryParam(std::stringstream& stream, std::string& sep, Arg const& arg)
+{
+    if constexpr (is_optional<typename std::tuple_element<1, Arg>::type>) {
+        if (std::get<1>(arg).has_value()) {
+            stream << sep << std::get<0>(arg) << "=" << std::get<1>(arg).value();
+            sep = "&";
+        }
+    }
+    else {
+        stream << sep << std::get<0>(arg) << "=" << std::get<1>(arg);
+        sep = "&";
+    }
+}
+template<typename... Args>
+std::string buildQuery(Args const&... arg)
+{
+    std::stringstream   query;
+    std::string         sep = "";
+
+    (addQueryParam(query, sep, arg), ...);
+    return query.str();
+}
 
 
 }

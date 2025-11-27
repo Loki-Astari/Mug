@@ -103,7 +103,7 @@ struct ListReply: public API::Reply
 struct List
 {
     static constexpr char const* api = "https://slack.com/api/reactions.list";
-    static constexpr bool hasBody = false;
+    static constexpr Method method = Method::GET;
     using Reply = ListReply;
 
     OptString           user;               // Show reactions made by this user. Defaults to the authed user.
@@ -114,39 +114,15 @@ struct List
     OptInt              limit;              // The maximum number of items to return. Fewer than the requested number of items may be returned, even if the end of the list hasn't been reached.
     OptString           team_id;            // encoded team id to list reactions in, required if org token is used
 
-    std::string         query() const
+    std::string query() const
     {
-        std::string         sep = "";
-        std::stringstream   result;
-        if (user.has_value()) {
-            result << sep << "user=" << user.value();
-            sep = "&";
-        }
-        if (full.has_value()) {
-            result << sep << "full=" << full.value();
-            sep = "&";
-        }
-        if (count.has_value()) {
-            result << sep << "count=" << count.value();
-            sep = "&";
-        }
-        if (page.has_value()) {
-            result << sep << "page=" << page.value();
-            sep = "&";
-        }
-        if (cursor.has_value()) {
-            result << sep << "cursor=" << cursor.value();
-            sep = "&";
-        }
-        if (limit.has_value()) {
-            result << sep << "limit=" << limit.value();
-            sep = "&";
-        }
-        if (team_id.has_value()) {
-            result << sep << "team_id=" << team_id.value();
-            sep = "&";
-        }
-        return result.str();
+        return buildQuery(std::tie("user", user),
+                          std::tie("full", full),
+                          std::tie("count", count),
+                          std::tie("page", page),
+                          std::tie("cursor", cursor),
+                          std::tie("limit", limit),
+                          std::tie("team_id", team_id));
     }
 };
 

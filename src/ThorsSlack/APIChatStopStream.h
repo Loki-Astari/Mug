@@ -36,7 +36,7 @@ struct StopStreamReply: public API::Reply
 struct StopStream
 {
     static constexpr char const* api = "https://slack.com/api/chat.stopStream";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = StopStreamReply;
 
     std::string             channel;            // An encoded ID that represents a channel, private group, or DM

@@ -54,7 +54,7 @@ struct ScheduledMessagesListReply: public API::Reply
 struct ScheduledMessagesList
 {
     static constexpr char const* api = "https://slack.com/api/chat.scheduledMessages.list";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = ScheduledMessagesListReply;
 
     OptString       channel;            // The channel of the scheduled messages

@@ -2,6 +2,7 @@
 #define THORSANVIL_SLACK_SLACKCLIENT_H
 
 #include "ThorsSlackConfig.h"
+#include "API.h"
 #include "NisseHTTP/ClientRequest.h"
 #include "NisseHTTP/ClientResponse.h"
 #include "NisseHTTP/HeaderResponse.h"
@@ -24,21 +25,22 @@ class SlackClient
     Nisse::HeaderResponse   headers;
     private:
         template<typename T>
-        void sendMessageData(T const& message, Nisse::Method method, SlackStream& stream)
+        void sendMessageData(T const& message, SlackStream& stream)
         {
 
-            if constexpr (T::hasBody) {
-                Nisse::ClientRequest    post(stream, T::api, method);
+            if constexpr (T::method == API::Method::GET) {
+                std::string api = std::string{} + T::api + "?" + message.query();
+                Nisse::ClientRequest    post(stream, api, T::method);
+                post.addHeaders(headers);
+                post.body(0);
+            }
+            else {
+                // Anything that is not a GET
+                Nisse::ClientRequest    post(stream, T::api, T::method);
                 post.addHeaders(headers);
                 std::size_t size = Ser::jsonStreanSize(message);
                 // std::cerr << "Send: " << size << " " << Ser::jsonExporter(message, Ser::PrinterConfig{Ser::OutputType::Stream}) << "\n";
                 post.body(size) << Ser::jsonExporter(message, Ser::PrinterConfig{Ser::OutputType::Stream});
-            }
-            else {
-                std::string api = std::string{} + T::api + "?" + message.query();
-                Nisse::ClientRequest    post(stream, api, method);
-                post.addHeaders(headers);
-                post.body(0);
             }
         }
     public:
@@ -50,10 +52,10 @@ class SlackClient
         }
 
         template<typename T>
-        void  tryMessage(T const& message, Nisse::Method method = Nisse::Method::POST)
+        void  tryMessage(T const& message)
         {
             SlackStream             stream;
-            sendMessageData(message, method, stream);
+            sendMessageData(message, stream);
 
             Nisse::ClientResponse   response(stream);
             std::istream&           output = stream;
@@ -66,10 +68,10 @@ class SlackClient
             std::cerr << "========\n";
         }
         template<typename T>
-        T::Reply  sendMessage(T const& message, Nisse::Method method = Nisse::Method::POST)
+        T::Reply  sendMessage(T const& message)
         {
             SlackStream             stream;
-            sendMessageData(message, method, stream);
+            sendMessageData(message, stream);
 
             Nisse::ClientResponse   response(stream);
             typename T::Reply       reply;

@@ -74,7 +74,7 @@ struct PostMessageReply: public API::Reply
 struct PostMessage
 {
     static constexpr char const* api = "https://slack.com/api/chat.postMessage";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = PostMessageReply;
 
     std::string                 channel;

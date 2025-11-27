@@ -17,7 +17,7 @@ Response:
 struct Add
 {
     static constexpr char const* api = "https://slack.com/api/pins.add";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = API::Reply;
 
     std::string         channel;            // Channel to pin the messsage to. You must also include a timestamp when pinning messages.

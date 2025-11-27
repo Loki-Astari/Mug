@@ -25,7 +25,7 @@ struct PostEphemeralReply: public API::Reply
 struct PostEphemeral
 {
     static constexpr char const* api = "https://slack.com/api/chat.postEphemeral";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = PostEphemeralReply;
 
     std::string             channel;            // Channel, private group, or IM channel to send message to. Can be an encoded ID, or a name.

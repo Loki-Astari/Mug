@@ -74,7 +74,7 @@ struct TeamsListReply: public API::Reply
 struct Test
 {
     static constexpr char const* api = "https://slack.com/api/auth.test";
-    static constexpr bool hasBody = false;
+    static constexpr Method method = Method::GET;
     using Reply = AuthInfo;
 
     std::string query() const {return "";}
@@ -83,18 +83,18 @@ struct Test
 struct Revoke
 {
     static constexpr char const* api = "https://slack.com/api/auth.test";
-    static constexpr bool hasBody = false;
+    static constexpr Method method = Method::GET;
     using Reply = AuthInfo;
 
     OptBool     test;
 
-    std::string query() const {return test.has_value() ? std::string("test=") + (test.value() ? "1":"0") : "";}
+    std::string query() const {return buildQuery(std::tie("test", test));}
 };
 
 struct TeamsList
 {
     static constexpr char const* api = "https://slack.com/api/auth.teams.list";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = TeamsListReply;
 
     int             limit;          // The maximum number of workspaces to return. Must be a positive integer no larger than 1000.

@@ -27,7 +27,7 @@ struct AppendStreamReply: public API::Reply
 struct AppendStream
 {
     static constexpr char const* api = "https://slack.com/api/chat.appendStream";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = AppendStreamReply;
 
     std::string             channel;            // An encoded ID that represents a channel, private group, or DM

@@ -33,7 +33,7 @@ using OptUnfurlURL = std::optional<UnfurlURL>;
 struct Unfurl
 {
     static constexpr char const* api = "https://slack.com/api/chat.unfurl";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = UnfurlReply;
 
     OptString           channel;            // Channel ID of the message. Both channel and ts must be provided together, or unfurl_id and source must be provided together.

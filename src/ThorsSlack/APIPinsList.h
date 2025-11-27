@@ -91,12 +91,12 @@ struct ListReply: public API::Reply
 struct List
 {
     static constexpr char const* api = "https://slack.com/api/pins.list";
-    static constexpr bool hasBody = false;
+    static constexpr Method method = Method::GET;
     using Reply = ListReply;
 
     std::string         channel;        // Channel to get pinned items for.
 
-    std::string         query() const {return "channel=" + channel;}
+    std::string query() const {return buildQuery(std::tie("channel", channel));}
 };
 
 }

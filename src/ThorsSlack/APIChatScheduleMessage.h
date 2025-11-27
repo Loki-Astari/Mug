@@ -76,7 +76,7 @@ struct ScheduledMessageReply: public API::Reply
 struct ScheduleMessage
 {
     static constexpr char const* api = "https://slack.com/api/chat.scheduleMessage";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = ScheduledMessageReply;
 
     std::string                 channel;                // Channel, private group, or DM channel to send message to. Can be an encoded ID, or a name. See below for more details.

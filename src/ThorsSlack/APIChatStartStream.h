@@ -27,7 +27,7 @@ struct StartStreamReply: public API::Reply
 struct StartStream
 {
     static constexpr char const* api = "https://slack.com/api/chat.startStream";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = API::Reply;
 
     std::string             channel;            // An encoded ID that represents a channel thread or DM.

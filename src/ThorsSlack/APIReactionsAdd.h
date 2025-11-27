@@ -17,7 +17,7 @@ Response:
 struct Add
 {
     static constexpr char const* api = "https://slack.com/api/reactions.add";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = API::Reply;
 
     std::string         channel;            // Channel where the message to add reaction to was posted.

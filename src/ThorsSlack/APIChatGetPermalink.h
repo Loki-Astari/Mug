@@ -26,13 +26,13 @@ struct GetPermalinkReply: public API::Reply
 struct GetPermalink
 {
     static constexpr char const* api = "https://slack.com/api/chat.getPermalink";
-    static constexpr bool hasBody = false;
+    static constexpr Method method = Method::GET;
     using Reply = GetPermalinkReply;
 
     std::string             channel;        // The ID of the conversation or channel containing the message
     std::string             message_ts;     // A message's ts value, uniquely identifying it within a channel
 
-    std::string             query() const   {return "channel=" + channel + "&message_ts=" + message_ts;}
+    std::string query() const {return buildQuery(std::tie("channel", channel), std::tie("message_ts", message_ts));}
 };
 
 }

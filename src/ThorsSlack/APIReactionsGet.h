@@ -91,7 +91,7 @@ struct GetReply: public API::Reply
 struct Get
 {
     static constexpr char const* api = "https://slack.com/api/reactions.get";
-    static constexpr bool hasBody = false;
+    static constexpr Method method = Method::GET;
     using Reply = GetReply;
 
     OptString       channel;        // Channel where the message to get reactions for was posted.
@@ -101,32 +101,13 @@ struct Get
     OptString       timestamp;      // Timestamp of the message to get reactions for.
 
 
-    std::string     query() const
+    std::string query() const
     {
-        std::stringstream   result;
-        std::string         sep = "&";
-
-        if (channel.has_value()) {
-            result << sep << "channel=" << channel.value();
-            sep = "&";
-        }
-        if (file.has_value()) {
-            result << sep << "file=" << file.value();
-            sep = "&";
-        }
-        if (file_comment.has_value()) {
-            result << sep << "file_comment=" << file_comment.value();
-            sep = "&";
-        }
-        if (full.has_value()) {
-            result << sep << "full=" << full.value();
-            sep = "&";
-        }
-        if (timestamp.has_value()) {
-            result << sep << "timestamp=" << timestamp.value();
-            sep = "&";
-        }
-        return result.str();
+        return buildQuery(std::tie("channel", channel),
+                          std::tie("file", file),
+                          std::tie("file_comment", file_comment),
+                          std::tie("full", full),
+                          std::tie("timestamp", timestamp));
     }
 };
 

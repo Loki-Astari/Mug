@@ -17,7 +17,7 @@ Response:
 struct Remove
 {
     static constexpr char const* api = "https://slack.com/api/reactions.remove";
-    static constexpr bool hasBody = true;
+    static constexpr Method method = Method::POST;
     using Reply = API::Reply;
 
     std::string             name;               // Reaction (emoji) name.
