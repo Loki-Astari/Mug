@@ -26,14 +26,17 @@ class SlackClient
         template<typename T>
         void sendMessageData(T const& message, Nisse::Method method, SlackStream& stream)
         {
-            Nisse::ClientRequest    post(stream, T::api, method);
 
-            post.addHeaders(headers);
             if constexpr (T::hasBody) {
+                Nisse::ClientRequest    post(stream, T::api, method);
+                post.addHeaders(headers);
                 std::size_t size = Ser::jsonStreanSize(message);
                 post.body(size) << Ser::jsonExporter(message, Ser::PrinterConfig{Ser::OutputType::Stream});
             }
             else {
+                std::string api = std::string{} + T::api + "?" + message.query();
+                Nisse::ClientRequest    post(stream, api, method);
+                post.addHeaders(headers);
                 post.body(0);
             }
         }

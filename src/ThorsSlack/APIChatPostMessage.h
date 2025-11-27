@@ -64,15 +64,8 @@ namespace ThorsAnvil::Slack::API::Chat
 }
 #endif
 
-struct ResponseMetadata
-{
-    VecString                   messages;
-};
-using OptResponseMetaData = std::optional<ResponseMetadata>;
-
 struct PostMessageReply: public API::Reply
 {
-    OptResponseMetaData         response_metadata;
     OptString                   channel;
     OptString                   ts;
     OptMessage                  message;
@@ -95,8 +88,7 @@ struct PostMessage
 
 }
 
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::ResponseMetadata, messages);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::PostMessageReply, response_metadata, channel, ts, message);
+ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::PostMessageReply, channel, ts, message);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostMessage, channel, text, blocks, icon_emoji, username, thread_ts);
 
 #endif

@@ -3,7 +3,6 @@
 
 #include "ThorsSlackConfig.h"
 #include "API.h"
-#include "ThorSerialize/Traits.h"
 
 #include <string>
 

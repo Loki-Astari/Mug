@@ -2,10 +2,8 @@
 #define THORSANVIL_SLACK_API_CHAT_APPEND_STREAM_H
 
 
-#include "ThorSerialize/Traits.h"
 #include "ThorsSlackConfig.h"
 #include "APIChat.h"
-#include "SlackBlockKit.h"
 #include <string>
 
 namespace ThorsAnvil::Slack::API::Chat

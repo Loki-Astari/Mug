@@ -2,7 +2,6 @@
 #define THORSANVIL_SLACK_API_CHAT_START_STREAM_H
 
 
-#include "ThorSerialize/Traits.h"
 #include "ThorsSlackConfig.h"
 #include "APIChat.h"
 #include <string>
