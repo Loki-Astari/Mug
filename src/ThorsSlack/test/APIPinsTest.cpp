@@ -54,7 +54,6 @@ TEST_F(APIPinsTest, List)
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
     }
-    std::cerr << ThorsAnvil::Serialize::jsonExporter(reply) << "\n";
     ASSERT_TRUE(reply.ok);
     ASSERT_NE(0, reply.items.size());
     bool findPin = false;
@@ -72,7 +71,6 @@ TEST_F(APIPinsTest, Remove)
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
     }
-    std::cerr << ThorsAnvil::Serialize::jsonExporter(reply) << "\n";
     ASSERT_TRUE(reply.ok);
 
     int pinRemoved = 0;
