@@ -23,7 +23,7 @@ Response:
 #endif
 
 
-struct TestReply: public API::Reply
+struct AuthInfo: public API::Reply
 {
     std::string             url;
     std::string             team;
@@ -31,17 +31,20 @@ struct TestReply: public API::Reply
     std::string             team_id;
     std::string             user_id;
     std::string             bot_id;
+    bool                    is_enterprise_install;
 };
 
 struct Test
 {
     static constexpr char const* api = "https://slack.com/api/auth.test";
     static constexpr bool hasBody = false;
-    using Reply = TestReply;
+    using Reply = AuthInfo;
+
+    std::string query() const {return "";}
 };
 
 }
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Auth::TestReply, url, team, user, team_id, user_id, bot_id);
+ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Auth::AuthInfo, url, team, user, team_id, user_id, bot_id, is_enterprise_install);
 
 
 #endif
