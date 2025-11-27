@@ -11,7 +11,6 @@
 #include <variant>
 #include <thread>
 
-
 using namespace std::literals::string_literals;
 namespace BK = ThorsAnvil::Slack::BlockKit;
 
