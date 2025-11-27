@@ -2,9 +2,7 @@
 #include "gtest/gtest.h"
 
 #include "SlackClient.h"
-#include "APIAuthTest.h"
-#include "APIAuthTeamsList.h"
-#include "APIAuthRevoke.h"
+#include "APIAuth.h"
 
 using namespace std::literals::string_literals;
 
