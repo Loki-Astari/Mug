@@ -3,8 +3,7 @@
 #include "gtest/gtest.h"
 
 #include "SlackClient.h"
-#include "APIChatPostMessage.h"
-#include "APIChatDelete.h"
+#include "APIChatMessage.h"
 #include "APIPins.h"
 
 using namespace std::literals::string_literals;

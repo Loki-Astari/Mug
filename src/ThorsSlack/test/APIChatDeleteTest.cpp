@@ -5,8 +5,7 @@
 
 
 #include "SlackClient.h"
-#include "APIChatPostMessage.h"
-#include "APIChatDelete.h"
+#include "APIChatMessage.h"
 
 using namespace std::literals::string_literals;
 namespace BK = ThorsAnvil::Slack::BlockKit;

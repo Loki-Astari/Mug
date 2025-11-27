@@ -1,12 +1,11 @@
-#include "APIChatPostMessage.h"
-#include "SlackBlockKit.h"
-#include "ThorSerialize/JsonThor.h"
 #include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
-#include "SlackClient.h"
+#include "APIChatMessage.h"
 #include "APIChatUnfurl.h"
-#include "APIChatPostMessage.h"
+#include "SlackBlockKit.h"
+#include "SlackClient.h"
+#include "ThorSerialize/JsonThor.h"
 
 using namespace std::literals::string_literals;
 

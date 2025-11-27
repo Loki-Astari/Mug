@@ -6,7 +6,7 @@
 
 
 #include "SlackClient.h"
-#include "APIChatPostMessage.h"
+#include "APIChatMessage.h"
 #include "APIChatGetPermalink.h"
 
 using namespace std::literals::string_literals;
