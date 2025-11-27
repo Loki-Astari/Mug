@@ -8,8 +8,9 @@
 namespace ThorsAnvil::Slack::API::Chat
 {
 
-// Documentation: https://docs.slack.dev/reference/methods/chat.deletescheduledmessage
 #if 0
+Documentation: https://docs.slack.dev/reference/methods/chat.deletescheduledmessage
+Response:
 {"ok":true}
 #endif
 

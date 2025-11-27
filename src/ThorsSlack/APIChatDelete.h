@@ -9,14 +9,13 @@
 namespace ThorsAnvil::Slack::API::Chat
 {
 
-// Documentation: https://docs.slack.dev/reference/methods/chat.delete
 #if 0
-// TODO. Needs payed account to test and validate.
-// Expected Response:
+Documentation: https://docs.slack.dev/reference/methods/chat.delete
+Response:
 {
-  "ok": true,
-  "channel": "C123ABC456",
-  "ts": "1401383885.000061"
+    "channel": "C09RU2URYMS",
+    "ts": "1764214726.831099",
+    "ok": true
 }
 #endif
 

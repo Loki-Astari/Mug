@@ -8,55 +8,59 @@
 namespace ThorsAnvil::Slack::API::Chat
 {
 
-// Documentation: https://docs.slack.dev/reference/methods/chat.scheduleMessage
 #if 0
+Documentation: https://docs.slack.dev/reference/methods/chat.scheduleMessage
+Response:
 {
-  "ok": true,
-  "scheduled_message_id": "Q09V4EK70JF",
-  "channel": "C09RU2URYMS",
-  "post_at": 1764134613,
-  "message":
-  {
-    "user": "U09S3D8R00Z",
-    "type": "message",
-    "bot_id": "B09RJ4A000K",
-    "app_id": "A09RQFXSEKC",
-    "text": "A timed message",
-    "team": "T095XJHH589",
-    "bot_profile":
+    "scheduled_message_id": "Q0A0H8V2U2V",
+    "channel": "C09RU2URYMS",
+    "post_at": 1764215063,
+    "message":
     {
-      "id": "B09RJ4A000K",
-      "deleted": false,
-      "name": "ThorsSlackBotOne",
-      "updated": 1762644664,
-      "app_id": "A09RQFXSEKC",
-      "user_id": "U09S3D8R00Z",
-      "icons":
-      {
-        "image_36": "https://a.slack-edge.com/80588/img/plugins/app/bot_36.png",
-        "image_48": "https://a.slack-edge.com/80588/img/plugins/app/bot_48.png",
-        "image_72": "https://a.slack-edge.com/80588/img/plugins/app/service_72.png"
-      },
-      "team_id": "T095XJHH589"
-    },
-    "blocks": [
-      {
-        "type": "rich_text",
-        "block_id": "IFjO",
-        "elements": [
-          {
-            "type": "rich_text_section",
-            "elements": [
-              {
-                "type": "text",
-                "text": "A timed message"
-              }
-            ]
-          }
+        "user": "U09S3D8R00Z",
+        "type": "message",
+        "ts": "",
+        "bot_id": "B09RJ4A000K",
+        "app_id": "A09RQFXSEKC",
+        "text": "I hope the tour went well, Mr. Wonka.",
+        "team": "T095XJHH589",
+        "bot_profile":
+        {
+            "id": "B09RJ4A000K",
+            "app_id": "A09RQFXSEKC",
+            "user_id": "U09S3D8R00Z",
+            "name": "ThorsSlackBotOne",
+            "icons":
+            {
+                "image_36": "https://a.slack-edge.com/80588/img/plugins/app/bot_36.png",
+                "image_48": "https://a.slack-edge.com/80588/img/plugins/app/bot_48.png",
+                "image_72": "https://a.slack-edge.com/80588/img/plugins/app/service_72.png"
+            },
+            "deleted": false,
+            "updated": 1762644664,
+            "team_id": "T095XJHH589"
+        },
+        "blocks":
+        [
+            {
+                "type": "rich_text",
+                "elements":
+                [
+                    {
+                        "type": "rich_text_section",
+                        "elements":
+                        [
+                            {
+                                "type": "text",
+                                "text": "I hope the tour went well, Mr. Wonka."
+                            }
+                        ]
+                    }
+                ]
+            }
         ]
-      }
-    ]
-  }
+    },
+    "ok": true
 }
 #endif
 

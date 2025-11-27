@@ -9,14 +9,13 @@
 namespace ThorsAnvil::Slack::API::Chat
 {
 
-// Documentation: https://docs.slack.dev/reference/methods/chat.delete
 #if 0
-// TODO. Needs payed account to test and validate.
-// Expected Response:
+Documentation: https://docs.slack.dev/reference/methods/chat.getpermalink
+Response:
 {
-  "ok": true,
-  "channel": "C123ABC456",
-  "permalink": "https://ghostbusters.slack.com/archives/C1H9RESGA/p135854651500008"
+    "channel": "C09RU2URYMS",
+    "permalink": "https://thorsanvilworkspace.slack.com/archives/C09RU2URYMS/p1764214542336409",
+    "ok": true
 }
 #endif
 

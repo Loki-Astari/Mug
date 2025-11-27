@@ -1,5 +1,5 @@
-#include "ThorSerialize/JsonThor.h"
 #include "ThorsSlackConfig.h"
+#include "ThorSerialize/JsonThor.h"
 #include "gtest/gtest.h"
 #include <thread>
 #include <variant>
@@ -18,7 +18,6 @@ using ThorsAnvil::Slack::API::Chat::GetPermalink;
 
 extern SlackClient             client;
 
-#define DISABLE_TEST 0
 #if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
 TEST(APIChatGetPermalinkTest, SimpleText)

@@ -8,8 +8,9 @@
 namespace ThorsAnvil::Slack::API::Chat
 {
 
-// Documentation: https://docs.slack.dev/reference/methods/chat.scheduleMessage
 #if 0
+Documentation: https://docs.slack.dev/reference/methods/chat.scheduledmessages.list
+Response:
 {
   "ok": true,
   "scheduled_messages":

@@ -8,9 +8,9 @@
 namespace ThorsAnvil::Slack::API::Chat
 {
 
-// Documentation: https://docs.slack.dev/reference/methods/chat.postmessage
 #if 0
-// Example Reply
+Documentation: https://docs.slack.dev/reference/methods/chat.postmessage
+Response:
 {
     "ok": true,
     "channel": "C09RU2URYMS",

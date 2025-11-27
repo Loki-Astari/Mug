@@ -10,20 +10,59 @@
 namespace ThorsAnvil::Slack::API::Chat
 {
 
-// Documentation: https://docs.slack.dev/reference/methods/chat.delete
 #if 0
-// TODO. Needs payed account to test and validate.
-// Expected Response:
+Documentation: https://docs.slack.dev/reference/methods/chat.update
+Response:
 {
-  "ok": true,
-  "channel": "C123ABC456",
-  "ts": "1401383885.000061",
-  "text": "Updated text you carefully authored",
-  "message":
-  {
-    "text": "Updated text you carefully authored",
-    "user": "U34567890"
-  }
+    "channel": "C09RU2URYMS",
+    "ts": "1764215452.433709",
+    "text": "Update text.",
+    "message":
+    {
+        "user": "U09S3D8R00Z",
+        "type": "message",
+        "ts": "",
+        "bot_id": "B09RJ4A000K",
+        "app_id": "A09RQFXSEKC",
+        "text": "Update text.",
+        "team": "T095XJHH589",
+        "bot_profile":
+        {
+            "id": "B09RJ4A000K",
+            "app_id": "A09RQFXSEKC",
+            "user_id": "U09S3D8R00Z",
+            "name": "ThorsSlackBotOne",
+            "icons":
+            {
+                "image_36": "https://a.slack-edge.com/80588/img/plugins/app/bot_36.png",
+                "image_48": "https://a.slack-edge.com/80588/img/plugins/app/bot_48.png",
+                "image_72": "https://a.slack-edge.com/80588/img/plugins/app/service_72.png"
+            },
+            "deleted": false,
+            "updated": 1762644664,
+            "team_id": "T095XJHH589"
+        },
+        "blocks":
+        [
+            {
+                "type": "rich_text",
+                "elements":
+                [
+                    {
+                        "type": "rich_text_section",
+                        "elements":
+                        [
+                            {
+                                "type": "text",
+                                "text": "Update text."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "ok": true
 }
 #endif
 
