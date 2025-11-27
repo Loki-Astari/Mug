@@ -4,14 +4,14 @@
 
 #include "SlackClient.h"
 #include "APIChatPostMessage.h"
-#include "APIPinsAdd.h"
-#include "APIPinsList.h"
-#include "APIPinsRemove.h"
+#include "APIChatDelete.h"
+#include "APIPins.h"
 
 using namespace std::literals::string_literals;
 
 using ThorsAnvil::Slack::SlackClient;
 using ThorsAnvil::Slack::API::Chat::PostMessage;
+using ThorsAnvil::Slack::API::Chat::Delete;
 using ThorsAnvil::Slack::API::Pins::Add;
 using ThorsAnvil::Slack::API::Pins::List;
 using ThorsAnvil::Slack::API::Pins::Remove;
@@ -20,35 +20,62 @@ extern SlackClient             client;
 
 #if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
-TEST(APIPinsTest, Add)
-{
-    PostMessage::Reply      reply = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."});
-    ASSERT_TRUE(reply.ok);
+class APIPinsTest : public ::testing::Test {
+    protected:
+        static PostMessage::Reply      post;
+    protected:
+        //void SetUp() override {}
+        //void TearDown() override {}
+    public:
+        static void SetUpTestSuite()
+        {
+            post = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "The APIPinTest::Add message to add pins to"});
+            ASSERT_TRUE(post.ok);
+        }
+        static void TearDownTestSuite()
+        {
+            client.sendMessage(Delete{.channel = "C09RU2URYMS", .ts = post.message.value().ts});
+        }
+};
+PostMessage::Reply APIPinsTest::post;
 
-    Add::Reply      reply1 = client.sendMessage(Add{.channel = "C09RU2URYMS", .timestamp=reply.message.value().ts});
-    if (!reply1.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply1);
-    }
-    ASSERT_TRUE(reply1.ok);
-}
-
-TEST(APIPinsTest, List)
+TEST_F(APIPinsTest, Add)
 {
-    List::Reply      reply = client.sendMessage(List{.channel = "C09RU2URYMS"});
+    Add::Reply      reply = client.sendMessage(Add{.channel = "C09RU2URYMS", .timestamp=post.message.value().ts});
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
     }
     ASSERT_TRUE(reply.ok);
 }
 
-TEST(APIPinsTest, Remove)
+TEST_F(APIPinsTest, List)
 {
     List::Reply      reply = client.sendMessage(List{.channel = "C09RU2URYMS"});
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
     }
+    std::cerr << ThorsAnvil::Serialize::jsonExporter(reply) << "\n";
+    ASSERT_TRUE(reply.ok);
+    ASSERT_NE(0, reply.items.size());
+    bool findPin = false;
+    for (auto const& item: reply.items) {
+        if (item.message.ts == post.message.value().ts) {
+            findPin = true;
+        }
+    }
+    ASSERT_TRUE(findPin);
+}
+
+TEST_F(APIPinsTest, Remove)
+{
+    List::Reply      reply = client.sendMessage(List{.channel = "C09RU2URYMS"});
+    if (!reply.ok) {
+        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
+    }
+    std::cerr << ThorsAnvil::Serialize::jsonExporter(reply) << "\n";
     ASSERT_TRUE(reply.ok);
 
+    int pinRemoved = 0;
     for (auto const& pin: reply.items) {
 
         Remove::Reply r = client.sendMessage(Remove{.channel = pin.channel, .timestamp = pin.message.ts});
@@ -56,7 +83,9 @@ TEST(APIPinsTest, Remove)
             std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
         }
         EXPECT_TRUE(r.ok);
+        ++pinRemoved;
     }
+    ASSERT_NE(0, pinRemoved);
 }
 
 #endif

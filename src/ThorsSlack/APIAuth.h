@@ -108,6 +108,7 @@ struct TeamsList
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::TeamInfo, id, name);
 ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Auth::TeamsListReply, teams);
 ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Auth::AuthInfo, url, team, user, team_id, user_id, bot_id, is_enterprise_install);
+
 // Action objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::TeamsList, limit, cursor, include_icon);
 

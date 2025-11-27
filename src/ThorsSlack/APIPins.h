@@ -1,17 +1,21 @@
-#ifndef THORSANVIL_SLACK_API_PINS_LIST_H
-#define THORSANVIL_SLACK_API_PINS_LIST_H
+#ifndef THORSANVIL_SLACK_API_PINS_H
+#define THORSANVIL_SLACK_API_PINS_H
 
 
-#include "ThorSerialize/Traits.h"
 #include "ThorsSlackConfig.h"
 #include "API.h"
 #include <ctime>
-#include <string>
 
 namespace ThorsAnvil::Slack::API::Pins
 {
 
 #if 0
+Documentation: https://docs.slack.dev/reference/methods/pins.add/
+Response:
+{"ok":true}
+Documentation: https://docs.slack.dev/reference/methods/pins.remove/
+Response:
+{"ok":true}
 Documentation: https://docs.slack.dev/reference/methods/pins.list/
 Response:
 {
@@ -74,6 +78,7 @@ Response:
 }
 #endif
 
+// Response Objects
 struct ListMessage
 {
     std::string         type;
@@ -88,6 +93,28 @@ struct ListReply: public API::Reply
 {
     VecListMessage      items;
 };
+
+// Action Objects
+struct Add
+{
+    static constexpr char const* api = "https://slack.com/api/pins.add";
+    static constexpr Method method = Method::POST;
+    using Reply = API::Reply;
+
+    std::string         channel;            // Channel to pin the messsage to. You must also include a timestamp when pinning messages.
+    OptString           timestamp;          // Timestamp of the message to pin. You must also include the channel.
+};
+
+struct Remove
+{
+    static constexpr char const* api = "https://slack.com/api/pins.remove";
+    static constexpr Method method = Method::POST;
+    using Reply = API::Reply;
+
+    std::string         channel;            // Channel to pin the messsage to. You must also include a timestamp when pinning messages.
+    OptString           timestamp;          // Timestamp of the message to pin. You must also include the channel.
+};
+
 struct List
 {
     static constexpr char const* api = "https://slack.com/api/pins.list";
@@ -101,8 +128,13 @@ struct List
 
 }
 
+// Response objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Pins::ListMessage, type, created, created_by, channel, message);
 ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Pins::ListReply, items);
+
+// Action objects
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Pins::Add, channel, timestamp);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Pins::Remove, channel, timestamp);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Pins::List, channel);
 
 #endif
