@@ -11,10 +11,9 @@ using ThorsAnvil::Slack::API::Chat::MeMessage;
 
 extern SlackClient             client;
 
-#define DISABLE_TEST 0
 #if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
-TEST(APIChatPostEphemeralTest, SimpleText)
+TEST(APIChatMeMessageTest, SimpleText)
 {
     MeMessage::Reply      reply = client.sendMessage(MeMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."});
     if (!reply.ok) {

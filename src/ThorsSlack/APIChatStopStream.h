@@ -11,7 +11,7 @@ namespace ThorsAnvil::Slack::API::Chat
 #if 0
 Documentation: https://docs.slack.dev/reference/methods/chat.stopStream
 TODO. Needs payed account to test and validate.
-Expected Response:
+Expected-Response:
 {
   "ok": true,
   "channel": "C123ABC456",
