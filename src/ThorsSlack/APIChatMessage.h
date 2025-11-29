@@ -131,30 +131,38 @@ Response:
 #endif
 
 // Response Objects
-struct PostMessageReply: public API::Reply
+struct PostMessageReply
 {
-    OptString                   channel;
-    OptString                   ts;
-    OptMessage                  message;
+    bool                        ok      = false;
+    std::string                 channel;
+    std::string                 ts;
+    Message                     message;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Chat::PostMessageReply);
 };
 
-struct PostEphemeralReply: public API::Reply
+struct PostEphemeralReply
 {
-    std::string             message_ts;
+    bool                        ok      = false;
+    std::string                 message_ts;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Chat::PostEphemeralReply);
 };
 
-struct DeleteReply: public API::Reply
+struct DeleteReply
 {
-    std::string             channel;
-    std::string             ts;
+    bool                        ok      = false;
+    std::string                 channel;
+    std::string                 ts;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Chat::DeleteReply);
 };
 
-struct UpdateReply: public API::Reply
+struct UpdateReply
 {
-    std::string             channel;
-    std::string             ts;
-    std::string             text;
-    OptMessage              message;
+    bool                        ok      = false;
+    std::string                 channel;
+    std::string                 ts;
+    std::string                 text;
+    Message                     message;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Chat::UpdateReply);
 };
 
 // Action Objects
@@ -178,19 +186,19 @@ struct PostEphemeral
     static constexpr Method method = Method::POST;
     using Reply = PostEphemeralReply;
 
-    std::string             channel;            // Channel, private group, or IM channel to send message to. Can be an encoded ID, or a name.
-    std::string             user;               // id of the user who will receive the ephemeral message. The user should be in the channel specified by the channel argument.
-    OptBool                 as_user;            // (Legacy) Pass true to post the message as the authed user. Defaults to true if the chat:write:bot scope is not included. Otherwise, defaults to false.
-    OptVecString            attachments;        // A JSON-based array of structured attachments, presented as a URL-encoded string.
-    BlockKit::OptBlocks     blocks;             // A JSON-based array of structured blocks, presented as a URL-encoded string.
-    OptString               icon_emoji;         // Emoji to use as the icon for this message. Overrides icon_url.
-    OptString               icon_url;           // URL to an image to use as the icon for this message.
-    OptBool                 link_names;         // Find and link channel names and usernames.
-    OptString               markdown_text;      // Accepts message text formatted in markdown. This argument should not be used in conjunction with blocks or text. Limit this field to 12,000 characters.
-    OptString               parse;              // Change how messages are treated. Defaults to none. See below.
-    OptString               text;               // How this field works and whether it is required depends on other fields you use in your API call. See below for more detail.
-    OptString               thread_ts;          // Provide another message's ts value to post this message in a thread. Avoid using a reply's ts value; use its parent's value instead. Ephemeral messages in threads are only shown if there is already an active thread.
-    OptString               username;           // Set your bot's user name.
+    std::string                 channel;            // Channel, private group, or IM channel to send message to. Can be an encoded ID, or a name.
+    std::string                 user;               // id of the user who will receive the ephemeral message. The user should be in the channel specified by the channel argument.
+    OptBool                     as_user;            // (Legacy) Pass true to post the message as the authed user. Defaults to true if the chat:write:bot scope is not included. Otherwise, defaults to false.
+    OptVecString                attachments;        // A JSON-based array of structured attachments, presented as a URL-encoded string.
+    BlockKit::OptBlocks         blocks;             // A JSON-based array of structured blocks, presented as a URL-encoded string.
+    OptString                   icon_emoji;         // Emoji to use as the icon for this message. Overrides icon_url.
+    OptString                   icon_url;           // URL to an image to use as the icon for this message.
+    OptBool                     link_names;         // Find and link channel names and usernames.
+    OptString                   markdown_text;      // Accepts message text formatted in markdown. This argument should not be used in conjunction with blocks or text. Limit this field to 12,000 characters.
+    OptString                   parse;              // Change how messages are treated. Defaults to none. See below.
+    OptString                   text;               // How this field works and whether it is required depends on other fields you use in your API call. See below for more detail.
+    OptString                   thread_ts;          // Provide another message's ts value to post this message in a thread. Avoid using a reply's ts value; use its parent's value instead. Ephemeral messages in threads are only shown if there is already an active thread.
+    OptString                   username;           // Set your bot's user name.
 };
 
 struct Delete
@@ -199,9 +207,9 @@ struct Delete
     static constexpr Method method = Method::POST;
     using Reply = DeleteReply;
 
-    std::string             channel;        // Channel containing the message to be deleted.
-    std::string             ts;             // Timestamp of the message to be deleted.
-    OptBool                 as_user;        // (Legacy) Pass true to delete the message as the authed user with chat:write:user scope. Bot users in this context are considered authed users. See legacy as_user parameter below.
+    std::string                 channel;        // Channel containing the message to be deleted.
+    std::string                 ts;             // Timestamp of the message to be deleted.
+    OptBool                     as_user;        // (Legacy) Pass true to delete the message as the authed user with chat:write:user scope. Bot users in this context are considered authed users. See legacy as_user parameter below.
 };
 
 struct Update
@@ -210,29 +218,29 @@ struct Update
     static constexpr Method method = Method::POST;
     using Reply = UpdateReply;
 
-    std::string             channel;        // Channel containing the message to be updated. For direct messages, ensure that this value is a DM ID (starts with D) instead of a User ID (starts with either U or W).
-    std::string             ts;             // Timestamp of the message to be updated.
-    OptBool                 as_user;        // Pass true to update the message as the authed user. Bot users in this context are considered authed users.
-    OptVecString            attachments;    // A JSON-based array of structured attachments, presented as a URL-encoded string.
+    std::string                 channel;        // Channel containing the message to be updated. For direct messages, ensure that this value is a DM ID (starts with D) instead of a User ID (starts with either U or W).
+    std::string                 ts;             // Timestamp of the message to be updated.
+    OptBool                     as_user;        // Pass true to update the message as the authed user. Bot users in this context are considered authed users.
+    OptVecString                attachments;    // A JSON-based array of structured attachments, presented as a URL-encoded string.
                                             // TODO
                                             // Example: [{"pretext": "pre-hello", "text": "text-world"}]
-    BlockKit::OptBlocks     blocks;         // A JSON-based array of structured blocks, presented as a URL-encoded string.
-    OptString               markdown_text;  // Accepts message text formatted in markdown. This argument should not be used in conjunction with blocks or text. Limit this field to 12,000 characters.
-    OptMetadata             metadata;       // JSON object with event_type and event_payload fields, presented as a URL-encoded string. If you don't include this field, the message's previous metadata will be retained. To remove previous metadata, include an empty object for this field. Metadata you post to Slack is accessible to any app or user who is a member of that workspace.
-    OptBool                 link_names;     // Find and link channel names and usernames. Defaults to none. If you do not specify a value for this field, the original value set for the message will be overwritten with the default, none.
-    OptBool                 parse;          // Change how messages are treated. Defaults to client, unlike chat.postMessage. Accepts either none or full. If you do not specify a value for this field, the original value set for the message will be overwritten with the default, client.
-    OptString               text;           // How this field works and whether it is required depends on other fields you use in your API call. See below for more detail.
-    OptBool                 reply_broadcast;// Broadcast an existing thread reply to make it visible to everyone in the channel or conversation.
-    OptVecString            file_ids;       // Array of new file ids that will be sent with this message.
+    BlockKit::OptBlocks         blocks;         // A JSON-based array of structured blocks, presented as a URL-encoded string.
+    OptString                   markdown_text;  // Accepts message text formatted in markdown. This argument should not be used in conjunction with blocks or text. Limit this field to 12,000 characters.
+    OptMetadata                 metadata;       // JSON object with event_type and event_payload fields, presented as a URL-encoded string. If you don't include this field, the message's previous metadata will be retained. To remove previous metadata, include an empty object for this field. Metadata you post to Slack is accessible to any app or user who is a member of that workspace.
+    OptBool                     link_names;     // Find and link channel names and usernames. Defaults to none. If you do not specify a value for this field, the original value set for the message will be overwritten with the default, none.
+    OptBool                     parse;          // Change how messages are treated. Defaults to client, unlike chat.postMessage. Accepts either none or full. If you do not specify a value for this field, the original value set for the message will be overwritten with the default, client.
+    OptString                   text;           // How this field works and whether it is required depends on other fields you use in your API call. See below for more detail.
+    OptBool                     reply_broadcast;// Broadcast an existing thread reply to make it visible to everyone in the channel or conversation.
+    OptVecString                file_ids;       // Array of new file ids that will be sent with this message.
 };
 
 }
 
 // Response objects
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::PostMessageReply, channel, ts, message);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::PostEphemeralReply, message_ts);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::DeleteReply, channel, ts);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::UpdateReply, channel, ts, text, message);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostMessageReply, ok, channel, ts, message);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostEphemeralReply, ok, message_ts);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::DeleteReply, ok, channel, ts);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::UpdateReply, ok, channel, ts, text, message);
 
 // Action objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::PostMessage, channel, text, blocks, icon_emoji, username, thread_ts);

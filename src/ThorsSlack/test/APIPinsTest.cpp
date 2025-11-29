@@ -28,36 +28,32 @@ class APIPinsTest : public ::testing::Test {
     public:
         static void SetUpTestSuite()
         {
-            post = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "The APIPinTest::Add message to add pins to"});
+            client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "The APIPinTest::Add message to add pins to"}, post, true);
             ASSERT_TRUE(post.ok);
         }
         static void TearDownTestSuite()
         {
-            client.sendMessage(Delete{.channel = "C09RU2URYMS", .ts = post.message.value().ts});
+            client.sendMessage(Delete{.channel = "C09RU2URYMS", .ts = post.message.ts});
         }
 };
 PostMessage::Reply APIPinsTest::post;
 
 TEST_F(APIPinsTest, Add)
 {
-    Add::Reply      reply = client.sendMessage(Add{.channel = "C09RU2URYMS", .timestamp=post.message.value().ts});
-    if (!reply.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
-    }
+    Add::Reply      reply;
+    client.sendMessage(Add{.channel = "C09RU2URYMS", .timestamp=post.message.ts}, reply, true);
     ASSERT_TRUE(reply.ok);
 }
 
 TEST_F(APIPinsTest, List)
 {
-    List::Reply      reply = client.sendMessage(List{.channel = "C09RU2URYMS"});
-    if (!reply.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
-    }
+    List::Reply      reply;
+    client.sendMessage(List{.channel = "C09RU2URYMS"}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_NE(0, reply.items.size());
     bool findPin = false;
     for (auto const& item: reply.items) {
-        if (item.message.ts == post.message.value().ts) {
+        if (item.message.ts == post.message.ts) {
             findPin = true;
         }
     }
@@ -66,19 +62,15 @@ TEST_F(APIPinsTest, List)
 
 TEST_F(APIPinsTest, Remove)
 {
-    List::Reply      reply = client.sendMessage(List{.channel = "C09RU2URYMS"});
-    if (!reply.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
-    }
+    List::Reply      reply;
+    client.sendMessage(List{.channel = "C09RU2URYMS"}, reply, true);
     ASSERT_TRUE(reply.ok);
 
     int pinRemoved = 0;
     for (auto const& pin: reply.items) {
 
-        Remove::Reply r = client.sendMessage(Remove{.channel = pin.channel, .timestamp = pin.message.ts});
-        if (!reply.ok) {
-            std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
-        }
+        Remove::Reply r;
+        client.sendMessage(Remove{.channel = pin.channel, .timestamp = pin.message.ts}, r, true);
         EXPECT_TRUE(r.ok);
         ++pinRemoved;
     }

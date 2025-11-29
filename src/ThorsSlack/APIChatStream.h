@@ -44,23 +44,29 @@ Expected-Response:
 #endif
 
 // Response Objects
-struct AppendStreamReply: public API::Reply
+struct AppendStreamReply
 {
-    std::string             channel;
-    std::string             ts;
+    bool                        ok      = false;
+    std::string                 channel;
+    std::string                 ts;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Chat::AppentStreamReply);
 };
 
-struct StartStreamReply: public API::Reply
+struct StartStreamReply
 {
-    std::string             channel;
-    std::string             ts;
+    bool                        ok      = false;
+    std::string                 channel;
+    std::string                 ts;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Chat::StartStreamReply);
 };
 
-struct StopStreamReply: public API::Reply
+struct StopStreamReply
 {
-    std::string             channel;
-    std::string             ts;
-    OptMessage              message;
+    bool                        ok      = false;
+    std::string                 channel;
+    std::string                 ts;
+    Message                     message;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Chat::StopStreamReply);
 };
 
 
@@ -71,22 +77,22 @@ struct AppendStream
     static constexpr Method method = Method::POST;
     using Reply = AppendStreamReply;
 
-    std::string             channel;            // An encoded ID that represents a channel, private group, or DM
-    std::time_t             ts;                 // The timestamp of the streaming message.
-    OptString               markdown_text;      // Accepts message text formatted in markdown. Limit this field to 12,000 characters.
+    std::string                 channel;            // An encoded ID that represents a channel, private group, or DM
+    std::time_t                 ts;                 // The timestamp of the streaming message.
+    OptString                   markdown_text;      // Accepts message text formatted in markdown. Limit this field to 12,000 characters.
 };
 
 struct StartStream
 {
     static constexpr char const* api = "https://slack.com/api/chat.startStream";
     static constexpr Method method = Method::POST;
-    using Reply = API::Reply;
+    using Reply = API::OK;
 
-    std::string             channel;            // An encoded ID that represents a channel thread or DM.
-    std::string             thread_ts;          // Provide another message's ts value to reply to. Streamed messages should always be replies to a user request.
-    OptString               markdown_text;      // Accepts message text formatted in markdown. Limit this field to 12,000 characters.
-    OptString               recipient_user_id;  // The encoded ID of the user to receive the streaming text. Required when streaming to channels.
-    OptString               recipient_team_id;  // The encoded ID of the team the user receiving the streaming text belongs to. Required when streaming to channels.
+    std::string                 channel;            // An encoded ID that represents a channel thread or DM.
+    std::string                 thread_ts;          // Provide another message's ts value to reply to. Streamed messages should always be replies to a user request.
+    OptString                   markdown_text;      // Accepts message text formatted in markdown. Limit this field to 12,000 characters.
+    OptString                   recipient_user_id;  // The encoded ID of the user to receive the streaming text. Required when streaming to channels.
+    OptString                   recipient_team_id;  // The encoded ID of the team the user receiving the streaming text belongs to. Required when streaming to channels.
 };
 
 struct StopStream
@@ -95,19 +101,19 @@ struct StopStream
     static constexpr Method method = Method::POST;
     using Reply = StopStreamReply;
 
-    std::string             channel;            // An encoded ID that represents a channel, private group, or DM
-    std::time_t             ts;                 // The timestamp of the streaming message.
-    OptString               markdown_text;      // Accepts message text formatted in markdown. Limit this field to 12,000 characters.
-    BlockKit::OptBlocks     blocks;             // A list of blocks that will be rendered at the bottom of the finalized message.
-    OptMetadata             metadata;           // JSON object with event_type and event_payload fields, presented as a URL-encoded string. Metadata you post to Slack is accessible to any app or user who is a member of that workspace.
+    std::string                 channel;            // An encoded ID that represents a channel, private group, or DM
+    std::time_t                 ts;                 // The timestamp of the streaming message.
+    OptString                   markdown_text;      // Accepts message text formatted in markdown. Limit this field to 12,000 characters.
+    BlockKit::OptBlocks         blocks;             // A list of blocks that will be rendered at the bottom of the finalized message.
+    OptMetadata                 metadata;           // JSON object with event_type and event_payload fields, presented as a URL-encoded string. Metadata you post to Slack is accessible to any app or user who is a member of that workspace.
 };
 
 }
 
 // Response objects
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::AppendStreamReply, channel, ts);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::StartStreamReply, channel, ts);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::StopStreamReply, channel, ts, message);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::AppendStreamReply, ok, channel, ts);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::StartStreamReply, ok, channel, ts);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::StopStreamReply, ok, channel, ts, message);
 
 // Action objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::AppendStream, channel, ts, markdown_text);

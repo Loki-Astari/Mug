@@ -46,27 +46,31 @@ Response:
 #endif
 
 // Response Objects
-struct AuthInfo: public API::Reply
+struct AuthInfo
 {
-    std::string             url;
-    std::string             team;
-    std::string             user;
-    std::string             team_id;
-    std::string             user_id;
-    std::string             bot_id;
-    bool                    is_enterprise_install;
+    bool                        ok      = false;
+    std::string                 url;
+    std::string                 team;
+    std::string                 user;
+    std::string                 team_id;
+    std::string                 user_id;
+    std::string                 bot_id;
+    bool                        is_enterprise_install;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Auth::AuthInfo);
 };
 
 struct TeamInfo
 {
-    std::string             id;
-    std::string             name;
+    std::string                 id;
+    std::string                 name;
 };
 using VecTeamInfo = std::vector<TeamInfo>;
 
-struct TeamsListReply: public API::Reply
+struct TeamsListReply
 {
-    VecTeamInfo     teams;
+    bool                        ok      = false;
+    VecTeamInfo                 teams;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::AuthTeamsListReply);
 };
 
 
@@ -86,7 +90,7 @@ struct Revoke
     static constexpr Method method = Method::GET;
     using Reply = AuthInfo;
 
-    OptBool     test;
+    OptBool                     test;
 
     std::string query() const {return buildQuery(std::tie("test", test));}
 };
@@ -97,17 +101,17 @@ struct TeamsList
     static constexpr Method method = Method::POST;
     using Reply = TeamsListReply;
 
-    int             limit;          // The maximum number of workspaces to return. Must be a positive integer no larger than 1000.
-    OptString       cursor;         // Set cursor to next_cursor returned by the previous call to list items in the next page.
-    OptBool         include_icon;   // Whether to return icon paths for each workspace. An icon path represents a URI pointing to the image signifying the workspace.
+    int                         limit;          // The maximum number of workspaces to return. Must be a positive integer no larger than 1000.
+    OptString                   cursor;         // Set cursor to next_cursor returned by the previous call to list items in the next page.
+    OptBool                     include_icon;   // Whether to return icon paths for each workspace. An icon path represents a URI pointing to the image signifying the workspace.
 };
 
 }
 
 // Response objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::TeamInfo, id, name);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Auth::TeamsListReply, teams);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Auth::AuthInfo, url, team, user, team_id, user_id, bot_id, is_enterprise_install);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::TeamsListReply, ok, teams);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::AuthInfo, url, ok, team, user, team_id, user_id, bot_id, is_enterprise_install);
 
 // Action objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::TeamsList, limit, cursor, include_icon);

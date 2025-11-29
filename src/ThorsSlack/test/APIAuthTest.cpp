@@ -17,29 +17,23 @@ extern SlackClient             client;
 
 TEST(APIAuthTests, AuthTest)
 {
-    ThorsAnvil::Slack::API::Auth::Test::Reply      reply = client.sendMessage(ThorsAnvil::Slack::API::Auth::Test{});
-    if (!reply.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
-    }
+    ThorsAnvil::Slack::API::Auth::Test::Reply      reply;
+    client.sendMessage(ThorsAnvil::Slack::API::Auth::Test{}, reply, true);
     ASSERT_TRUE(reply.ok);
 }
 
 TEST(APIAuthTests, AuthTeamsList)
 {
-    TeamsList::Reply      reply = client.sendMessage(TeamsList{});
-    if (!reply.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
-    }
+    TeamsList::Reply      reply;
+    client.sendMessage(TeamsList{}, reply, true);
     ASSERT_TRUE(reply.ok);
     EXPECT_NE(0, reply.teams.size());   // At least your current team (may be more).
 }
 
 TEST(APIAuthTests, AuthRevoke)
 {
-    Revoke::Reply      reply = client.sendMessage(Revoke{.test = true});
-    if (!reply.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
-    }
+    Revoke::Reply      reply;
+    client.sendMessage(Revoke{.test = true}, reply, true);
     ASSERT_TRUE(reply.ok);
 }
 

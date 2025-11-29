@@ -159,25 +159,29 @@ Response:
 #endif
 
 // Response Objects
-struct GetReply: public API::Reply
+struct GetReply
 {
-    std::string     type;
-    API::Message    message;
-    std::string     channel;
+    bool                        ok      = false;
+    std::string                 type;
+    API::Message                message;
+    std::string                 channel;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Reaction::GetReply);
 };
 
 struct ReactionMessage
 {
-    std::string         type;
-    std::string         channel;
-    API::Message        message;
+    std::string                 type;
+    std::string                 channel;
+    API::Message                message;
 };
 using VecReactionMessage = std::vector<ReactionMessage>;
 
-struct ListReply: public API::Reply
+struct ListReply
 {
-    VecReactionMessage  items;
-    Cursor              response_metadata;
+    bool                        ok      = false;
+    VecReactionMessage          items;
+    Cursor                      response_metadata;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Reaction::ListReply);
 };
 
 // Action Objects
@@ -185,11 +189,11 @@ struct Add
 {
     static constexpr char const* api = "https://slack.com/api/reactions.add";
     static constexpr Method method = Method::POST;
-    using Reply = API::Reply;
+    using Reply = API::OK;
 
-    std::string         channel;            // Channel where the message to add reaction to was posted.
-    std::string         name;               // Reaction (emoji) name
-    std::string         timestamp;          // Timestamp of the message to add reaction to.
+    std::string                 channel;            // Channel where the message to add reaction to was posted.
+    std::string                 name;               // Reaction (emoji) name
+    std::string                 timestamp;          // Timestamp of the message to add reaction to.
 };
 
 struct Get
@@ -198,11 +202,11 @@ struct Get
     static constexpr Method method = Method::GET;
     using Reply = GetReply;
 
-    OptString       channel;        // Channel where the message to get reactions for was posted.
-    OptString       file;           // File to get reactions for.
-    OptString       file_comment;   // File comment to get reactions for.
-    OptBool         full;           // If true always return the complete reaction list.
-    OptString       timestamp;      // Timestamp of the message to get reactions for.
+    OptString                   channel;        // Channel where the message to get reactions for was posted.
+    OptString                   file;           // File to get reactions for.
+    OptString                   file_comment;   // File comment to get reactions for.
+    OptBool                     full;           // If true always return the complete reaction list.
+    OptString                   timestamp;      // Timestamp of the message to get reactions for.
 
 
     std::string query() const
@@ -221,13 +225,13 @@ struct List
     static constexpr Method method = Method::GET;
     using Reply = ListReply;
 
-    OptString           user;               // Show reactions made by this user. Defaults to the authed user.
-    OptBool             full;               // If true always return the complete reaction list.
-    OptInt              count;              // Default: 100
-    OptInt              page;               // Default: 1
-    OptString           cursor;             // Parameter for pagination. Set cursor equal to the next_cursor attribute returned by the previous request's response_metadata. This parameter is optional, but pagination is mandatory: the default value simply fetches the first "page" of the collection. See pagination for more details.
-    OptInt              limit;              // The maximum number of items to return. Fewer than the requested number of items may be returned, even if the end of the list hasn't been reached.
-    OptString           team_id;            // encoded team id to list reactions in, required if org token is used
+    OptString                   user;               // Show reactions made by this user. Defaults to the authed user.
+    OptBool                     full;               // If true always return the complete reaction list.
+    OptInt                      count;              // Default: 100
+    OptInt                      page;               // Default: 1
+    OptString                   cursor;             // Parameter for pagination. Set cursor equal to the next_cursor attribute returned by the previous request's response_metadata. This parameter is optional, but pagination is mandatory: the default value simply fetches the first "page" of the collection. See pagination for more details.
+    OptInt                      limit;              // The maximum number of items to return. Fewer than the requested number of items may be returned, even if the end of the list hasn't been reached.
+    OptString                   team_id;            // encoded team id to list reactions in, required if org token is used
 
     std::string query() const
     {
@@ -245,21 +249,21 @@ struct Remove
 {
     static constexpr char const* api = "https://slack.com/api/reactions.remove";
     static constexpr Method method = Method::POST;
-    using Reply = API::Reply;
+    using Reply = API::OK;
 
-    std::string             name;               // Reaction (emoji) name.
-    OptString               file;               // File to remove reaction from.
-    OptString               file_comment;       // File comment to remove reaction from.
-    OptString               channel;            // Channel where the message to remove reaction from was posted.
-    OptString               timestamp;          // Timestamp of the message to remove reaction from
+    std::string                 name;               // Reaction (emoji) name.
+    OptString                   file;               // File to remove reaction from.
+    OptString                   file_comment;       // File comment to remove reaction from.
+    OptString                   channel;            // Channel where the message to remove reaction from was posted.
+    OptString                   timestamp;          // Timestamp of the message to remove reaction from
 };
 
 }
 
 // Response objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::ReactionMessage, type, channel, message);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Reactions::GetReply, type, message, channel);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Reactions::ListReply, items, response_metadata);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::GetReply, ok, type, message, channel);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::ListReply, ok, items, response_metadata);
 
 // Action objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::Add, channel, name, timestamp);

@@ -67,11 +67,11 @@ struct Message
 };
 using OptMessage = std::optional<Message>;
 
-struct ResponseMetadata
+struct ResponseMetaData
 {
     VecString                   messages;
 };
-using OptResponseMetaData = std::optional<ResponseMetadata>;
+using OptResponseMetaData = std::optional<ResponseMetaData>;
 
 struct Reply
 {
@@ -81,6 +81,23 @@ struct Reply
     OptString                   warning;
     OptVecString                warnings;
     OptResponseMetaData         response_metadata;
+};
+
+struct OK
+{
+    bool                        ok;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::OK);
+};
+
+struct Error
+{
+    bool                        ok;
+    std::string                 error;
+    std::vector<std::string>    errors;
+    std::string                 warning;
+    std::vector<std::string>    warnings;
+    ResponseMetaData            response_metadata;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Error);
 };
 
 struct Cursor
@@ -131,8 +148,10 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotIcon, image_36, image_48, image_
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotProfile, id, app_id, user_id, name, icons, deleted, updated, team_id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reaction, name, users, count);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks, pinned_to, permalink, reactions);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ResponseMetadata, messages);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ResponseMetaData, messages);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reply, ok, error, errors, warning, warnings, response_metadata);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::OK, ok);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Error, ok, error, errors, warning, warnings, response_metadata);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Cursor, next_cursor);
 
 

@@ -30,21 +30,25 @@ Documentation: https://docs.slack.dev/reference/methods/chat.unfurl/
 #endif
 
 // Response Objects
-struct GetPermalinkReply: public API::Reply
+struct GetPermalinkReply
 {
-    std::string             channel;
-    std::string             permalink;
+    bool                        ok      = false;
+    std::string                 channel;
+    std::string                 permalink;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Chat::GetPermalinkReply);
 };
 
-struct MeMessageReply: public API::Reply
+struct MeMessageReply
 {
-    std::string         channel;
-    std::string         ts;
+    bool                        ok      = false;
+    std::string                 channel;
+    std::string                 ts;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Chat::MeMessageReply);
 };
 
 struct UnfurlBlock
 {
-    BK::Blocks          blocks;
+    BK::Blocks                  blocks;
 };
 using UnfurlURL = std::map<std::string, UnfurlBlock>;
 using OptUnfurlURL = std::optional<UnfurlURL>;
@@ -57,8 +61,8 @@ struct GetPermalink
     static constexpr Method method = Method::GET;
     using Reply = GetPermalinkReply;
 
-    std::string             channel;        // The ID of the conversation or channel containing the message
-    std::string             message_ts;     // A message's ts value, uniquely identifying it within a channel
+    std::string                 channel;        // The ID of the conversation or channel containing the message
+    std::string                 message_ts;     // A message's ts value, uniquely identifying it within a channel
 
     std::string query() const {return buildQuery(std::tie("channel", channel), std::tie("message_ts", message_ts));}
 };
@@ -69,34 +73,34 @@ struct MeMessage
     static constexpr Method method = Method::POST;
     using Reply = MeMessageReply;
 
-    std::string         channel;        // Channel to send message to. Can be a public channel, private group or IM channel. Can be an encoded ID, or a name.
-    std::string         text;           // Text of the message to send.
+    std::string                 channel;        // Channel to send message to. Can be a public channel, private group or IM channel. Can be an encoded ID, or a name.
+    std::string                 text;           // Text of the message to send.
 };
 
 struct Unfurl
 {
     static constexpr char const* api = "https://slack.com/api/chat.unfurl";
     static constexpr Method method = Method::POST;
-    using Reply = API::Reply;
+    using Reply = API::OK;
 
-    OptString           channel;            // Channel ID of the message. Both channel and ts must be provided together, or unfurl_id and source must be provided together.
-    OptString           ts;                 // Timestamp of the message to add unfurl behavior to.
-    OptUnfurlURL        unfurls;            // URL-encoded JSON map with keys set to URLs featured in the the message, pointing to their unfurl blocks or message attachments. Either unfurls or metadata must be provided.
-    OptString           user_auth_message;  // Provide a simply-formatted string to send as an ephemeral message to the user as invitation to authenticate further and enable full unfurling behavior. Provides two buttons, Not now or Never ask me again.
-    OptBool             user_auth_required; // Set to true or 1 to indicate the user must install your Slack app to trigger unfurls for this domain
-    OptString           user_auth_url;      // Send users to this custom URL where they will complete authentication in your app to fully trigger unfurling. Value should be properly URL-encoded.
-    BlockKit::OptBlocks user_auth_blocks;   // Provide a JSON based array of structured blocks presented as URL-encoded string to send as an ephemeral message to the user as invitation to authenticate further and enable full unfurling behavior
-    OptString           unfurl_id;          // The ID of the link to unfurl. Both unfurl_id and source must be provided together, or channel and ts must be provided together.
-    OptString           source;             // The source of the link to unfurl. The source may either be composer, when the link is inside the message composer, or conversations_history, when the link has been posted to a conversation.
-    OptMetadata         metadata;           // JSON object with entity_type and entity_payload fields, presented as a URL-encoded string. Either unfurls or metadata must be provided.
+    OptString                   channel;            // Channel ID of the message. Both channel and ts must be provided together, or unfurl_id and source must be provided together.
+    OptString                   ts;                 // Timestamp of the message to add unfurl behavior to.
+    OptUnfurlURL                unfurls;            // URL-encoded JSON map with keys set to URLs featured in the the message, pointing to their unfurl blocks or message attachments. Either unfurls or metadata must be provided.
+    OptString                   user_auth_message;  // Provide a simply-formatted string to send as an ephemeral message to the user as invitation to authenticate further and enable full unfurling behavior. Provides two buttons, Not now or Never ask me again.
+    OptBool                     user_auth_required; // Set to true or 1 to indicate the user must install your Slack app to trigger unfurls for this domain
+    OptString                   user_auth_url;      // Send users to this custom URL where they will complete authentication in your app to fully trigger unfurling. Value should be properly URL-encoded.
+    BlockKit::OptBlocks         user_auth_blocks;   // Provide a JSON based array of structured blocks presented as URL-encoded string to send as an ephemeral message to the user as invitation to authenticate further and enable full unfurling behavior
+    OptString                   unfurl_id;          // The ID of the link to unfurl. Both unfurl_id and source must be provided together, or channel and ts must be provided together.
+    OptString                   source;             // The source of the link to unfurl. The source may either be composer, when the link is inside the message composer, or conversations_history, when the link has been posted to a conversation.
+    OptMetadata                 metadata;           // JSON object with entity_type and entity_payload fields, presented as a URL-encoded string. Either unfurls or metadata must be provided.
 };
 
 }
 
 // Response objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::UnfurlBlock, blocks);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::GetPermalinkReply, channel, permalink);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Chat::MeMessageReply, channel, ts);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::GetPermalinkReply, ok, channel, permalink);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::MeMessageReply, ok, channel, ts);
 
 // Action objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Chat::GetPermalink, channel, message_ts);

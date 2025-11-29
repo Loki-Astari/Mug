@@ -81,17 +81,19 @@ Response:
 // Response Objects
 struct ListMessage
 {
-    std::string         type;
-    std::time_t         created;
-    std::string         created_by;
-    std::string         channel;
-    API::Message        message;
+    std::string                 type;
+    std::time_t                 created;
+    std::string                 created_by;
+    std::string                 channel;
+    API::Message                message;
 };
 using VecListMessage = std::vector<ListMessage>;
 
-struct ListReply: public API::Reply
+struct ListReply
 {
-    VecListMessage      items;
+    bool                        ok      = false;
+    VecListMessage              items;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Pin::ListReply);
 };
 
 // Action Objects
@@ -99,20 +101,20 @@ struct Add
 {
     static constexpr char const* api = "https://slack.com/api/pins.add";
     static constexpr Method method = Method::POST;
-    using Reply = API::Reply;
+    using Reply = API::OK;
 
-    std::string         channel;            // Channel to pin the messsage to. You must also include a timestamp when pinning messages.
-    OptString           timestamp;          // Timestamp of the message to pin. You must also include the channel.
+    std::string                 channel;            // Channel to pin the messsage to. You must also include a timestamp when pinning messages.
+    OptString                   timestamp;          // Timestamp of the message to pin. You must also include the channel.
 };
 
 struct Remove
 {
     static constexpr char const* api = "https://slack.com/api/pins.remove";
     static constexpr Method method = Method::POST;
-    using Reply = API::Reply;
+    using Reply = API::OK;
 
-    std::string         channel;            // Channel to pin the messsage to. You must also include a timestamp when pinning messages.
-    OptString           timestamp;          // Timestamp of the message to pin. You must also include the channel.
+    std::string                 channel;            // Channel to pin the messsage to. You must also include a timestamp when pinning messages.
+    OptString                   timestamp;          // Timestamp of the message to pin. You must also include the channel.
 };
 
 struct List
@@ -121,7 +123,7 @@ struct List
     static constexpr Method method = Method::GET;
     using Reply = ListReply;
 
-    std::string         channel;        // Channel to get pinned items for.
+    std::string                 channel;        // Channel to get pinned items for.
 
     std::string query() const {return buildQuery(std::tie("channel", channel));}
 };
@@ -130,7 +132,7 @@ struct List
 
 // Response objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Pins::ListMessage, type, created, created_by, channel, message);
-ThorsAnvil_ExpandTrait(ThorsAnvil::Slack::API::Reply, ThorsAnvil::Slack::API::Pins::ListReply, items);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Pins::ListReply, ok, items);
 
 // Action objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Pins::Add, channel, timestamp);

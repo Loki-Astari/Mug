@@ -24,15 +24,11 @@ extern SlackClient             client;
 
 TEST(APIChatScheduleTest, CreateScheduledMessage)
 {
-    ScheduleMessage::Reply      reply = client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."});
-
-    if (!reply.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
-    }
+    ScheduleMessage::Reply      reply;
+    client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
-    ASSERT_TRUE(reply.message.has_value());
-    ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message->blocks[0]));
-    BK::RichText&           text = std::get<BK::RichText>(reply.message->blocks[0]);
+    ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
+    BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
 
     ASSERT_TRUE(std::holds_alternative<BK::RichTextSection>(text.elements[0]));
     BK::RichTextSection&    section = std::get<BK::RichTextSection>(text.elements[0]);
@@ -45,37 +41,34 @@ TEST(APIChatScheduleTest, CreateScheduledMessage)
 
 TEST(APIChatScheduledTest, DeleteScheduledMessage)
 {
-    ScheduleMessage::Reply          reply1 = client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 120, .text = "I hope the tour went well, Mr. Wonka."});
-
+    ScheduleMessage::Reply          reply1;
+    client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 120, .text = "I hope the tour went well, Mr. Wonka."}, reply1, true);
     ASSERT_TRUE(reply1.ok);
 
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(5s);
     DeleteScheduledMessage  message{.channel = "C09RU2URYMS", .scheduled_message_id = reply1.scheduled_message_id};
-    DeleteScheduledMessage::Reply   reply2 = client.sendMessage(message);
-
-    if (!reply2.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply2);
-    }
+    DeleteScheduledMessage::Reply   reply2;
+    client.sendMessage(message, reply2, true);
     ASSERT_TRUE(reply2.ok);
 }
 
 TEST(APIChatScheduledTest, ListScheduledMessage)
 {
-    ScheduledMessagesList::Reply    reply0 = client.sendMessage(ScheduledMessagesList{.channel = "C09RU2URYMS"});
+    ScheduledMessagesList::Reply    reply0;
+    client.sendMessage(ScheduledMessagesList{.channel = "C09RU2URYMS"}, reply0, true);
     std::size_t originalSize = reply0.scheduled_messages.size();
 
-    ScheduleMessage::Reply          reply1 = client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."});
+    ScheduleMessage::Reply          reply1;
+    client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."}, reply1, true);
     ASSERT_TRUE(reply1.ok);
-    ScheduleMessage::Reply          reply2 = client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."});
+    ScheduleMessage::Reply          reply2;
+    client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."}, reply2, true);
     ASSERT_TRUE(reply2.ok);
 
 
-    ScheduledMessagesList::Reply    reply3 = client.sendMessage(ScheduledMessagesList{.channel = "C09RU2URYMS"});
-
-    if (!reply3.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply3);
-    }
+    ScheduledMessagesList::Reply    reply3;
+    client.sendMessage(ScheduledMessagesList{.channel = "C09RU2URYMS"}, reply3, true);
     ASSERT_TRUE(reply3.ok);
     ASSERT_EQ(2, reply3.scheduled_messages.size() - originalSize);
     // Can tell the order.

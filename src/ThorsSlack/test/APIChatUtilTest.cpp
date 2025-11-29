@@ -28,11 +28,11 @@ extern SlackClient             client;
 
 TEST(APIChatUtilTest, GetPermalink)
 {
-    PostMessage::Reply      reply = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."});
+    PostMessage::Reply      reply;
+    client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
-    ASSERT_TRUE(reply.message.has_value());
-    ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message->blocks[0]));
-    BK::RichText&           text = std::get<BK::RichText>(reply.message->blocks[0]);
+    ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
+    BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
 
     ASSERT_TRUE(std::holds_alternative<BK::RichTextSection>(text.elements[0]));
     BK::RichTextSection&    section = std::get<BK::RichTextSection>(text.elements[0]);
@@ -44,20 +44,15 @@ TEST(APIChatUtilTest, GetPermalink)
 
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(2s);
-    GetPermalink::Reply      reply1 = client.sendMessage(GetPermalink{.channel = "C09RU2URYMS",.message_ts = reply.message.value().ts,});
-
-    if (!reply1.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply1);
-    }
+    GetPermalink::Reply      reply1;
+    client.sendMessage(GetPermalink{.channel = "C09RU2URYMS",.message_ts = reply.message.ts,}, reply1, true);
     EXPECT_TRUE(reply1.ok);
 }
 
 TEST(APIChatUtilTest, MeMessage)
 {
-    MeMessage::Reply      reply = client.sendMessage(MeMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."});
-    if (!reply.ok) {
-        std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
-    }
+    MeMessage::Reply      reply;
+    client.sendMessage(MeMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
 }
 
