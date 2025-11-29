@@ -73,16 +73,6 @@ struct ResponseMetaData
 };
 using OptResponseMetaData = std::optional<ResponseMetaData>;
 
-struct Reply
-{
-    bool                        ok;
-    OptString                   error;
-    OptVecString                errors;
-    OptString                   warning;
-    OptVecString                warnings;
-    OptResponseMetaData         response_metadata;
-};
-
 struct OK
 {
     bool                        ok;
@@ -149,7 +139,6 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotProfile, id, app_id, user_id, na
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reaction, name, users, count);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks, pinned_to, permalink, reactions);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ResponseMetaData, messages);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reply, ok, error, errors, warning, warnings, response_metadata);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::OK, ok);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Error, ok, error, errors, warning, warnings, response_metadata);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Cursor, next_cursor);
