@@ -1,10 +1,8 @@
 #include "Environment.h"
 #include "ThorsSlack/SlackClient.h"
-#include "ThorsSlack/APIChatPostMessage.h"
-#include "ThorsSlack/APIChatScheduleMessage.h"
-#include "ThorsSlack/APIChatDeleteScheduledMessage.h"
-#include "ThorsSlack/APIChatScheduledMessageList.h"
-#include "ThorsSlack/APIChatStartStream.h"
+#include "ThorsSlack/APIChatMessage.h"
+#include "ThorsSlack/APIChatSchedule.h"
+#include "ThorsSlack/APIChatStream.h"
 #include "ThorSerialize/JsonThor.h"
 
 using namespace std::literals::string_literals;
@@ -19,12 +17,13 @@ int main()
     using ThorsAnvil::Slack::API::Chat::PostMessage;
     using ThorsAnvil::Slack::API::Chat::ScheduleMessage;
     using ThorsAnvil::Slack::API::Chat::DeleteScheduledMessage;
-    using ThorsAnvil::Slack::API::Chat::ScheduledMessageList;
+    using ThorsAnvil::Slack::API::Chat::ScheduledMessagesList;
     using ThorsAnvil::Slack::API::Chat::StartStream;
 
     SlackClient             client(environment.slackToken);
 
-    auto reply = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."});
+    PostMessage::Reply reply;
+    client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply);
     //
     // auto reply1 = client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "A timed message"});
     // auto reply2 = client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "A timed message"});
@@ -33,7 +32,7 @@ int main()
     // auto reply5 = client.sendMessage(ScheduledMessageList{.channel = "C09RU2URYMS"});
     // auto reply6 = client.sendMessage(DeleteScheduledMessage{.channel = "C09RU2URYMS", .scheduled_message_id = reply2.scheduled_message_id,});
 
-    client.tryMessage(StartStream{.channel = "@martin.york", .thread_ts = reply.message.value().ts});
+    client.tryMessage(StartStream{.channel = "@martin.york", .thread_ts = reply.message.ts});
     // std::cout << ThorsAnvil::Serialize::jsonExporter(reply4);
     // std::cout << ThorsAnvil::Serialize::jsonExporter(reply6);
 }
