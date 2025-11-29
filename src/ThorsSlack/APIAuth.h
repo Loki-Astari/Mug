@@ -80,8 +80,6 @@ struct Test
     static constexpr char const* api = "https://slack.com/api/auth.test";
     static constexpr Method method = Method::GET;
     using Reply = AuthInfo;
-
-    std::string query() const {return "";}
 };
 
 struct Revoke
@@ -91,8 +89,6 @@ struct Revoke
     using Reply = AuthInfo;
 
     OptBool                     test;
-
-    std::string query() const {return buildQuery(std::tie("test", test));}
 };
 
 struct TeamsList
@@ -114,6 +110,8 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::TeamsListReply, ok, teams);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::AuthInfo, url, ok, team, user, team_id, user_id, bot_id, is_enterprise_install);
 
 // Action objects
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::Test);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::Revoke, test);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Auth::TeamsList, limit, cursor, include_icon);
 
 #endif

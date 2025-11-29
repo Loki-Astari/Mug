@@ -9,6 +9,8 @@
 
 #include <sstream>
 #include <string>
+#include <tuple>
+#include <utility>
 #include <vector>
 #include <optional>
 
@@ -107,28 +109,47 @@ constexpr bool is_optional_impl<std::optional<T>> = true;
 template<typename T>
 constexpr bool is_optional = is_optional_impl<std::remove_cvref_t<T>>; // C++20 and later
 
-template<typename Arg>
-void addQueryParam(std::stringstream& stream, std::string& sep, Arg const& arg)
+template<typename T>
+void buildQueryE(std::stringstream& stream, std::string& sep, std::string_view name, T const& val)
 {
-    if constexpr (is_optional<typename std::tuple_element<1, Arg>::type>) {
-        if (std::get<1>(arg).has_value()) {
-            stream << sep << std::get<0>(arg) << "=" << std::get<1>(arg).value();
+    if constexpr (is_optional<T>) {
+        if (val.has_value()) {
+            stream << sep << name << "=" << val.value();
             sep = "&";
         }
     }
     else {
-        stream << sep << std::get<0>(arg) << "=" << std::get<1>(arg);
+        stream << sep << name << "=" << val;
         sep = "&";
     }
 }
-template<typename... Args>
-std::string buildQuery(Args const&... arg)
-{
-    std::stringstream   query;
-    std::string         sep = "";
 
-    (addQueryParam(query, sep, arg), ...);
+template<typename T, typename F>
+void buildQueryD(std::stringstream& stream, std::string& sep, T const& val, F const& field)
+{
+    buildQueryE(stream, sep, field.first, (val.*(field.second)));
+}
+
+template<typename T, typename M, std::size_t... I>
+std::string buildQueryC(T const& val, M const& fields, std::index_sequence<I...> const&)
+{
+    std::stringstream       query;
+    std::string             sep = "";
+
+    (buildQueryD(query, sep, val, std::get<I>(fields)), ...);
     return query.str();
+}
+
+template<typename T, typename M>
+std::string buildQueryB(T const& val, M const& fields)
+{
+    return buildQueryC(val, fields, std::make_index_sequence<std::tuple_size<M>::value>{});
+}
+
+template<typename T>
+std::string buildQueryA(T const& val)
+{
+    return buildQueryB(val, ThorsAnvil::Serialize::Traits<T>::getMembers());
 }
 
 

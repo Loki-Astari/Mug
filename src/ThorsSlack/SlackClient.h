@@ -52,7 +52,7 @@ class SlackClient
         {
 
             if constexpr (T::method == API::Method::GET) {
-                std::string api = std::string{} + T::api + "?" + message.query();
+                std::string api = std::string{} + T::api + "?" + ThorsAnvil::Slack::API::buildQueryA(message);
                 Nisse::ClientRequest    post(stream, api, T::method);
                 post.addHeaders(headers);
                 post.body(0);

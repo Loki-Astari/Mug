@@ -207,16 +207,6 @@ struct Get
     OptString                   file_comment;   // File comment to get reactions for.
     OptBool                     full;           // If true always return the complete reaction list.
     OptString                   timestamp;      // Timestamp of the message to get reactions for.
-
-
-    std::string query() const
-    {
-        return buildQuery(std::tie("channel", channel),
-                          std::tie("file", file),
-                          std::tie("file_comment", file_comment),
-                          std::tie("full", full),
-                          std::tie("timestamp", timestamp));
-    }
 };
 
 struct List
@@ -232,17 +222,6 @@ struct List
     OptString                   cursor;             // Parameter for pagination. Set cursor equal to the next_cursor attribute returned by the previous request's response_metadata. This parameter is optional, but pagination is mandatory: the default value simply fetches the first "page" of the collection. See pagination for more details.
     OptInt                      limit;              // The maximum number of items to return. Fewer than the requested number of items may be returned, even if the end of the list hasn't been reached.
     OptString                   team_id;            // encoded team id to list reactions in, required if org token is used
-
-    std::string query() const
-    {
-        return buildQuery(std::tie("user", user),
-                          std::tie("full", full),
-                          std::tie("count", count),
-                          std::tie("page", page),
-                          std::tie("cursor", cursor),
-                          std::tie("limit", limit),
-                          std::tie("team_id", team_id));
-    }
 };
 
 struct Remove
@@ -266,7 +245,9 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::GetReply, ok, type, mess
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::ListReply, ok, items, response_metadata);
 
 // Action objects
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::Get, channel, file, file_comment, full, timestamp);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::Add, channel, name, timestamp);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::Remove, name, file, file_comment, channel, timestamp);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::List, user, full, count, page, cursor, limit, team_id);
 
 #endif

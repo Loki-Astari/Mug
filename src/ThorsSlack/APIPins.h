@@ -124,8 +124,6 @@ struct List
     using Reply = ListReply;
 
     std::string                 channel;        // Channel to get pinned items for.
-
-    std::string query() const {return buildQuery(std::tie("channel", channel));}
 };
 
 }

@@ -63,8 +63,6 @@ struct GetPermalink
 
     std::string                 channel;        // The ID of the conversation or channel containing the message
     std::string                 message_ts;     // A message's ts value, uniquely identifying it within a channel
-
-    std::string query() const {return buildQuery(std::tie("channel", channel), std::tie("message_ts", message_ts));}
 };
 
 struct MeMessage
