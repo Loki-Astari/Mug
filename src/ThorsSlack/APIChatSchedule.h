@@ -153,6 +153,7 @@ struct DeleteScheduledMessage
 {
     static constexpr char const* api = "https://slack.com/api/chat.deleteScheduledMessage";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = API::OK;
 
     std::string             channel;                // The channel the scheduled_message is posting to

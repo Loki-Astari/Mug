@@ -23,7 +23,8 @@ Response:
     {
       "type": "message",
       "channel": "C09RU2URYMS",
-      "message": {
+      "message":
+      {
         "user": "U09S3D8R00Z",
         "type": "message",
         "ts": "1764530084.305729",
@@ -31,14 +32,16 @@ Response:
         "app_id": "A09RQFXSEKC",
         "text": "The APIStarTest::Add message With star",
         "team": "T095XJHH589",
-        "bot_profile": {
+        "bot_profile":
+        {
           "id": "B09RJ4A000K",
           "deleted": false,
           "name": "ThorsSlackBotOne",
           "updated": 1762644664,
           "app_id": "A09RQFXSEKC",
           "user_id": "U09S3D8R00Z",
-          "icons": {
+          "icons":
+          {
             "image_36": "https://a.slack-edge.com/80588/img/plugins/app/bot_36.png",
             "image_48": "https://a.slack-edge.com/80588/img/plugins/app/bot_48.png",
             "image_72": "https://a.slack-edge.com/80588/img/plugins/app/service_72.png"
@@ -67,7 +70,8 @@ Response:
       "date_create": 1764530084
     }
   ],
-  "response_metadata": {
+  "response_metadata":
+  {
     "next_cursor": ""
   }
 }

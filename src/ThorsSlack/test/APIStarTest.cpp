@@ -18,8 +18,6 @@ using ThorsAnvil::Slack::API::Star::List;
 extern SlackClient             client;
 
 
-#undef DISABLE_TEST
-#define DISABLE_TEST 0
 #if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
 class APIStarTest : public ::testing::Test {
@@ -61,7 +59,7 @@ TEST_F(APIStarTest, AddStarToNoStar)
 TEST_F(APIStarTest, AddStarToWithStar)
 {
     Add::Reply      reply;
-    client.sendMessage(Add{.channel = "C09RU2URYMS", .timestamp = postWithStar.message.ts}, reply, true);
+    client.sendMessage(Add{.channel = "C09RU2URYMS", .timestamp = postWithStar.message.ts}, reply);
     ASSERT_FALSE(reply.ok);
 }
 

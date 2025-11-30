@@ -54,7 +54,8 @@ namespace ThorsAnvil::Slack::Event
     "user": "U123ABC456",
     "reaction": "thumbsup",
     "item_user": "U222222222",
-    "item": {
+    "item":
+    {
         "type": "message",
         "channel": "C123ABC456",
         "ts": "1360782400.498405"
