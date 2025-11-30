@@ -10,7 +10,8 @@
 
 struct Environment
 {
-    std::string     slackToken;
+    std::string     botToken;
+    std::string     userToken;
     std::string     slackSecret;
     Environment(std::string const& fileName)
     {
@@ -18,6 +19,6 @@ struct Environment
         file >> ThorsAnvil::Serialize::jsonImporter(*this);
     }
 };
-ThorsAnvil_MakeTrait(Environment, slackToken, slackSecret);
+ThorsAnvil_MakeTrait(Environment, botToken, userToken, slackSecret);
 
 #endif

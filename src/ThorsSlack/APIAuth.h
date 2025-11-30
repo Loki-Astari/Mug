@@ -79,6 +79,7 @@ struct Test
 {
     static constexpr char const* api = "https://slack.com/api/auth.test";
     static constexpr Method method = Method::GET;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = AuthInfo;
 };
 
@@ -86,6 +87,7 @@ struct Revoke
 {
     static constexpr char const* api = "https://slack.com/api/auth.test";
     static constexpr Method method = Method::GET;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = AuthInfo;
 
     OptBool                     test;
@@ -95,6 +97,7 @@ struct TeamsList
 {
     static constexpr char const* api = "https://slack.com/api/auth.teams.list";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = TeamsListReply;
 
     int                         limit;          // The maximum number of workspaces to return. Must be a positive integer no larger than 1000.

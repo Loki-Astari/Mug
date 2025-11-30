@@ -8,7 +8,7 @@
 #include "EventURLVerification.h"
 
 #include "ThorsChalice/DLLib.h"
-#include "ThorsSlack/EventCallbackReactionAdded.h"
+#include "ThorsSlack/EventCallbackReaction.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 #include "ThorsCrypto/hmac.h"
@@ -44,12 +44,37 @@ class SlackPlugin: public ThorsAnvil::ThorsChalice::ChalicePlugin
         void handleCallbackEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::EventCallback const& event);
         virtual void handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::Message const& /*event*/)
         {
-            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method");
+            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method: ", "Message");
             response.setStatus(501);
         }
         virtual void handleCallbackReactionAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::ReactionAdded const& /*event*/)
         {
-            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method");
+            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method: ", "ReactionAdded");
+            response.setStatus(501);
+        }
+        virtual void handleCallbackReactionRemovedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::ReactionRemoved const& /*event*/)
+        {
+            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method: ", "ReactionRemoved");
+            response.setStatus(501);
+        }
+        virtual void handleCallbackPinAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::PinAdded const& /*event*/)
+        {
+            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method: ", "PinAdded");
+            response.setStatus(501);
+        }
+        virtual void handleCallbackPinRemovedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::PinRemoved const& /*event*/)
+        {
+            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method: ", "PinRemoved");
+            response.setStatus(501);
+        }
+        virtual void handleCallbackStarAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::StarAdded const& /*event*/)
+        {
+            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method: ", "StarAdded");
+            response.setStatus(501);
+        }
+        virtual void handleCallbackStarRemovedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::StarRemoved const& /*event*/)
+        {
+            ThorsLogError("SlackPlugin", "handleCallbackMessageEvent", "Call to unimplemented method: ", "StarRemoved");
             response.setStatus(501);
         }
 
@@ -71,6 +96,11 @@ class SlackPlugin: public ThorsAnvil::ThorsChalice::ChalicePlugin
 
             void operator()(ThorsAnvil::Slack::Event::Message const& event)                 {plugin.handleCallbackMessageEvent(request, response, event);}
             void operator()(ThorsAnvil::Slack::Event::ReactionAdded const& event)           {plugin.handleCallbackReactionAddedEvent(request, response, event);}
+            void operator()(ThorsAnvil::Slack::Event::ReactionRemoved const& event)         {plugin.handleCallbackReactionRemovedEvent(request, response, event);}
+            void operator()(ThorsAnvil::Slack::Event::PinAdded const& event)                {plugin.handleCallbackPinAddedEvent(request, response, event);}
+            void operator()(ThorsAnvil::Slack::Event::PinRemoved const& event)              {plugin.handleCallbackPinRemovedEvent(request, response, event);}
+            void operator()(ThorsAnvil::Slack::Event::StarAdded const& event)               {plugin.handleCallbackStarAddedEvent(request, response, event);}
+            void operator()(ThorsAnvil::Slack::Event::StarRemoved const& event)             {plugin.handleCallbackStarRemovedEvent(request, response, event);}
         };
 };
 

@@ -21,7 +21,7 @@ using ThorsAnvil::Slack::API::Chat::Delete;
 using ThorsAnvil::Slack::API::Chat::Update;
 
 Environment             environment("test/data/environment.json");
-SlackClient             client(environment.slackToken);
+SlackClient             client(environment.botToken, environment.userToken);
 
 #if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 

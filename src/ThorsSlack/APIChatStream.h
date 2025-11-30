@@ -75,6 +75,7 @@ struct AppendStream
 {
     static constexpr char const* api = "https://slack.com/api/chat.appendStream";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = AppendStreamReply;
 
     std::string                 channel;            // An encoded ID that represents a channel, private group, or DM
@@ -86,6 +87,7 @@ struct StartStream
 {
     static constexpr char const* api = "https://slack.com/api/chat.startStream";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = API::OK;
 
     std::string                 channel;            // An encoded ID that represents a channel thread or DM.
@@ -99,6 +101,7 @@ struct StopStream
 {
     static constexpr char const* api = "https://slack.com/api/chat.stopStream";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = StopStreamReply;
 
     std::string                 channel;            // An encoded ID that represents a channel, private group, or DM

@@ -128,6 +128,7 @@ struct ScheduleMessage
 {
     static constexpr char const* api = "https://slack.com/api/chat.scheduleMessage";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = ScheduledMessageReply;
 
     std::string                 channel;                // Channel, private group, or DM channel to send message to. Can be an encoded ID, or a name. See below for more details.
@@ -164,6 +165,7 @@ struct ScheduledMessagesList
 {
     static constexpr char const* api = "https://slack.com/api/chat.scheduledMessages.list";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = ScheduledMessagesListReply;
 
     OptString       channel;            // The channel of the scheduled messages

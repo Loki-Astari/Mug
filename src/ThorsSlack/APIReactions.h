@@ -168,27 +168,12 @@ struct GetReply
     ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Reaction::GetReply);
 };
 
-struct ReactionMessage
-{
-    std::string                 type;
-    std::string                 channel;
-    API::Message                message;
-};
-using VecReactionMessage = std::vector<ReactionMessage>;
-
-struct ListReply
-{
-    bool                        ok      = false;
-    VecReactionMessage          items;
-    Cursor                      response_metadata;
-    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Reaction::ListReply);
-};
-
 // Action Objects
 struct Add
 {
     static constexpr char const* api = "https://slack.com/api/reactions.add";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = API::OK;
 
     std::string                 channel;            // Channel where the message to add reaction to was posted.
@@ -200,6 +185,7 @@ struct Get
 {
     static constexpr char const* api = "https://slack.com/api/reactions.get";
     static constexpr Method method = Method::GET;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = GetReply;
 
     OptString                   channel;        // Channel where the message to get reactions for was posted.
@@ -213,6 +199,7 @@ struct List
 {
     static constexpr char const* api = "https://slack.com/api/reactions.list";
     static constexpr Method method = Method::GET;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = ListReply;
 
     OptString                   user;               // Show reactions made by this user. Defaults to the authed user.
@@ -228,6 +215,7 @@ struct Remove
 {
     static constexpr char const* api = "https://slack.com/api/reactions.remove";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = API::OK;
 
     std::string                 name;               // Reaction (emoji) name.
@@ -240,9 +228,7 @@ struct Remove
 }
 
 // Response objects
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::ReactionMessage, type, channel, message);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::GetReply, ok, type, message, channel);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::ListReply, ok, items, response_metadata);
 
 // Action objects
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reactions::Get, channel, file, file_comment, full, timestamp);

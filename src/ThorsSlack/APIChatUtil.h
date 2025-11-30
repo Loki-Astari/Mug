@@ -59,6 +59,7 @@ struct GetPermalink
 {
     static constexpr char const* api = "https://slack.com/api/chat.getPermalink";
     static constexpr Method method = Method::GET;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = GetPermalinkReply;
 
     std::string                 channel;        // The ID of the conversation or channel containing the message
@@ -69,6 +70,7 @@ struct MeMessage
 {
     static constexpr char const* api = "https://slack.com/api/chat.meMessage";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = MeMessageReply;
 
     std::string                 channel;        // Channel to send message to. Can be a public channel, private group or IM channel. Can be an encoded ID, or a name.
@@ -79,6 +81,7 @@ struct Unfurl
 {
     static constexpr char const* api = "https://slack.com/api/chat.unfurl";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = API::OK;
 
     OptString                   channel;            // Channel ID of the message. Both channel and ts must be provided together, or unfurl_id and source must be provided together.

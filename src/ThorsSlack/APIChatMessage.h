@@ -170,6 +170,7 @@ struct PostMessage
 {
     static constexpr char const* api = "https://slack.com/api/chat.postMessage";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = PostMessageReply;
 
     std::string                 channel;
@@ -184,6 +185,7 @@ struct PostEphemeral
 {
     static constexpr char const* api = "https://slack.com/api/chat.postEphemeral";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = PostEphemeralReply;
 
     std::string                 channel;            // Channel, private group, or IM channel to send message to. Can be an encoded ID, or a name.
@@ -205,6 +207,7 @@ struct Delete
 {
     static constexpr char const* api = "https://slack.com/api/chat.delete";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = DeleteReply;
 
     std::string                 channel;        // Channel containing the message to be deleted.
@@ -216,6 +219,7 @@ struct Update
 {
     static constexpr char const* api = "https://slack.com/api/chat.update";
     static constexpr Method method = Method::POST;
+    static constexpr Scope  scope = Scope::Bot;
     using Reply = UpdateReply;
 
     std::string                 channel;        // Channel containing the message to be updated. For direct messages, ensure that this value is a DM ID (starts with D) instead of a User ID (starts with either U or W).

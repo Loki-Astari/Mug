@@ -17,12 +17,21 @@
 namespace ThorsAnvil::Slack::API
 {
 
+enum class Scope {Bot, User};
+
 using OptBool       = std::optional<bool>;
 using OptInt        = std::optional<int>;
+using OptTime       = std::optional<std::time_t>;
 using OptString     = std::optional<std::string>;
 using VecString     = std::vector<std::string>;
 using OptVecString  = std::optional<std::vector<std::string>>;
 using Method        = ThorsAnvil::Nisse::HTTP::Method;
+
+struct Cursor
+{
+    std::string                         next_cursor;
+};
+using OptCursor = std::optional<Cursor>;
 
 struct BotIcon
 {
@@ -75,6 +84,24 @@ struct ResponseMetaData
 };
 using OptResponseMetaData = std::optional<ResponseMetaData>;
 
+struct ListMessage
+{
+    std::string                 type;
+    OptTime                     created;
+    OptString                   created_by;
+    std::string                 channel;
+    API::Message                message;
+};
+using VecListMessage = std::vector<ListMessage>;
+
+struct ListReply
+{
+    bool                        ok      = false;
+    VecListMessage              items;
+    OptCursor                   response_metadata;
+    ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Pin::ListReply);
+};
+
 struct OK
 {
     bool                        ok;
@@ -84,17 +111,19 @@ struct OK
 struct Error
 {
     bool                        ok;
-    std::string                 error;
-    std::vector<std::string>    errors;
-    std::string                 warning;
-    std::vector<std::string>    warnings;
-    ResponseMetaData            response_metadata;
+    OptString                   needed;
+    OptString                   provided;
+    OptString                   error;
+    OptVecString                errors;
+    OptString                   warning;
+    OptVecString                warnings;
+    OptResponseMetaData         response_metadata;
     ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Error);
 };
 
-struct Cursor
+struct Debug
 {
-    std::string                         next_cursor;
+    bool                        ok;
 };
 
 // Primary template: By default, a type is not std::optional
@@ -155,14 +184,16 @@ std::string buildQueryA(T const& val)
 
 }
 
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Cursor, next_cursor);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ListMessage, type, created, created_by, channel, message);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ListReply, ok, items, response_metadata);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotIcon, image_36, image_48, image_72);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotProfile, id, app_id, user_id, name, icons, deleted, updated, team_id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reaction, name, users, count);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks, pinned_to, permalink, reactions);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ResponseMetaData, messages);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::OK, ok);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Error, ok, error, errors, warning, warnings, response_metadata);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Cursor, next_cursor);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Error, ok, error, needed, provided, errors, warning, warnings, response_metadata);
 
 
 #endif

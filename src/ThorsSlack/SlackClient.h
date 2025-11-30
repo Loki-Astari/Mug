@@ -44,23 +44,32 @@ struct VisitResult
 
 class SlackClient
 {
-    Nisse::HeaderResponse   headers;
-    Ser::ParserConfig      config;
+    Nisse::HeaderResponse   botHeaders;
+    Nisse::HeaderResponse   userHeaders;
     private:
         template<typename T>
         void sendMessageData(T const& message, SlackStream& stream)
         {
-
             if constexpr (T::method == API::Method::GET) {
                 std::string api = std::string{} + T::api + "?" + ThorsAnvil::Slack::API::buildQueryA(message);
                 Nisse::ClientRequest    post(stream, api, T::method);
-                post.addHeaders(headers);
+                if constexpr (T::scope == API::Scope::Bot) {
+                    post.addHeaders(botHeaders);
+                }
+                else {
+                    post.addHeaders(userHeaders);
+                }
                 post.body(0);
             }
             else {
                 // Anything that is not a GET
                 Nisse::ClientRequest    post(stream, T::api, T::method);
-                post.addHeaders(headers);
+                if constexpr (T::scope == API::Scope::Bot) {
+                    post.addHeaders(botHeaders);
+                }
+                else {
+                    post.addHeaders(userHeaders);
+                }
                 std::size_t size = Ser::jsonStreanSize(message);
                 post.body(size) << Ser::jsonExporter(message, Ser::PrinterConfig{Ser::OutputType::Stream});
             }
@@ -85,31 +94,17 @@ class SlackClient
             return "";
         }
     public:
-        SlackClient(std::string const& token)
+        SlackClient(std::string const& botToken, std::string const& userToken)
         {
-            headers.add("Connection", "close");
-            headers.add("Content-Type", "application/json; charset=utf-8");
-            headers.add("Authorization", "Bearer " + token);
+            botHeaders.add("Connection", "close");
+            botHeaders.add("Content-Type", "application/json; charset=utf-8");
+            botHeaders.add("Authorization", "Bearer " + botToken);
 
-            config.setIdentifyDynamicClass([](Ser::DataInputStream&){return "";});
+            userHeaders.add("Connection", "close");
+            userHeaders.add("Content-Type", "application/json; charset=utf-8");
+            userHeaders.add("Authorization", "Bearer " + userToken);
         }
 
-        template<typename T>
-        void  tryMessage(T const& message)
-        {
-            SlackStream             stream;
-            sendMessageData(message, stream);
-
-            Nisse::ClientResponse   response(stream);
-            std::istream&           output = stream;
-            std::string             line;
-
-            std::cerr << response << "\n";
-            while (std::getline(output, line)) {
-                std::cerr << line << "\n";
-            }
-            std::cerr << "========\n";
-        }
         template<typename T>
         void  sendMessage(T const& message, SuccFunc<typename T::Reply>&& succ = [](typename T::Reply&&){}, FailFunc&& fail = [](API::Error&&){})
         {
@@ -123,14 +118,24 @@ class SlackClient
             Nisse::StreamInput      input(stream, response.getContentSize());
             OutputType              reply;
             bool hit = false;
-            input >> Ser::jsonImporter(reply, Ser::ParserConfig{}.setIdentifyDynamicClass([&](Ser::DataInputStream&){return getEventType<ResultType>(input, hit);}));
+            if constexpr (ThorsAnvil::Serialize::Traits<typename T::Reply>::type == ThorsAnvil::Serialize::TraitType::Invalid) {
+                std::cerr << "Response Data\n";
+                std::string line;
+                while (std::getline(input, line)) {
+                    std::cerr << ">" << line << "<\n";
+                }
+                std::cerr << "==============\n";
+            }
+            else {
+                input >> Ser::jsonImporter(reply, Ser::ParserConfig{}.setIdentifyDynamicClass([&](Ser::DataInputStream&){return getEventType<ResultType>(input, hit);}));
+            }
 
             std::visit(VisitResult<ResultType>{std::move(succ), std::move(fail)}, reply);
         }
         template<typename T>
         bool  sendMessage(T const& message, typename T::Reply& result, bool dumpError = false)
         {
-            bool good = true;;
+            bool good = true;
             sendMessage(message, [&result](typename T::Reply&& value){result = std::move(value);}, [&dumpError,&good](API::Error&& value){good = false;if (dumpError){std::cerr << ThorsAnvil::Serialize::jsonExporter(value) << "\n";}});
             return good;
         }
