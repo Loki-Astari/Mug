@@ -11,7 +11,7 @@ int main()
 {
     loguru::g_stderr_verbosity = 9;
     const Environment     environment(".slackenv");
-    ThorsLogDebug("main", "main", "SlackCLI ", environment.slackToken);
+    ThorsLogDebug("main", "main", "SlackCLI ", environment.botToken);
 
     using ThorsAnvil::Slack::SlackClient;
     using ThorsAnvil::Slack::API::Chat::PostMessage;
@@ -20,7 +20,7 @@ int main()
     using ThorsAnvil::Slack::API::Chat::ScheduledMessagesList;
     using ThorsAnvil::Slack::API::Chat::StartStream;
 
-    SlackClient             client(environment.slackToken);
+    SlackClient             client(environment.botToken, environment.userToken);
 
     PostMessage::Reply reply;
     client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply);
@@ -32,7 +32,7 @@ int main()
     // auto reply5 = client.sendMessage(ScheduledMessageList{.channel = "C09RU2URYMS"});
     // auto reply6 = client.sendMessage(DeleteScheduledMessage{.channel = "C09RU2URYMS", .scheduled_message_id = reply2.scheduled_message_id,});
 
-    client.tryMessage(StartStream{.channel = "@martin.york", .thread_ts = reply.message.ts});
+    client.sendMessage(StartStream{.channel = "@martin.york", .thread_ts = reply.message.ts});
     // std::cout << ThorsAnvil::Serialize::jsonExporter(reply4);
     // std::cout << ThorsAnvil::Serialize::jsonExporter(reply6);
 }

@@ -3,7 +3,7 @@
 
 #include "ThorsSlackBotConfig.h"
 #include "WelcomeMessage.h"
-#include "ThorsSlack/EventCallbackReactionAdded.h"
+#include "ThorsSlack/EventCallbackReaction.h"
 #include "ThorsSlack/EventCallbackMessage.h"
 #include "ThorsSlack/SlackClient.h"
 #include "ThorsSlack/SlackPlugin.h"

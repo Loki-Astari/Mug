@@ -26,7 +26,7 @@ namespace NisHTTP   = ThorsAnvil::Nisse::HTTP;
 
 SlackBot::SlackBot()
     : SlackPlugin(environment.slackSecret)
-    , client(environment.slackToken)
+    , client(environment.botToken, environment.userToken)
 {
     client.sendMessage(ThorsAnvil::Slack::API::Auth::Test{}, [&](ThorsAnvil::Slack::API::Auth::Test::Reply&& result){botId = result.user_id;});
 }
