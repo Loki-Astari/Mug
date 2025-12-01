@@ -51,7 +51,7 @@ void SlackBot::sendWelcomeMessage(std::string const& channel, std::string const&
 
 void SlackBot::handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::Message const& event)
 {
-    ThorsLogDebug("SlackBot", "handleCallbackMessageEvent", "Recievent Message Event");
+    ThorsLogInfo("SlackBot", "handleCallbackMessageEvent", "Recievent Message Event");
     std::string const& userId = event.user;
     if ((userId != "") && (userId != botId)) {
         ++messageCount[userId];
@@ -75,7 +75,7 @@ void SlackBot::handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request& /*re
 }
 void SlackBot::handleCallbackReactionAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::ReactionAdded const& event)
 {
-    ThorsLogDebug("SlackBot", "handleCallbackReactionAddedEvent", "Recievent Reaction Add Event");
+    ThorsLogInfo("SlackBot", "handleCallbackReactionAddedEvent", "Recievent Reaction Add Event");
 
     std::string const& channel = event.item.channel;
     std::string const& user = event.user;
@@ -86,6 +86,31 @@ void SlackBot::handleCallbackReactionAddedEvent(ThorsAnvil::Nisse::HTTP::Request
     }
     find->second.markCompleted();
     client.sendMessage(find->second.getMessage(), [&](auto&& resp){find->second.settime(std::stol(resp.ts));});
+}
+
+void SlackBot::handleCallbackReactionRemovedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::ReactionRemoved const& /*event*/)
+{
+    ThorsLogInfo("SlackPlugin", "handleCallbackReactionRemovedEvent", "Call to implemented method: ", "ReactionRemoved");
+}
+
+void SlackBot::handleCallbackPinAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::PinAdded const& /*event*/)
+{
+    ThorsLogInfo("SlackPlugin", "handleCallbackPinAddedEvent", "Call to implemented method: ", "PinAdded");
+}
+
+void SlackBot::handleCallbackPinRemovedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::PinRemoved const& /*event*/)
+{
+    ThorsLogInfo("SlackPlugin", "handleCallbackPinRemovedEvent", "Call to implemented method: ", "PinRemoved");
+}
+
+void SlackBot::handleCallbackStarAddedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::StarAdded const& /*event*/)
+{
+    ThorsLogInfo("SlackPlugin", "handleCallbackStarAddedEvent", "Call to implemented method: ", "StarAdded");
+}
+
+void SlackBot::handleCallbackStarRemovedEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/,ThorsAnvil::Slack::Event::StarRemoved const& /*event*/)
+{
+    ThorsLogInfo("SlackPlugin", "handleCallbackStarRemovedEvent", "Call to implemented method: ", "StarRemoved");
 }
 
 void SlackBot::handleCommand(NisHTTP::Request& request, NisHTTP::Response& response)

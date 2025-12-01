@@ -205,6 +205,7 @@ std::string SlackPlugin::getEventType(ThorsAnvil::Nisse::HTTP::Request& request,
     if (!found) {
         found = true;
         std::string_view    body = request.preloadStreamIntoBuffer();
+        ThorsLogTrack("SlackPlugin", "getEventType", "Event Sent: ", body);
         if (body.find(R"("type":"url_verification")") != std::string_view::npos) {
             ThorsLogDebug("SlackPlugin", "getEventType", "Found: url_verification");
             return "url_verification";

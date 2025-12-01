@@ -12,15 +12,39 @@ namespace ThorsAnvil::Slack::Event
 #if 0
 // https://docs.slack.dev/reference/events/star_added
 // Pin Added
+  "event":
+  {
+    "type": "star_added",
+    "user": "U095XJHJ1J5",
+    "item":
+    {
+      "type": "channel",
+      "channel": "C09RU2URYMS",
+      "date_create": 1764547799
+    },
+    "event_ts": "1764547799.000100"
+  },
 // https://docs.slack.dev/reference/events/star_removed
 // Pin Removed
+  "event":
+  {
+    "type": "star_removed",
+    "user": "U095XJHJ1J5",
+    "item":
+    {
+      "type": "channel",
+      "channel": "C09RU2URYMS",
+      "date_create": 0
+    },
+    "event_ts": "1764547801.000200"
+  },
 #endif
 
 struct StarItem
 {
     std::string                 type;                   // doc
     std::string                 channel;                // doc
-    std::string                 ts;                     // doc
+    std::time_t                 date_create;            // doc
 };
 struct StarAdded
 {
@@ -43,7 +67,7 @@ struct StarRemoved
 
 }
 
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Event::StarItem, type, channel, ts);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Event::StarItem, type, channel, date_create);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Event::StarAdded, user, item, event_ts);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Event::StarRemoved, user, item, event_ts);
 

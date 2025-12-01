@@ -84,7 +84,7 @@ struct ResponseMetaData
 };
 using OptResponseMetaData = std::optional<ResponseMetaData>;
 
-struct ListMessage
+struct Item
 {
     std::string                 type;
     OptTime                     created;
@@ -92,12 +92,12 @@ struct ListMessage
     std::string                 channel;
     API::Message                message;
 };
-using VecListMessage = std::vector<ListMessage>;
+using VecItems = std::vector<Item>;
 
 struct ListReply
 {
     bool                        ok      = false;
-    VecListMessage              items;
+    VecItems                    items;
     OptCursor                   response_metadata;
     ThorsAnvil_VariantSerializer(ThorsAnvil::Slack::API::Pin::ListReply);
 };
@@ -185,7 +185,7 @@ std::string buildQueryA(T const& val)
 }
 
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Cursor, next_cursor);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ListMessage, type, created, created_by, channel, message);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Item, type, created, created_by, channel, message);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ListReply, ok, items, response_metadata);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotIcon, image_36, image_48, image_72);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotProfile, id, app_id, user_id, name, icons, deleted, updated, team_id);

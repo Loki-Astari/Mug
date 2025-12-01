@@ -863,7 +863,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Header, text);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Image, alt_text, image_url, slack_file, title);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Input, label, element, dispatch_action, hint, optional);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Markdown, text);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::RichText, elements);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::RichText, elements, block_id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Section, text, fields, accessory, expand);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Table, rows, column_settings);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Video, alt_text, author_name, description, provider_icon_url, provider_name, title, title_url, thumbnail_url, video_url);

@@ -35,14 +35,17 @@ struct Authorization
 };
 using VecAuthorization = std::vector<Authorization>;
 using Team = std::string;
+using OptString = std::optional<std::string>;
 using VecTeam = std::vector<Team>;
 using OptVecTeam = std::optional<VecTeam>;
+using OptContext = std::optional<Context*>;
+
 struct EventCallback
 {
     std::string                 token;                          // doc      X
     std::string                 team_id;                        // doc      X
-    std::string                 context_team_id;                //          X
-    Context*                    context_enterprise_id = nullptr;//          X
+    OptString                   context_team_id;                //          X
+    OptContext                  context_enterprise_id = nullptr;//          X
     std::string                 api_app_id;                     // doc      X
     CallbackMessage             event;                          // doc
     //std::string                 type;                           // doc    X
@@ -50,7 +53,7 @@ struct EventCallback
     std::size_t                 event_time;                     // doc      X
     VecAuthorization            authorizations;                 //          X
     bool                        is_ext_shared_channel;          //          X
-    std::string                 event_context;                  //          X
+    OptString                   event_context;                  //          X
     OptVecTeam                  authed_teams;                   // doc
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::EventCallback, event_callback);
     ThorsAnvil_TypeFieldName(type);

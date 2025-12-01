@@ -8,6 +8,7 @@ const Paths             ChaliceCLA::searchPath = {"./chalice.cfg", "/etc/chalice
 const VerbosityMap      ChaliceCLA::verbosity  = {
                                                     {"All",     loguru::Verbosity_9},
                                                     {"Trace",   loguru::Verbosity_8},
+                                                    {"Track",   loguru::Verbosity_7},
                                                     {"Debug",   loguru::Verbosity_6},
                                                     {"Info",    loguru::Verbosity_INFO},
                                                     {"Warn",    loguru::Verbosity_WARNING},
@@ -102,7 +103,7 @@ void ChaliceCLA::parseArguments(std::vector<std::string_view> const& arguments)
 
 void ChaliceCLA::displayHelp(std::string_view command, std::ostream& output)
 {
-    output << "Usage: " << command << " [--help] [--silent] [--logLevel=(All|Trace|Debug|Info|Warn|Error)] [--config=<configFile>]\n"
+    output << "Usage: " << command << " [--help] [--silent] [--logLevel=(All|Trace|Track|Debug|Info|Warn|Error)] [--config=<configFile>]\n"
            << R"(
 --help:     prints out the help.
 --silent:   does not spint startup information.

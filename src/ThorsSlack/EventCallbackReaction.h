@@ -12,56 +12,36 @@ namespace ThorsAnvil::Slack::Event
 #if 0
 // https://docs.slack.dev/reference/events/reaction_added
 // Reaction Added
-{
-  "token": "4axIIPlMUVqU5NWGL7OQOfO9",
-  "team_id": "T095XJHH589",
-  "context_team_id": "T095XJHH589",
-  "context_enterprise_id": null,
-  "api_app_id": "A09RQFXSEKC",
   "event":
   {
     "type": "reaction_added",
     "user": "U095XJHJ1J5",
-    "reaction": "blush",
+    "reaction": "smiley",
     "item":
     {
       "type": "message",
-      "channel": "D09RQG5F3NE",
-      "ts": "1763961926.408339"
+      "channel": "C09RU2URYMS",
+      "ts": "1764544528.464179"
     },
     "item_user": "U09S3D8R00Z",
-    "event_ts": "1763966107.000100"
+    "event_ts": "1764545087.005100"
   },
-  "type": "event_callback",
-  "event_id": "Ev09UR3H5STX",
-  "event_time": 1763966107,
-  "authorizations": [
-    {
-      "enterprise_id": null,
-      "team_id": "T095XJHH589",
-      "user_id": "U09S3D8R00Z",
-      "is_bot": true,
-      "is_enterprise_install": false
-    }
-  ],
-  "is_ext_shared_channel": false,
-  "event_context": "4-eyJldCI6InJlYWN0aW9uX2FkZGVkIiwidGlkIjoiVDA5NVhKSEg1ODkiLCJhaWQiOiJBMDlSUUZYU0VLQyIsImNpZCI6IkQwOVJRRzVGM05FIn0"
-}
 // https://docs.slack.dev/reference/events/reaction_removed
 // Reaction Removed
-{
+  "event":
+  {
     "type": "reaction_removed",
-    "user": "U123ABC456",
-    "reaction": "thumbsup",
-    "item_user": "U222222222",
+    "user": "U095XJHJ1J5",
+    "reaction": "smiley",
     "item":
     {
-        "type": "message",
-        "channel": "C123ABC456",
-        "ts": "1360782400.498405"
+      "type": "message",
+      "channel": "C09RU2URYMS",
+      "ts": "1764544528.464179"
     },
-    "event_ts": "1360782804.083113"
-}
+    "item_user": "U09S3D8R00Z",
+    "event_ts": "1764545209.005200"
+  },
 #endif
 
 struct ReactionItem
