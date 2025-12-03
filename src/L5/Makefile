@@ -1,3 +1,4 @@
+CONFIG_NAME					= Mug
 THORSANVIL_ROOT             = $(realpath ../../)
 
 TARGET                      = L5.slib

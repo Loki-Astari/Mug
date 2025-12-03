@@ -1,3 +1,4 @@
+CONFIG_NAME					= Mug
 THORSANVIL_ROOT             = $(realpath ../../)
 
 CXXFLAGS					+= -DDISABLE_SLACKTEST=$(DISABLE_SLACKTEST)

@@ -18,6 +18,21 @@
 
 using namespace std::chrono_literals;
 
+/*
+ * Some locations were we build do not currently support std::jthread.
+ * This is a simplified version just for testing purposes.
+ */
+//    std::jthread
+class LocalJthread: public std::thread
+{
+    public:
+        using std::thread::thread;
+        ~LocalJthread()
+        {
+            join();
+        }
+};
+
 TEST(MugServer, CreateHeadless)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
@@ -39,7 +54,7 @@ TEST(MugServer, ServiceRunManuallyStopped)
         server.run();
     };
 
-    std::jthread     serverThread(work);
+    LocalJthread     serverThread(work);
 
     std::this_thread::sleep_for(250ms);
     server.stopHard();
@@ -54,7 +69,7 @@ TEST(MugServer, ServiceRunDefaultConfigHitControl)
         server.run();
     };
 
-    std::jthread     serverThread(work);
+    LocalJthread     serverThread(work);
 
     // Touch the control point to shut down the server.
     std::this_thread::sleep_for(250ms);
@@ -90,7 +105,7 @@ TEST(MugServer, ServiceRunModifiedControl)
         server.run();
     };
 
-    std::jthread     serverThread(work);
+    LocalJthread     serverThread(work);
 
     // Touch the control point to shut down the server.
     std::this_thread::sleep_for(250ms);
@@ -131,7 +146,7 @@ TEST(MugServer, ServiceRunAddServer)
         server.run();
     };
 
-    std::jthread     serverThread(work);
+    LocalJthread     serverThread(work);
 
     // Touch the control point to shut down the server.
     std::this_thread::sleep_for(250ms);
@@ -178,7 +193,7 @@ TEST(MugServer, ServiceRunAddServerWithFile)
         server.run();
     };
 
-    std::jthread     serverThread(work);
+    LocalJthread     serverThread(work);
 
     // Touch the control point to shut down the server.
     std::this_thread::sleep_for(250ms);
@@ -225,7 +240,7 @@ TEST(MugServer, ServiceRunAddServerWithFileValidateWorks)
         server.run();
     };
 
-    std::jthread     serverThread(work);
+    LocalJthread     serverThread(work);
 
     {
         // Talk to server.
@@ -285,7 +300,7 @@ TEST(MugServer, CallALoadedLib)
         server.run();
     };
 
-    std::jthread     serverThread(work);
+    LocalJthread     serverThread(work);
 
     {
         // Talk to server.

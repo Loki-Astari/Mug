@@ -1,6 +1,7 @@
+CONFIG_NAME					= Mug
 THORSANVIL_ROOT             = $(realpath ../../)
 
-TARGET                      = Mug.prog ThorsMug.head
+TARGET                      = mug.prog ThorsMug.head
 LDLIBS_EXTERN_BUILD			= ThorSerialize Nisse
 FILE_WARNING_FLAGS			= -Wno-missing-braces -Wno-deprecated-copy-with-user-provided-dtor
 

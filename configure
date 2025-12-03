@@ -593,7 +593,7 @@ PACKAGE_STRING='ThorsMug 0.1'
 PACKAGE_BUGREPORT='loki.Astari+ThorsMug@gmail.com'
 PACKAGE_URL=''
 
-ac_unique_file="src/ThorsMug/Mug.cpp"
+ac_unique_file="src/ThorsMug/mug.cpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stddef.h>
@@ -759,7 +759,6 @@ VERATOOL
 TestVera
 COV
 DefaultLinkDir
-THOR_PACKAGE_NAME
 target_alias
 host_alias
 build_alias
@@ -3665,11 +3664,8 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
     export BUILDING_ThorsMug=1
-
-printf "%s\n" "#define THOR_PACKAGE_NAME ThorsMug" >>confdefs.h
-
-    THOR_PACKAGE_NAME=ThorsMug
-
+    # AC_DEFINE([THOR_PACKAGE_NAME], [ThorsMug], [Name of package for header files])
+    # AC_SUBST([THOR_PACKAGE_NAME], [ThorsMug])
 
     ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -3926,7 +3922,7 @@ fi
 
 
 
-    if test "src/ThorsMug/Mug.cpp" != ""
+    if test "src/ThorsMug/mug.cpp" != ""
 then :
 
 
@@ -4842,7 +4838,7 @@ fi
 then :
 
 
-    if [ "x12" == "x12" ] || [ "x12" == "x10" ]; then
+    if [ "x" == "x12" ] || [ "x" == "x10" ]; then
 
         grep -q 'ThorSerialize_ROOT_DIR=@ThorSerialize_ROOT_DIR@' Makefile.config.in
         result=$?
@@ -4860,7 +4856,7 @@ then :
 fi
     fi
 
-    if [ "x12" == "x12" ] || [ "x12" == "x11" ]; then
+    if [ "x" == "x12" ] || [ "x" == "x11" ]; then
 
         grep -q 'ThorSerialize_ROOT_LIB=@ThorSerialize_ROOT_LIB@' Makefile.config.in
         result=$?
@@ -4878,7 +4874,7 @@ then :
 fi
     fi
 
-    if [ "x12" == "x13" ]; then
+    if [ "x" == "x13" ]; then
         grep -q 'ThorSerializeHeaderOnly_ROOT_DIR=@ThorSerializeHeaderOnly_ROOT_DIR@' Makefile.config.in
         result=$?
         if test "x${result}" != "x0"
@@ -5284,7 +5280,7 @@ fi
 then :
 
 
-    if [ "x12" == "x12" ] || [ "x12" == "x10" ]; then
+    if [ "x" == "x12" ] || [ "x" == "x10" ]; then
 
         grep -q 'Nisse_ROOT_DIR=@Nisse_ROOT_DIR@' Makefile.config.in
         result=$?
@@ -5302,7 +5298,7 @@ then :
 fi
     fi
 
-    if [ "x12" == "x12" ] || [ "x12" == "x11" ]; then
+    if [ "x" == "x12" ] || [ "x" == "x11" ]; then
 
         grep -q 'Nisse_ROOT_LIB=@Nisse_ROOT_LIB@' Makefile.config.in
         result=$?
@@ -5320,7 +5316,7 @@ then :
 fi
     fi
 
-    if [ "x12" == "x13" ]; then
+    if [ "x" == "x13" ]; then
         grep -q 'NisseHeaderOnly_ROOT_DIR=@NisseHeaderOnly_ROOT_DIR@' Makefile.config.in
         result=$?
         if test "x${result}" != "x0"
@@ -5486,7 +5482,7 @@ fi
 then :
 
 
-    if [ "x12" == "x12" ] || [ "x12" == "x10" ]; then
+    if [ "x" == "x12" ] || [ "x" == "x10" ]; then
 
         grep -q 'event_ROOT_DIR=@event_ROOT_DIR@' Makefile.config.in
         result=$?
@@ -5504,7 +5500,7 @@ then :
 fi
     fi
 
-    if [ "x12" == "x12" ] || [ "x12" == "x11" ]; then
+    if [ "x" == "x12" ] || [ "x" == "x11" ]; then
 
         grep -q 'event_ROOT_LIB=@event_ROOT_LIB@' Makefile.config.in
         result=$?
@@ -5522,7 +5518,7 @@ then :
 fi
     fi
 
-    if [ "x12" == "x13" ]; then
+    if [ "x" == "x13" ]; then
         grep -q 'eventHeaderOnly_ROOT_DIR=@eventHeaderOnly_ROOT_DIR@' Makefile.config.in
         result=$?
         if test "x${result}" != "x0"
@@ -20578,6 +20574,13 @@ fi
 
     pushd third
     if [ $? == 0 ]; then
+        for third in $(ls); do
+
+    export BUILDING_${third}=1
+    # AC_DEFINE([THOR_PACKAGE_NAME], [${third}], [Name of package for header files])
+    # AC_SUBST([THOR_PACKAGE_NAME], [${third}])
+
+        done
         for third in $(ls); do
             echo
             echo
