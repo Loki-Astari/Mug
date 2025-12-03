@@ -23,7 +23,7 @@ https://docs.slack.dev/reference/events/pin_added
       "type": "message",
       "created": 1764550467,
       "created_by": "U095XJHJ1J5",
-      "channel": "C09RU2URYMS",
+      "channel": "<Your Slack Channel>",
       "message":
       {
         "user": "U09S3D8R00Z",
@@ -67,17 +67,17 @@ https://docs.slack.dev/reference/events/pin_added
           }
         ],
         "pinned_to": [
-          "C09RU2URYMS"
+          "<Your Slack Channel>"
         ],
-        "permalink": "https://thorsanvilworkspace.slack.com/archives/C09RU2URYMS/p1764544528464179"
+        "permalink": "https://thorsanvilworkspace.slack.com/archives/X09XU2UXXMS/p1764544528464179"
       }
     },
     "item_user": "U09S3D8R00Z",
-    "channel_id": "C09RU2URYMS",
+    "channel_id": "<Your Slack Channel>",
     "pin_count": 1,
     "pinned_info":
     {
-      "channel": "C09RU2URYMS",
+      "channel": "<Your Slack Channel>",
       "pinned_by": "U095XJHJ1J5",
       "pinned_ts": 1764550467
     },
@@ -94,7 +94,7 @@ https://docs.slack.dev/reference/events/pin_added
       "type": "message",
       "created": 1764550467,
       "created_by": "U095XJHJ1J5",
-      "channel": "C09RU2URYMS",
+      "channel": "<Your Slack Channel>",
       "message":
       {
         "user": "U09S3D8R00Z",
@@ -137,15 +137,15 @@ https://docs.slack.dev/reference/events/pin_added
             ]
           }
         ],
-        "permalink": "https://thorsanvilworkspace.slack.com/archives/C09RU2URYMS/p1764544528464179"
+        "permalink": "https://thorsanvilworkspace.slack.com/archives/X09XU2UXXMS/p1764544528464179"
       }
     },
     "item_user": "U09S3D8R00Z",
-    "channel_id": "C09RU2URYMS",
+    "channel_id": "<Your Slack Channel>",
     "pin_count": 0,
     "pinned_info":
     {
-      "channel": "C09RU2URYMS",
+      "channel": "<Your Slack Channel>",
       "pinned_by": "U095XJHJ1J5",
       "pinned_ts": 1764550467
     },

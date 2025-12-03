@@ -7,7 +7,7 @@
 #include "EventCallbackMessage.h"
 #include "EventURLVerification.h"
 
-#include "ThorsChalice/DLLib.h"
+#include "ThorsMug/DLLib.h"
 #include "ThorsSlack/EventCallbackReaction.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
@@ -27,7 +27,7 @@
 namespace ThorsAnvil::ThorsSlack
 {
 
-class SlackPlugin: public ThorsAnvil::ThorsChalice::ChalicePlugin
+class SlackPlugin: public ThorsAnvil::ThorsMug::MugPlugin
 {
         std::string_view  slackSecret;
     public:

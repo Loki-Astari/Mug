@@ -1,11 +1,11 @@
-#include "ChaliceCLA.h"
+#include "MugCLA.h"
 
 #include <charconv>
 
-using namespace ThorsAnvil::ThorsChalice;
+using namespace ThorsAnvil::ThorsMug;
 
-const Paths             ChaliceCLA::searchPath = {"./chalice.cfg", "/etc/chalice.cfg", "/opt/homebrew/etc/chalice.cfg"};
-const VerbosityMap      ChaliceCLA::verbosity  = {
+const Paths             MugCLA::searchPath = {"./mug.cfg", "/etc/mug.cfg", "/opt/homebrew/etc/mug.cfg"};
+const VerbosityMap      MugCLA::verbosity  = {
                                                     {"All",     loguru::Verbosity_9},
                                                     {"Trace",   loguru::Verbosity_8},
                                                     {"Track",   loguru::Verbosity_7},
@@ -13,9 +13,9 @@ const VerbosityMap      ChaliceCLA::verbosity  = {
                                                     {"Info",    loguru::Verbosity_INFO},
                                                     {"Warn",    loguru::Verbosity_WARNING},
                                                     {"Error",   loguru::Verbosity_ERROR},
-                                                 };
+                                             };
 
-SplitArg ChaliceCLA::splitArgument(std::string_view arg)
+SplitArg MugCLA::splitArgument(std::string_view arg)
 {
     std::size_t  find = arg.find('=');
     std::size_t  endF = find == std::string::npos ? arg.size() : find;
@@ -28,48 +28,48 @@ SplitArg ChaliceCLA::splitArgument(std::string_view arg)
     return {flag, param, hasValue};
 }
 
-void ChaliceCLA::parseArguments(std::vector<std::string_view> const& arguments)
+void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
 {
     bool first = true;
 
     for (std::string_view const& arg: arguments)
     {
-        ThorsLogDebug("ChaliceCLA", "parseArguments", "Check arguments ", arg);
+        ThorsLogDebug("MugCLA", "parseArguments", "Check arguments ", arg);
         if (first) {
             first = false;
             continue;
         }
         SplitArg  const argVal = splitArgument(arg);
-        ThorsLogDebug("ChaliceCLA", "parseArguments", "Flag:  ", argVal.flag);
-        ThorsLogDebug("ChaliceCLA", "parseArguments", "Value: ", argVal.value);
+        ThorsLogDebug("MugCLA", "parseArguments", "Flag:  ", argVal.flag);
+        ThorsLogDebug("MugCLA", "parseArguments", "Value: ", argVal.value);
 
         if (argVal.flag == "--help")
         {
-            ThorsLogDebug("ChaliceCLA", "parseArguments", "Activate Help");
+            ThorsLogDebug("MugCLA", "parseArguments", "Activate Help");
             args.setHelp();
             continue;
         }
         if (argVal.flag == "--silent")
         {
-            ThorsLogDebug("ChaliceCLA", "parseArguments", "Activate Silent");
+            ThorsLogDebug("MugCLA", "parseArguments", "Activate Silent");
             args.setSilent();
             continue;
         }
         if (argVal.flag == "--logFile")
         {
-            ThorsLogDebug("ChaliceCLA", "parseArguments", "Activate LogFile");
+            ThorsLogDebug("MugCLA", "parseArguments", "Activate LogFile");
             args.logAddFile(argVal.value);
             continue;
         }
         if (argVal.flag == "--logSys")
         {
-            ThorsLogDebug("ChaliceCLA", "parseArguments", "Activate LogSys");
+            ThorsLogDebug("MugCLA", "parseArguments", "Activate LogSys");
             args.logAddSys(!argVal.hasValue ? arguments[0] : argVal.value);
             continue;
         }
         if (argVal.flag == "--logLevel")
         {
-            ThorsLogDebug("ChaliceCLA", "parseArguments", "Activate LogLevel");
+            ThorsLogDebug("MugCLA", "parseArguments", "Activate LogLevel");
             auto find = verbosity.find(argVal.value);
             if (find == std::end(verbosity)) {
                 int value = 0;
@@ -89,19 +89,19 @@ void ChaliceCLA::parseArguments(std::vector<std::string_view> const& arguments)
         }
         if (argVal.flag == "--config")
         {
-            ThorsLogDebug("ChaliceCLA", "parseArguments", "Activate Config");
+            ThorsLogDebug("MugCLA", "parseArguments", "Activate Config");
             setConfig = true;
             args.setConfigFile(argVal.value);
             continue;
         }
 
         // Invalid Flag;
-        ThorsLogDebug("ChaliceCLA", "parseArguments", "Invalid Flag");
+        ThorsLogDebug("MugCLA", "parseArguments", "Invalid Flag");
         args.setHelp();
     }
 }
 
-void ChaliceCLA::displayHelp(std::string_view command, std::ostream& output)
+void MugCLA::displayHelp(std::string_view command, std::ostream& output)
 {
     output << "Usage: " << command << " [--help] [--silent] [--logLevel=(All|Trace|Track|Debug|Info|Warn|Error)] [--config=<configFile>]\n"
            << R"(
@@ -119,7 +119,7 @@ If no config file is explicitly specified then the following files are checked i
     }
 
     output << R"(
-Chalice config is loaded from the config file.
+Mug config is loaded from the config file.
 It is an error when:
     * the config file does not exist
     * has an invalid format.
@@ -131,7 +131,7 @@ The server will refuse to start when there is an error.
 
 }
 
-ChaliceCLA::ChaliceCLA(std::vector<std::string_view> const& arguments, ChaliceCLAInterface& args)
+MugCLA::MugCLA(std::vector<std::string_view> const& arguments, MugCLAInterface& args)
     : args(args)
 {
     parseArguments(arguments);

@@ -1,7 +1,6 @@
 #include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
-
 #include "APIChatMessage.h"
 #include "Environment.h"
 #include "SlackClient.h"
@@ -23,12 +22,13 @@ using ThorsAnvil::Slack::API::Chat::Update;
 Environment             environment("test/data/environment.json");
 SlackClient             client(environment.botToken, environment.userToken);
 
-#if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
+#if !(defined(DISABLE_SLACKTEST) && (DISABLE_SLACKTEST == 1))
+
 
 TEST(APIChatMessageTest, SimpleText)
 {
     PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
     BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
@@ -46,7 +46,7 @@ TEST(APIChatMessageTest, Block_Section_ElText)
 {
     PostMessage::Reply      reply;
     client.sendMessage(PostMessage{
-                            .channel = "C09RU2URYMS",
+                            .channel = environment.slackChannel,
                             .blocks = BK::Blocks{
                                         BK::Section{
                                             .text = BK::ElText{
@@ -80,14 +80,14 @@ TEST(APIChatMessageTest, Block_Section_ElText)
 TEST(APIChatMessageTest, MessageWithBadJSON)
 {
     PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "Json does not support new line\n"}, reply);
+    client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "Json does not support new line\n"}, reply);
     ASSERT_FALSE(reply.ok);
 }
 
 TEST(APIChatMessageTest, Delete)
 {
     PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
     BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
@@ -104,7 +104,7 @@ TEST(APIChatMessageTest, Delete)
     std::this_thread::sleep_for(2s);
     Delete::Reply      reply1;
     client.sendMessage(Delete{
-                            .channel = "C09RU2URYMS",
+                            .channel = environment.slackChannel,
                             .ts = reply.message.ts,
                        }, reply1, true);
 
@@ -115,7 +115,7 @@ TEST(APIChatMessageTest, Delete)
 TEST(APIChatMessageTest, PostEphemeral)
 {
     PostEphemeral::Reply      reply;
-    client.sendMessage(PostEphemeral{.channel = "C09RU2URYMS", .user="U095XJHJ1J5", .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    client.sendMessage(PostEphemeral{.channel = environment.slackChannel, .user="U095XJHJ1J5", .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
     }
@@ -126,7 +126,7 @@ TEST(APIChatMessageTest, PostEphemeral)
 TEST(APIChatMessageTest, Update)
 {
     PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
     BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
@@ -142,7 +142,7 @@ TEST(APIChatMessageTest, Update)
 
     Update::Reply      reply1;
     client.sendMessage(Update {
-                            .channel = "C09RU2URYMS",
+                            .channel = environment.slackChannel,
                             .ts = reply.message.ts,
                             .blocks = BK::Blocks{},
                             .text = "Update text.",

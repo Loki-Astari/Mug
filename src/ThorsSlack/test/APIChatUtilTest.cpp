@@ -1,7 +1,10 @@
 #include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
+#if !(defined(DISABLE_SLACKTEST) && (DISABLE_SLACKTEST == 1))
+
 #include "APIChatMessage.h"
+#include "Environment.h"
 #include "APIChatUtil.h"
 
 #include "SlackClient.h"
@@ -23,13 +26,13 @@ using ThorsAnvil::Slack::API::Chat::Unfurl;
 using ThorsAnvil::Slack::API::Chat::UnfurlURL;
 
 extern SlackClient             client;
+extern Environment             environment;
 
-#if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
 TEST(APIChatUtilTest, GetPermalink)
 {
     PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
     BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
@@ -45,14 +48,14 @@ TEST(APIChatUtilTest, GetPermalink)
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(2s);
     GetPermalink::Reply      reply1;
-    client.sendMessage(GetPermalink{.channel = "C09RU2URYMS",.message_ts = reply.message.ts,}, reply1, true);
+    client.sendMessage(GetPermalink{.channel = environment.slackChannel, .message_ts = reply.message.ts}, reply1, true);
     EXPECT_TRUE(reply1.ok);
 }
 
 TEST(APIChatUtilTest, MeMessage)
 {
     MeMessage::Reply      reply;
-    client.sendMessage(MeMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    client.sendMessage(MeMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
 }
 
@@ -60,11 +63,11 @@ TEST(APIChatUtilTest, MeMessage)
 TODO
 TEST(APIChatUtilTest, UnfurlURL)
 {
-    PostMessage::Reply  reply   = client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."});
+    PostMessage::Reply  reply   = client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."});
     ASSERT_TRUE(reply.ok);
 
     Unfurl message{
-            .channel = "C09RU2URYMS",
+            .channel = environment.slackChannel,
             .ts = reply.message.value().ts,
 #if 0
             .unfurls = UnfurlURL
@@ -119,7 +122,7 @@ TEST(APIChatUtilTest, UnfurlURL)
     std::cerr << ThorsAnvil::Serialize::jsonExporter(message) << "\n";
     client.tryMessage(message);
 #if 0
-    PostUnfurl::Reply      reply = client.sendMessage(Unfurl{.channel = "C09RU2URYMS", .user="U095XJHJ1J5", .text = "I hope the tour went well, Mr. Wonka."});
+    PostUnfurl::Reply      reply = client.sendMessage(Unfurl{.channel = environment.slackChannel, .user="U095XJHJ1J5", .text = "I hope the tour went well, Mr. Wonka."});
     if (!reply.ok) {
         std::cerr << ThorsAnvil::Serialize::jsonExporter(reply);
     }

@@ -1,7 +1,7 @@
-#ifndef THORSANVIL_THORS_CHALICE_CHALICE_SERVER_H
-#define THORSANVIL_THORS_CHALICE_CHALICE_SERVER_H
+#ifndef THORSANVIL_THORS_MUG_MUG_SERVER_H
+#define THORSANVIL_THORS_MUG_MUG_SERVER_H
 
-#include "ChaliceConfig.h"
+#include "MugConfig.h"
 #include "DLLib.h"
 #include "NisseServer/NisseServer.h"
 #include "NisseHTTP/PyntHTTPControl.h"
@@ -12,18 +12,18 @@
 namespace NisServer = ThorsAnvil::Nisse::Server;
 namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
-namespace ThorsAnvil::ThorsChalice
+namespace ThorsAnvil::ThorsMug
 {
 
-enum ChaliceServerMode {Headless, Active};
+enum MugServerMode {Headless, Active};
 
-class ChaliceServer: public NisServer::NisseServer
+class MugServer: public NisServer::NisseServer
 {
     class LibraryChecker: public NisServer::TimerAction
     {
-        ChaliceServer& server;
+        MugServer& server;
         public:
-            LibraryChecker(ChaliceServer& server)
+            LibraryChecker(MugServer& server)
                 : server(server)
             {}
             virtual void handleRequest(int) override
@@ -47,7 +47,7 @@ class ChaliceServer: public NisServer::NisseServer
     void handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir);
 
     public:
-        ChaliceServer(ChaliceConfig const& config, ChaliceServerMode mode);
+        MugServer(MugConfig const& config, MugServerMode mode);
 
     private:
         void checkLibrary();

@@ -22,7 +22,7 @@ Response:
   "items": [
     {
       "type": "message",
-      "channel": "C09RU2URYMS",
+      "channel": "<Your Slack Channel>",
       "message":
       {
         "user": "U09S3D8R00Z",
@@ -65,7 +65,7 @@ Response:
             ]
           }
         ],
-        "permalink": "https://thorsanvilworkspace.slack.com/archives/C09RU2URYMS/p1764530084305729"
+        "permalink": "https://thorsanvilworkspace.slack.com/archives/X09XU2UXXMS/p1764530084305729"
       },
       "date_create": 1764530084
     }

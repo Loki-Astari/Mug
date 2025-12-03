@@ -1,5 +1,5 @@
-#ifndef THORSANVIL_THORS_CHALICE_CHALICE_CONFIG_H
-#define THORSANVIL_THORS_CHALICE_CHALICE_CONFIG_H
+#ifndef THORSANVIL_THORS_MUG_MUG_CONFIG_H
+#define THORSANVIL_THORS_MUG_MUG_CONFIG_H
 
 #include <string>
 #include <vector>
@@ -10,7 +10,7 @@
 
 namespace FS = std::filesystem;
 
-namespace ThorsAnvil::ThorsChalice
+namespace ThorsAnvil::ThorsMug
 {
 
 enum class ActionType {File, Lib};
@@ -50,7 +50,7 @@ struct PortConfig
     std::vector<Action>         actions;
 };
 
-struct ChaliceConfig
+struct MugConfig
 {
     int                         controlPort         = 8079;
     int                         libraryCheckTime    = 0;
@@ -59,8 +59,8 @@ struct ChaliceConfig
 
 }
 
-ThorsAnvil_MakeTrait(ThorsAnvil::ThorsChalice::Action, type, rootDir, path);
-ThorsAnvil_MakeTrait(ThorsAnvil::ThorsChalice::PortConfig, port, certPath, actions);
-ThorsAnvil_MakeTrait(ThorsAnvil::ThorsChalice::ChaliceConfig, servers, controlPort, libraryCheckTime);
+ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::Action, type, rootDir, path);
+ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::PortConfig, port, certPath, actions);
+ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::MugConfig, servers, controlPort, libraryCheckTime);
 
 #endif

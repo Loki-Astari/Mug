@@ -1,9 +1,9 @@
-#include "../ThorsChalice/DLLib.h"
+#include "../ThorsMug/DLLib.h"
 #include "NisseHTTP/HTTPHandler.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 
-class L5Plugin: public ThorsAnvil::ThorsChalice::ChalicePlugin
+class L5Plugin: public ThorsAnvil::ThorsMug::MugPlugin
 {
     void handle(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response)
     {
@@ -19,7 +19,7 @@ class L5Plugin: public ThorsAnvil::ThorsChalice::ChalicePlugin
 L5Plugin    l5;
 
 
-extern "C" void* chaliceFunctionNotCorrectName()
+extern "C" void* mugFunctionNotCorrectName()
 {
-    return dynamic_cast<ThorsAnvil::ThorsChalice::ChalicePlugin*>(&l5);
+    return dynamic_cast<ThorsAnvil::ThorsMug::MugPlugin*>(&l5);
 }

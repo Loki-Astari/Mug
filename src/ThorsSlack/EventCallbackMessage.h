@@ -43,7 +43,7 @@ namespace ThorsAnvil::Slack::Event
         ]
       }
     ],
-    "channel": "C09RU2URYMS",
+    "channel": "<Your Slack Channel>",
     "event_ts": "1763965955.056429",
     "channel_type": "channel"
   },

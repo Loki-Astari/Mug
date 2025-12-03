@@ -20,7 +20,7 @@ namespace ThorsAnvil::Slack::Event
     "item":
     {
       "type": "message",
-      "channel": "C09RU2URYMS",
+      "channel": "<Your Slack Channel>",
       "ts": "1764544528.464179"
     },
     "item_user": "U09S3D8R00Z",
@@ -36,7 +36,7 @@ namespace ThorsAnvil::Slack::Event
     "item":
     {
       "type": "message",
-      "channel": "C09RU2URYMS",
+      "channel": "<Your Slack Channel>",
       "ts": "1764544528.464179"
     },
     "item_user": "U09S3D8R00Z",

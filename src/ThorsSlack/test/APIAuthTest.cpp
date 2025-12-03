@@ -1,6 +1,8 @@
 #include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
+#if !(defined(DISABLE_SLACKTEST) && (DISABLE_SLACKTEST == 1))
+
 #include "SlackClient.h"
 #include "APIAuth.h"
 
@@ -12,8 +14,6 @@ using ThorsAnvil::Slack::API::Auth::TeamsList;
 using ThorsAnvil::Slack::API::Auth::Revoke;
 
 extern SlackClient             client;
-
-#if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
 
 TEST(APIAuthTests, AuthTest)
 {

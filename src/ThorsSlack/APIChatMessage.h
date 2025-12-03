@@ -13,7 +13,7 @@ Documentation: https://docs.slack.dev/reference/methods/chat.postmessage
 Response:
 {
     "ok": true,
-    "channel": "C09RU2URYMS",
+    "channel": "<Your Slack Channel>",
     "ts": "1763354325.527129",
     "message":
     {
@@ -71,14 +71,14 @@ Response:
 Documentation: https://docs.slack.dev/reference/methods/chat.delete
 Response:
 {
-    "channel": "C09RU2URYMS",
+    "channel": "<Your Slack Channel>",
     "ts": "1764214726.831099",
     "ok": true
 }
 Documentation: https://docs.slack.dev/reference/methods/chat.update
 Response:
 {
-    "channel": "C09RU2URYMS",
+    "channel": "<Your Slack Channel>",
     "ts": "1764215452.433709",
     "text": "Update text.",
     "message":

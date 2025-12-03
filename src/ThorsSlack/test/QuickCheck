@@ -1,6 +1,7 @@
 #!/bin/bash
 
 token=$(jq -r .slackToken test/data/environment.json)
+channel=$(jq -r .slackChannel test/data/environment.json)
 
 echo "Token: ${token}"
 
@@ -9,14 +10,14 @@ r1=$(curl \
     --header "authorization: Bearer ${token}" \
     --header "content-type: application/json; charset=utf-8" \
     --header "content-size: 243" \
-    --data   '{"channel":"C09RU2URYMS","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_preformatted","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}],"border":1}]}]}' \
+    --data   '{"channel":"'${channel}'","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_preformatted","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}],"border":1}]}]}' \
     --request POST \
     https://slack.com/api/chat.postMessage)
 
 echo "Post: ${r1}"
 
 ts=$(echo ${r1} | jq -r .message.ts)
-message='{"channel":"C09RU2URYMS","message_ts":'${ts}'}'
+message='{"channel":"'${channel}'","message_ts":'${ts}'}'
 size=$(echo -n ${message} | wc -c)
 
 echo "${message} => S: ${size}"
@@ -26,7 +27,7 @@ r2=$(curl \
     --header "authorization: Bearer ${token}" \
     --header "content-type: application/json; charset=utf-8" \
     --request GET \
-    "https://slack.com/api/chat.getPermalink?channel=C09RU2URYMS&message_ts=${ts}")
+    "https://slack.com/api/chat.getPermalink?channel=${channel}&message_ts=${ts}")
 
 echo "Reply: ${r2}"
 
@@ -45,7 +46,7 @@ echo "Reply: ${r2}"
 #    --header "authorization: Bearer ${token}" \
 #    --header "content-type: application/json; charset=utf-8" \
 #    --header "content-size: 243" \
-#    --data   '{"channel":"C09RU2URYMS","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_preformatted","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}],"border":1}]}]}' \
+#    --data   '{"channel":"'${channel}'","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_preformatted","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}],"border":1}]}]}' \
 #    --request POST \
 #    https://slack.com/api/chat.postMessage
 #echo
@@ -55,7 +56,7 @@ echo "Reply: ${r2}"
 #    --header "authorization: Bearer ${token}" \
 #    --header "content-type: application/json; charset=utf-8" \
 #    --header "content-size: 225" \
-#    --data   '{"channel":"C09RU2URYMS","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_preformatted","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}]}]}]}' \
+#    --data   '{"channel":"'${channel}'","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_preformatted","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}]}]}]}' \
 #    --request POST \
 #    https://slack.com/api/chat.postMessage
 #
@@ -65,7 +66,7 @@ echo "Reply: ${r2}"
 #    --header "authorization: Bearer ${token}" \
 #    --header "content-type: application/json; charset=utf-8" \
 #    --header "content-size: 236" \
-#    --data   '{"channel":"C09RU2URYMS","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_quote","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}],"border":1}]}]}' \
+#    --data   '{"channel":"'${channel}'","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_quote","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}],"border":1}]}]}' \
 #    --request POST \
 #    https://slack.com/api/chat.postMessage
 #
@@ -75,7 +76,7 @@ echo "Reply: ${r2}"
 #    --header "authorization: Bearer ${token}" \
 #    --header "content-type: application/json; charset=utf-8" \
 #    --header "content-size: 225" \
-#    --data   '{"channel":"C09RU2URYMS","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_quote","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}]}]}]}' \
+#    --data   '{"channel":"'${channel}'","blocks":[{"type":"rich_text","elements":[{"type":"rich_text_quote","elements":[{"type":"text","text":"Rich Text PreFormatted Test","style":{"bold":true,"italic":true,"strike":true,"code":true}}]}]}]}' \
 #    --request POST \
 #    https://slack.com/api/chat.postMessage
 #

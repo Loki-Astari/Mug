@@ -4,7 +4,7 @@
 #include <dlfcn.h>
 #include <filesystem>
 
-using namespace ThorsAnvil::ThorsChalice;
+using namespace ThorsAnvil::ThorsMug;
 
 
 DLLib::DLLib()
@@ -78,8 +78,8 @@ void DLLib::reload()
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlopen() failed: ", safeDLerror());
     }
 
-    void*           chaliceFuncSym = dlsym(lib, "chaliceFunction");
-    if (chaliceFuncSym == nullptr) {
+    void*           mugFuncSym = dlsym(lib, "mugFunction");
+    if (mugFuncSym == nullptr) {
         dlclose(lib);
         lib = nullptr;
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlsym() failed: ", safeDLerror());
@@ -87,9 +87,9 @@ void DLLib::reload()
     lastModified = FS::last_write_time(path);
 
 
-    ChaliceFunc     chaliceFunc     = reinterpret_cast<ChaliceFunc>(chaliceFuncSym);
-    void*           chalicePluginV  = (*chaliceFunc)();
-    plugin                          = reinterpret_cast<ChalicePlugin*>(chalicePluginV);
+    MugFunc     mugFunc     = reinterpret_cast<MugFunc>(mugFuncSym);
+    void*       mugPluginV  = (*mugFunc)();
+    plugin                      = reinterpret_cast<MugPlugin*>(mugPluginV);
 }
 
 std::size_t DLLibMap::load(std::string const& path)

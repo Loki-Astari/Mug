@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
-#include "ChaliceCLA.h"
+#include "MugCLA.h"
 
 struct MockFile
 {
@@ -20,7 +20,7 @@ struct MockFile
     }
 };
 
-struct MockArguments: public ThorsAnvil::ThorsChalice::ChaliceCLAInterface
+struct MockArguments: public ThorsAnvil::ThorsMug::MugCLAInterface
 {
     std::size_t                 classCount      = 0;
     std::array<std::size_t, 6>  methodCallCount = {0, 0, 0, 0, 0, 0};
@@ -65,188 +65,188 @@ struct MockArguments: public ThorsAnvil::ThorsChalice::ChaliceCLAInterface
     }
 };
 
-TEST(ChaliceCLATest, NoArgumentsOnlyApplicationName)
+TEST(MugCLATest, NoArgumentsOnlyApplicationName)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(0, mockArgs.classCount);
 }
-TEST(ChaliceCLATest, InvalidArgument)
+TEST(MugCLATest, InvalidArgument)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--invalid"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--invalid"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[3]);
 }
-TEST(ChaliceCLATest, HelpFlag)
+TEST(MugCLATest, HelpFlag)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--help"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--help"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[3]);
 }
-TEST(ChaliceCLATest, SilentFlag)
+TEST(MugCLATest, SilentFlag)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--silent"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--silent"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[4]);
 }
-TEST(ChaliceCLATest, ConfigFlag)
+TEST(MugCLATest, ConfigFlag)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--config=LocalFile"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--config=LocalFile"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[5]);
     ASSERT_EQ("LocalFile", mockArgs.config);
 }
-TEST(ChaliceCLATest, addLogFile)
+TEST(MugCLATest, addLogFile)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logFile=LogFile"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logFile=LogFile"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[0]);
     ASSERT_EQ("LogFile", mockArgs.logFile);
 }
-TEST(ChaliceCLATest, addSysLog)
+TEST(MugCLATest, addSysLog)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logSys"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logSys"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[1]);
     ASSERT_EQ("Test", mockArgs.appName);
 }
-TEST(ChaliceCLATest, addSysLogExplicit)
+TEST(MugCLATest, addSysLogExplicit)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logSys=AppName"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logSys=AppName"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[1]);
     ASSERT_EQ("AppName", mockArgs.appName);
 }
-TEST(ChaliceCLATest, setLogLevelAll)
+TEST(MugCLATest, setLogLevelAll)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logLevel=All"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logLevel=All"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[2]);
     ASSERT_EQ(loguru::Verbosity_9, mockArgs.verbosity);
 }
-TEST(ChaliceCLATest, setLogLevelTrace)
+TEST(MugCLATest, setLogLevelTrace)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logLevel=Trace"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logLevel=Trace"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[2]);
     ASSERT_EQ(loguru::Verbosity_8, mockArgs.verbosity);
 }
-TEST(ChaliceCLATest, setLogLevelDebug)
+TEST(MugCLATest, setLogLevelDebug)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logLevel=Debug"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logLevel=Debug"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[2]);
     ASSERT_EQ(loguru::Verbosity_6, mockArgs.verbosity);
 }
-TEST(ChaliceCLATest, setLogLevelInfo)
+TEST(MugCLATest, setLogLevelInfo)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logLevel=Info"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logLevel=Info"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[2]);
     ASSERT_EQ(loguru::Verbosity_INFO, mockArgs.verbosity);
 }
-TEST(ChaliceCLATest, setLogLevelWarn)
+TEST(MugCLATest, setLogLevelWarn)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logLevel=Warn"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logLevel=Warn"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[2]);
     ASSERT_EQ(loguru::Verbosity_WARNING, mockArgs.verbosity);
 }
-TEST(ChaliceCLATest, setLogLevelError)
+TEST(MugCLATest, setLogLevelError)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logLevel=Error"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logLevel=Error"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[2]);
     ASSERT_EQ(loguru::Verbosity_ERROR, mockArgs.verbosity);
 }
-TEST(ChaliceCLATest, setLogLevelInvalid)
+TEST(MugCLATest, setLogLevelInvalid)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logLevel=Fake"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logLevel=Fake"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[3]);
 }
-TEST(ChaliceCLATest, displayHelp)
+TEST(MugCLATest, displayHelp)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logLevel=Error"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logLevel=Error"}, mockArgs);
 
-    std::stringstream                       output;
+    std::stringstream                   output;
     cla.displayHelp("TestingCommand", output);
 
     EXPECT_FALSE(output.str().empty());
 
 }
-TEST(ChaliceCLATest, findDefaultConfigFile)
+TEST(MugCLATest, findDefaultConfigFile)
 {
-    MockFile                                file("chalice.cfg", "{}");
+    MockFile                                file("mug.cfg", "{}");
 
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test"}, mockArgs);
 
-    EXPECT_EQ(mockArgs.config, "./chalice.cfg");
+    EXPECT_EQ(mockArgs.config, "./mug.cfg");
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[5]);
 
 }
-TEST(ChaliceCLATest, dontUseDefaultIfUserSpecified)
+TEST(MugCLATest, dontUseDefaultIfUserSpecified)
 {
-    MockFile                                file("chalice.cfg", "{}");
+    MockFile                            file("mug.cfg", "{}");
 
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--config=MyConfig"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--config=MyConfig"}, mockArgs);
 
     EXPECT_EQ(mockArgs.config, "MyConfig");
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[5]);
 }
-TEST(ChaliceCLATest, allFlags)
+TEST(MugCLATest, allFlags)
 {
-    MockArguments                           mockArgs;
-    ThorsAnvil::ThorsChalice::ChaliceCLA    cla({"Test", "--logFile=log1", "--logSys=Sys", "--logLevel=Warn", "--config=Configer", "--help", "--silent"}, mockArgs);
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logFile=log1", "--logSys=Sys", "--logLevel=Warn", "--config=Configer", "--help", "--silent"}, mockArgs);
 
     // Call to load
     ASSERT_EQ(6, mockArgs.classCount);

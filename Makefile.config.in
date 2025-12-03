@@ -14,3 +14,5 @@ event_ROOT_LIB=@event_ROOT_LIB@
 event_ROOT_DIR=@event_ROOT_DIR@
 
 MagicEnumHeaderOnly_ROOT_DIR=@MagicEnumHeaderOnly_ROOT_DIR@
+
+DISABLE_SLACKTEST=@DISABLE_SLACKTEST@

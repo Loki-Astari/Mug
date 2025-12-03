@@ -1,8 +1,8 @@
-#include "../ThorsChalice/DLLib.h"
+#include "../ThorsMug/DLLib.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 
-class L4Plugin: public ThorsAnvil::ThorsChalice::ChalicePlugin
+class L4Plugin: public ThorsAnvil::ThorsMug::MugPlugin
 {
     void handle(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response)
     {
@@ -18,7 +18,7 @@ class L4Plugin: public ThorsAnvil::ThorsChalice::ChalicePlugin
 L4Plugin    l4;
 
 
-extern "C" void* chaliceFunction()
+extern "C" void* mugFunction()
 {
-    return dynamic_cast<ThorsAnvil::ThorsChalice::ChalicePlugin*>(&l4);
+    return dynamic_cast<ThorsAnvil::ThorsMug::MugPlugin*>(&l4);
 }

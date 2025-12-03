@@ -2,8 +2,8 @@
 
 
 
-#ifndef  THORS_THORSCHALICE_CONFIG_H
-#define  THORS_THORSCHALICE_CONFIG_H
+#ifndef  THORS_THORSMUG_CONFIG_H
+#define  THORS_THORSMUG_CONFIG_H
 #ifndef  THORS_PACKAGE_INFO_CONFIG_H
 #define  THORS_PACKAGE_INFO_CONFIG_H
 
@@ -107,10 +107,10 @@
 
 
 /* Enable to use header only libraries */
-#undef THORSCHALICE_HEADER_ONLY
+#undef THORSMUG_HEADER_ONLY
 
 /* For header only convert to inline */
-#undef THORSCHALICE_HEADER_ONLY_INCLUDE
+#undef THORSMUG_HEADER_ONLY_INCLUDE
 
 
 #endif

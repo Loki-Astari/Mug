@@ -15,19 +15,19 @@ namespace FS = std::filesystem;
 
 TEST(DLLibTest, Create)
 {
-    ThorsAnvil::ThorsChalice::DLLib   dlLib;
+    ThorsAnvil::ThorsMug::DLLib   dlLib;
 }
 
 TEST(DLLibTest, Move)
 {
-    ThorsAnvil::ThorsChalice::DLLib   dlLib1;
-    ThorsAnvil::ThorsChalice::DLLib   dlLib2(std::move(dlLib1));
+    ThorsAnvil::ThorsMug::DLLib   dlLib1;
+    ThorsAnvil::ThorsMug::DLLib   dlLib2(std::move(dlLib1));
 }
 
 TEST(DLLibTest, MoveAssign)
 {
-    ThorsAnvil::ThorsChalice::DLLib   dlLib1;
-    ThorsAnvil::ThorsChalice::DLLib   dlLib2;
+    ThorsAnvil::ThorsMug::DLLib   dlLib1;
+    ThorsAnvil::ThorsMug::DLLib   dlLib2;
 
     dlLib1 = std::move(dlLib1);
 }
@@ -35,12 +35,12 @@ TEST(DLLibTest, MoveAssign)
 TEST(DLLibTest, LoadL3)
 {
     std::error_code ec;
-    ThorsAnvil::ThorsChalice::DLLib   dlLib1(FS::canonical(FS::path("../L3/release/libL3.dylib"), ec));
+    ThorsAnvil::ThorsMug::DLLib   dlLib1(FS::canonical(FS::path("../L3/release/libL3.dylib"), ec));
 }
 TEST(DLLibTest, LoadFailEmpty)
 {
     std::error_code ec;
-    auto action = [&](){ThorsAnvil::ThorsChalice::DLLib   dlLib1(FS::canonical(FS::path("../../build/lib/libBadLibName.dylib"), ec));};
+    auto action = [&](){ThorsAnvil::ThorsMug::DLLib   dlLib1(FS::canonical(FS::path("../../build/lib/libBadLibName.dylib"), ec));};
     EXPECT_THROW(
                  action(),
                  std::runtime_error
@@ -48,7 +48,7 @@ TEST(DLLibTest, LoadFailEmpty)
 }
 TEST(DLLibTest, LoadFailWithPath)
 {
-    auto action = [&](){ThorsAnvil::ThorsChalice::DLLib   dlLib1(FS::path("../../build/lib/libBadLibName.dylib"));};
+    auto action = [&](){ThorsAnvil::ThorsMug::DLLib   dlLib1(FS::path("../../build/lib/libBadLibName.dylib"));};
     EXPECT_THROW(
                  action(),
                  std::runtime_error
@@ -57,7 +57,7 @@ TEST(DLLibTest, LoadFailWithPath)
 TEST(DLLibTest, LoadOKFunctionBad)
 {
     std::error_code ec;
-    auto action = [&](){ThorsAnvil::ThorsChalice::DLLib   dlLib1(FS::canonical(FS::path("../L5/release/libL5.dylib"), ec));};
+    auto action = [&](){ThorsAnvil::ThorsMug::DLLib   dlLib1(FS::canonical(FS::path("../L5/release/libL5.dylib"), ec));};
     EXPECT_THROW(
                  action(),
                  std::runtime_error
@@ -67,7 +67,7 @@ TEST(DLLibTest, LoadOKFunctionBad)
 TEST(DLLibTest, LoadL3Call)
 {
     std::error_code ec;
-    ThorsAnvil::ThorsChalice::DLLib     dlLib1(FS::canonical(FS::path("../L3/release/libL3.dylib"), ec));
+    ThorsAnvil::ThorsMug::DLLib     dlLib1(FS::canonical(FS::path("../L3/release/libL3.dylib"), ec));
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8070\r\n"
                                                "content-length: 0\r\n"
@@ -86,7 +86,7 @@ TEST(DLLibTest, LoadL3Call)
 TEST(DLLibTest, LoadL4Call)
 {
     std::error_code ec;
-    ThorsAnvil::ThorsChalice::DLLib     dlLib1(FS::canonical(FS::path("../L4/release/libL4.dylib"), ec));
+    ThorsAnvil::ThorsMug::DLLib     dlLib1(FS::canonical(FS::path("../L4/release/libL4.dylib"), ec));
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8070\r\n"
                                                "content-length: 0\r\n"
@@ -106,7 +106,7 @@ TEST(DLLibTest, LoadL4Call)
 TEST(DLLibTest, CallCheck)
 {
     std::error_code ec;
-    ThorsAnvil::ThorsChalice::DLLib     dlLib1(FS::canonical(FS::path("../L4/release/libL4.dylib"), ec));
+    ThorsAnvil::ThorsMug::DLLib     dlLib1(FS::canonical(FS::path("../L4/release/libL4.dylib"), ec));
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8070\r\n"
                                                "content-length: 0\r\n"
@@ -128,13 +128,13 @@ TEST(DLLibTest, CallCheck)
 
 TEST(DLLibTest, CheckOnEmpty)
 {
-    ThorsAnvil::ThorsChalice::DLLib     dlLib;
+    ThorsAnvil::ThorsMug::DLLib     dlLib;
     EXPECT_EQ(false, dlLib.check());
 }
 
 TEST(DLLibTest, CallOnEmpty)
 {
-    ThorsAnvil::ThorsChalice::DLLib     dlLib1;
+    ThorsAnvil::ThorsMug::DLLib     dlLib1;
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8070\r\n"
                                                "content-length: 0\r\n"

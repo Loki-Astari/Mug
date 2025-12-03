@@ -8,5 +8,5 @@ LDLIBS_EXTERN_BUILD			= Nisse ThorSerialize
 include $(THORSANVIL_ROOT)/build/tools/Makefile
 
 done:
-	echo "Stopping Chalice"
+	echo "Stopping Mug"
 	curl localhost:8079?command=stophard

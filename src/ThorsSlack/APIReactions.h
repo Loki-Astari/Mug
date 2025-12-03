@@ -76,9 +76,9 @@ Response:
                 "count":1
             }
         ],
-        "permalink":"https:\/\/thorsanvilworkspace.slack.com\/archives\/C09RU2URYMS\/p1764267968082039"
+        "permalink":"https:\/\/thorsanvilworkspace.slack.com\/archives\/X09XU2UXXMS\/p1764267968082039"
     },
-    "channel":"C09RU2URYMS"
+    "channel":"<Your Slack Channel>"
 }
 Documentation: https://docs.slack.dev/reference/methods/reactions.list/
 Response:
@@ -87,7 +87,7 @@ Response:
     "items":[
         {
             "type":"message",
-            "channel":"C09RU2URYMS",
+            "channel":"<Your Slack Channel>",
             "message":
             {
                 "user":"U09S3D8R00Z",
@@ -143,7 +143,7 @@ Response:
                     },
                     {"name":"smile","users":["U09S3D8R00Z"],"count":1}
                 ],
-                "permalink":"https:\/\/thorsanvilworkspace.slack.com\/archives\/C09RU2URYMS\/p1764260011353119"
+                "permalink":"https:\/\/thorsanvilworkspace.slack.com\/archives\/X09XU2UXXMS\/p1764260011353119"
             }
         }
         ...

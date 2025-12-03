@@ -15,13 +15,13 @@ namespace ThorsAnvil::Slack::API::Chat
 Documentation: https://docs.slack.dev/reference/methods/chat.getpermalink
 Response:
 {
-    "channel": "C09RU2URYMS",
-    "permalink": "https://thorsanvilworkspace.slack.com/archives/C09RU2URYMS/p1764214542336409",
+    "channel": "<Your Slack Channel>",
+    "permalink": "https://thorsanvilworkspace.slack.com/archives/XX9RU2UXYMS/p1764214542336409",
     "ok": true
 }
 Documentation: https://docs.slack.dev/reference/methods/chat.memessage
 Response:
-{"ok":true,"channel":"C09RU2URYMS","ts":"1764218489.801069"}
+{"ok":true,"channel":"<Your Slack Channel>","ts":"1764218489.801069"}
 Documentation: https://docs.slack.dev/reference/methods/chat.unfurl/
 // TODO.
 // This code does not work.

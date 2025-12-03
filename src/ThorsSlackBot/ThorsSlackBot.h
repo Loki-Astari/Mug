@@ -7,7 +7,7 @@
 #include "ThorsSlack/EventCallbackMessage.h"
 #include "ThorsSlack/SlackClient.h"
 #include "ThorsSlack/SlackPlugin.h"
-#include "ThorsChalice/DLLib.h"
+#include "ThorsMug/DLLib.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 

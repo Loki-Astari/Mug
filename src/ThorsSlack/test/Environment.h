@@ -13,12 +13,13 @@ struct Environment
     std::string     botToken;
     std::string     userToken;
     std::string     slackSecret;
+    std::string     slackChannel;
     Environment(std::string const& fileName)
     {
         std::ifstream   file(fileName);
         file >> ThorsAnvil::Serialize::jsonImporter(*this);
     }
 };
-ThorsAnvil_MakeTrait(Environment, botToken, userToken, slackSecret);
+ThorsAnvil_MakeTrait(Environment, botToken, userToken, slackSecret, slackChannel);
 
 #endif

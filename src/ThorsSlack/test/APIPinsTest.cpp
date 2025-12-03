@@ -1,10 +1,14 @@
 #include "ThorsSlackConfig.h"
-#include "ThorSerialize/JsonThor.h"
 #include "gtest/gtest.h"
 
+#if !(defined(DISABLE_SLACKTEST) && (DISABLE_SLACKTEST == 1))
+
 #include "SlackClient.h"
+#include "Environment.h"
 #include "APIChatMessage.h"
 #include "APIPins.h"
+
+#include "ThorSerialize/JsonThor.h"
 
 using namespace std::literals::string_literals;
 
@@ -16,8 +20,7 @@ using ThorsAnvil::Slack::API::Pins::List;
 using ThorsAnvil::Slack::API::Pins::Remove;
 
 extern SlackClient             client;
-
-#if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
+extern Environment             environment;
 
 class APIPinsTest : public ::testing::Test {
     protected:
@@ -28,12 +31,12 @@ class APIPinsTest : public ::testing::Test {
     public:
         static void SetUpTestSuite()
         {
-            client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "The APIPinTest::Add message to add pins to"}, post, true);
+            client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "The APIPinTest::Add message to add pins to"}, post, true);
             ASSERT_TRUE(post.ok);
         }
         static void TearDownTestSuite()
         {
-            client.sendMessage(Delete{.channel = "C09RU2URYMS", .ts = post.message.ts});
+            client.sendMessage(Delete{.channel = environment.slackChannel, .ts = post.message.ts});
         }
 };
 PostMessage::Reply APIPinsTest::post;
@@ -41,14 +44,14 @@ PostMessage::Reply APIPinsTest::post;
 TEST_F(APIPinsTest, Add)
 {
     Add::Reply      reply;
-    client.sendMessage(Add{.channel = "C09RU2URYMS", .timestamp=post.message.ts}, reply, true);
+    client.sendMessage(Add{.channel = environment.slackChannel, .timestamp=post.message.ts}, reply, true);
     ASSERT_TRUE(reply.ok);
 }
 
 TEST_F(APIPinsTest, List)
 {
     List::Reply      reply;
-    client.sendMessage(List{.channel = "C09RU2URYMS"}, reply, true);
+    client.sendMessage(List{.channel = environment.slackChannel}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_NE(0, reply.items.size());
     bool findPin = false;
@@ -63,7 +66,7 @@ TEST_F(APIPinsTest, List)
 TEST_F(APIPinsTest, Remove)
 {
     List::Reply      reply;
-    client.sendMessage(List{.channel = "C09RU2URYMS"}, reply, true);
+    client.sendMessage(List{.channel = environment.slackChannel}, reply, true);
     ASSERT_TRUE(reply.ok);
 
     int pinRemoved = 0;

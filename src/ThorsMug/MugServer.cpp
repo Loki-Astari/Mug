@@ -1,4 +1,4 @@
-#include "ChaliceServer.h"
+#include "MugServer.h"
 
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
@@ -7,10 +7,10 @@
 #include <ratio>
 #include <string>
 
-using namespace ThorsAnvil::ThorsChalice;
+using namespace ThorsAnvil::ThorsMug;
 
 
-TASock::ServerInit ChaliceServer::getServerInit(std::optional<FS::path> certPath, int port)
+TASock::ServerInit MugServer::getServerInit(std::optional<FS::path> certPath, int port)
 {
     if (!certPath.has_value()) {
         return TASock::ServerInfo{port};
@@ -23,20 +23,20 @@ TASock::ServerInit ChaliceServer::getServerInit(std::optional<FS::path> certPath
     return TASock::SServerInfo{port, std::move(ctx)};
 }
 
-void ChaliceServer::handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir)
+void MugServer::handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir)
 {
-    ThorsLogDebug("ChaliceServer", "handleRequestLib", "Handle file extract");
+    ThorsLogDebug("MugServer", "handleRequestLib", "Handle file extract");
     // Get the path from the HTTP request object.
     // Remove the leading slash if it exists.
     std::string_view    path = request.variables()["FilePath"];
-    ThorsLogDebug("ChaliceServer", "handleRequestPath", "Input Path:   ", path);
+    ThorsLogDebug("MugServer", "handleRequestPath", "Input Path:   ", path);
 
     // Check that the path is valid
     // i.e. Some basic checks that the user is not trying to break into the filesystem.
     FS::path            requestPath = FS::path(path).lexically_normal();
-    ThorsLogDebug("ChaliceServer", "handleRequestPath", "Request Path: ", requestPath.string());
+    ThorsLogDebug("MugServer", "handleRequestPath", "Request Path: ", requestPath.string());
     if (requestPath.empty() || (*requestPath.begin()) == "..") {
-        ThorsLogDebug("ChaliceServer", "handleRequestPath", "400 Invalid Path");
+        ThorsLogDebug("MugServer", "handleRequestPath", "400 Invalid Path");
         response.error(400, "Invalid Request Path");
         return;
     }
@@ -45,14 +45,14 @@ void ChaliceServer::handleRequestPath(NisHttp::Request& request, NisHttp::Respon
     // Note if the user picked a directory we look for index.html
     std::error_code ec;
     FS::path        filePath = FS::path{contentDir} /= requestPath;
-    ThorsLogDebug("ChaliceServer", "handleRequestPath", "File Path:    ", filePath.string());
+    ThorsLogDebug("MugServer", "handleRequestPath", "File Path:    ", filePath.string());
     filePath = FS::canonical(filePath, ec);
-    ThorsLogDebug("ChaliceServer", "handleRequestPath", "Conical Path: ", filePath.string());
+    ThorsLogDebug("MugServer", "handleRequestPath", "Conical Path: ", filePath.string());
     if (!ec && FS::is_directory(filePath)) {
         filePath = FS::canonical(filePath /= "index.html", ec);
     }
     if (ec || !FS::is_regular_file(filePath)) {
-        ThorsLogDebug("ChaliceServer", "handleRequestPath", "404 No File Found: ", filePath);
+        ThorsLogDebug("MugServer", "handleRequestPath", "404 No File Found: ", filePath);
         response.error(404, "No File Found At Path");
         return;
     }
@@ -67,25 +67,25 @@ void ChaliceServer::handleRequestPath(NisHttp::Request& request, NisHttp::Respon
     response.body(NisHttp::Encoding::Chunked) << file.rdbuf();
 }
 
-ChaliceServer::ChaliceServer(ChaliceConfig const& config, ChaliceServerMode /*mode*/)
+MugServer::MugServer(MugConfig const& config, MugServerMode /*mode*/)
     : NisseServer(workerCount)
     , control(*this)
     , libraryChecker(*this)
 {
-    ThorsLogDebug("ChaliceServer", "ChaliceServer", "Create Server");
+    ThorsLogDebug("MugServer", "MugServer", "Create Server");
     servers.reserve(config.servers.size());
 
     for (auto const& server: config.servers) {
-        ThorsLogDebug("ChaliceServer", "ChaliceServer", "Adding Server: ", server.port);
+        ThorsLogDebug("MugServer", "MugServer", "Adding Server: ", server.port);
         servers.emplace_back();
         for (auto const& action: server.actions) {
-            ThorsLogDebug("ChaliceServer", "ChaliceServer", "  Adding Action: ", action.path);
+            ThorsLogDebug("MugServer", "MugServer", "  Adding Action: ", action.path);
             switch (action.type)
             {
                 case ActionType::File:
                 {
                     std::string     path = FS::path(action.path + "/{FilePath}").lexically_normal();
-                    ThorsLogDebug("ChaliceServer", "ChaliceServer", "    File Listener: ", path);
+                    ThorsLogDebug("MugServer", "MugServer", "    File Listener: ", path);
                     servers.back().addPath(NisHttp::Method::GET,
                                            path,
                                            [&, rootDir = action.rootDir](NisHttp::Request& request, NisHttp::Response& response)
@@ -95,7 +95,7 @@ ChaliceServer::ChaliceServer(ChaliceConfig const& config, ChaliceServerMode /*mo
                 }
                 case ActionType::Lib:
                 {
-                    ThorsLogDebug("ChaliceServer", "ChaliceServer", "    Lib  Listener: ");
+                    ThorsLogDebug("MugServer", "MugServer", "    Lib  Listener: ");
                     std::size_t libIndex = libraries.load(action.rootDir);
                     libraries.registerHandlers(libIndex, servers.back(), action.path);
                     break;
@@ -104,7 +104,7 @@ ChaliceServer::ChaliceServer(ChaliceConfig const& config, ChaliceServerMode /*mo
         }
         listen(getServerInit(server.certPath, server.port), servers.back());
     }
-    ThorsLogDebug("ChaliceServer", "ChaliceServer", "  Adding Control Port: ", config.controlPort);
+    ThorsLogDebug("MugServer", "MugServer", "  Adding Control Port: ", config.controlPort);
     listen(TASock::ServerInfo{config.controlPort}, control);
     //control.
 
@@ -116,7 +116,7 @@ ChaliceServer::ChaliceServer(ChaliceConfig const& config, ChaliceServerMode /*mo
     addTimer(libraryCheckTime, libraryChecker);
 }
 
-void ChaliceServer::checkLibrary()
+void MugServer::checkLibrary()
 {
     libraries.checkAll();
 }

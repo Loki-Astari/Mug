@@ -19,7 +19,7 @@ namespace ThorsAnvil::Slack::Event
     "item":
     {
       "type": "channel",
-      "channel": "C09RU2URYMS",
+      "channel": "<Your Slack Channel>",
       "date_create": 1764547799
     },
     "event_ts": "1764547799.000100"
@@ -33,7 +33,7 @@ namespace ThorsAnvil::Slack::Event
     "item":
     {
       "type": "channel",
-      "channel": "C09RU2URYMS",
+      "channel": "<Your Slack Channel>",
       "date_create": 0
     },
     "event_ts": "1764547801.000200"

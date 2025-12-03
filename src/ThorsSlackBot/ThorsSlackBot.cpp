@@ -13,12 +13,12 @@
 #include <utility>
 #include <cmath>
 
-const Environment   environment("/Users/martinyork/Repo/ThorsChalice/src/ThorsSlackBot/.slackenv");
+const Environment   environment("/Users/martinyork/Repo/ThorsMug/src/ThorsSlackBot/.slackenv");
 SlackBot            slackBot;
 
-extern "C" void* chaliceFunction()
+extern "C" void* mugFunction()
 {
-    return dynamic_cast<ThorsAnvil::ThorsChalice::ChalicePlugin*>(&slackBot);
+    return dynamic_cast<ThorsAnvil::ThorsMug::MugPlugin*>(&slackBot);
 }
 
 namespace Ser       = ThorsAnvil::Serialize;

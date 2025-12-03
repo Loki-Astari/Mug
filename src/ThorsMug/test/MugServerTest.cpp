@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 #include <string>
 #include <thread>
-#include "ChaliceConfig.h"
-#include "ChaliceServer.h"
+#include "MugConfig.h"
+#include "MugServer.h"
 
 #include "NisseHTTP/ClientStream.h"
 #include "NisseHTTP/ClientRequest.h"
@@ -18,22 +18,22 @@
 
 using namespace std::chrono_literals;
 
-TEST(ChaliceServer, CreateHeadless)
+TEST(MugServer, CreateHeadless)
 {
-    ThorsAnvil::ThorsChalice::ChaliceConfig     config;
-    ThorsAnvil::ThorsChalice::ChaliceServerMode mode = ThorsAnvil::ThorsChalice::Headless;
-    ThorsAnvil::ThorsChalice::ChaliceServer     server(config, mode);
+    ThorsAnvil::ThorsMug::MugConfig     config;
+    ThorsAnvil::ThorsMug::MugServerMode mode = ThorsAnvil::ThorsMug::Headless;
+    ThorsAnvil::ThorsMug::MugServer     server(config, mode);
 }
-TEST(ChaliceServer, CreateActive)
+TEST(MugServer, CreateActive)
 {
-    ThorsAnvil::ThorsChalice::ChaliceConfig     config;
-    ThorsAnvil::ThorsChalice::ChaliceServerMode mode = ThorsAnvil::ThorsChalice::Active;
-    ThorsAnvil::ThorsChalice::ChaliceServer     server(config, mode);
+    ThorsAnvil::ThorsMug::MugConfig     config;
+    ThorsAnvil::ThorsMug::MugServerMode mode = ThorsAnvil::ThorsMug::Active;
+    ThorsAnvil::ThorsMug::MugServer     server(config, mode);
 }
-TEST(ChaliceServer, ServiceRunManuallyStopped)
+TEST(MugServer, ServiceRunManuallyStopped)
 {
-    ThorsAnvil::ThorsChalice::ChaliceConfig     config;
-    ThorsAnvil::ThorsChalice::ChaliceServer     server(config, ThorsAnvil::ThorsChalice::Active);
+    ThorsAnvil::ThorsMug::MugConfig     config;
+    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
 
     auto work = [&]() {
         server.run();
@@ -45,10 +45,10 @@ TEST(ChaliceServer, ServiceRunManuallyStopped)
     server.stopHard();
 }
 
-TEST(ChaliceServer, ServiceRunDefaultConfigHitControl)
+TEST(MugServer, ServiceRunDefaultConfigHitControl)
 {
-    ThorsAnvil::ThorsChalice::ChaliceConfig     config;
-    ThorsAnvil::ThorsChalice::ChaliceServer     server(config, ThorsAnvil::ThorsChalice::Active);
+    ThorsAnvil::ThorsMug::MugConfig     config;
+    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
 
     auto work = [&]() {
         server.run();
@@ -68,23 +68,23 @@ TEST(ChaliceServer, ServiceRunDefaultConfigHitControl)
     }
 }
 
-TEST(ChaliceServer, ServiceRunModifiedControl)
+TEST(MugServer, ServiceRunModifiedControl)
 {
-    using ThorsAnvil::ThorsChalice::ActionType;
+    using ThorsAnvil::ThorsMug::ActionType;
     std::stringstream   configStream(R"(
         {
             "controlPort": 8078,
             "servers": []
         }
     )");
-    ThorsAnvil::ThorsChalice::ChaliceConfig     config;
+    ThorsAnvil::ThorsMug::MugConfig     config;
 
     if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
         ASSERT_TRUE(false);
     }
 
 
-    ThorsAnvil::ThorsChalice::ChaliceServer     server(config, ThorsAnvil::ThorsChalice::Active);
+    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
 
     auto work = [&]() {
         server.run();
@@ -104,9 +104,9 @@ TEST(ChaliceServer, ServiceRunModifiedControl)
     }
 }
 
-TEST(ChaliceServer, ServiceRunAddServer)
+TEST(MugServer, ServiceRunAddServer)
 {
-    using ThorsAnvil::ThorsChalice::ActionType;
+    using ThorsAnvil::ThorsMug::ActionType;
     std::stringstream   configStream(R"(
         {
             "controlPort": 8079,
@@ -119,13 +119,13 @@ TEST(ChaliceServer, ServiceRunAddServer)
             ]
         }
     )");
-    ThorsAnvil::ThorsChalice::ChaliceConfig     config;
+    ThorsAnvil::ThorsMug::MugConfig     config;
 
     if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
         ASSERT_TRUE(false);
     }
 
-    ThorsAnvil::ThorsChalice::ChaliceServer     server(config, ThorsAnvil::ThorsChalice::Active);
+    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
 
     auto work = [&]() {
         server.run();
@@ -145,9 +145,9 @@ TEST(ChaliceServer, ServiceRunAddServer)
     }
 }
 
-TEST(ChaliceServer, ServiceRunAddServerWithFile)
+TEST(MugServer, ServiceRunAddServerWithFile)
 {
-    using ThorsAnvil::ThorsChalice::ActionType;
+    using ThorsAnvil::ThorsMug::ActionType;
     std::stringstream   configStream(R"(
         {
             "controlPort": 8079,
@@ -165,14 +165,14 @@ TEST(ChaliceServer, ServiceRunAddServerWithFile)
             ]
         }
     )");
-    ThorsAnvil::ThorsChalice::ChaliceConfig     config;
+    ThorsAnvil::ThorsMug::MugConfig     config;
 
     if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
         ASSERT_TRUE(false);
     }
 
 
-    ThorsAnvil::ThorsChalice::ChaliceServer     server(config, ThorsAnvil::ThorsChalice::Active);
+    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
 
     auto work = [&]() {
         server.run();
@@ -192,9 +192,9 @@ TEST(ChaliceServer, ServiceRunAddServerWithFile)
     }
 }
 
-TEST(ChaliceServer, ServiceRunAddServerWithFileValidateWorks)
+TEST(MugServer, ServiceRunAddServerWithFileValidateWorks)
 {
-    using ThorsAnvil::ThorsChalice::ActionType;
+    using ThorsAnvil::ThorsMug::ActionType;
     std::stringstream   configStream(R"(
         {
             "controlPort": 8079,
@@ -213,13 +213,13 @@ TEST(ChaliceServer, ServiceRunAddServerWithFileValidateWorks)
         }
     )");
 
-    ThorsAnvil::ThorsChalice::ChaliceConfig     config;
+    ThorsAnvil::ThorsMug::MugConfig     config;
 
     if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
         ASSERT_TRUE(false);
     }
 
-    ThorsAnvil::ThorsChalice::ChaliceServer     server(config, ThorsAnvil::ThorsChalice::Active);
+    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
 
     auto work = [&]() {
         server.run();
@@ -252,9 +252,9 @@ TEST(ChaliceServer, ServiceRunAddServerWithFileValidateWorks)
     }
 }
 
-TEST(ChaliceServer, CallALoadedLib)
+TEST(MugServer, CallALoadedLib)
 {
-    using ThorsAnvil::ThorsChalice::ActionType;
+    using ThorsAnvil::ThorsMug::ActionType;
     std::stringstream   configStream(R"(
         {
             "controlPort": 8079,
@@ -273,13 +273,13 @@ TEST(ChaliceServer, CallALoadedLib)
         }
     )");
 
-    ThorsAnvil::ThorsChalice::ChaliceConfig     config;
+    ThorsAnvil::ThorsMug::MugConfig     config;
 
     if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
         ASSERT_TRUE(false);
     }
 
-    ThorsAnvil::ThorsChalice::ChaliceServer     server(config, ThorsAnvil::ThorsChalice::Active);
+    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
 
     auto work = [&]() {
         server.run();

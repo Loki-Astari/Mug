@@ -1,7 +1,7 @@
-#ifndef THORSANVIL_THORS_CHALICE_CHALICE_CLA_H
-#define THORSANVIL_THORS_CHALICE_CHALICE_CLA_H
+#ifndef THORSANVIL_THORS_MUG_MUG_CLA_H
+#define THORSANVIL_THORS_MUG_MUG_CLA_H
 
-#include "ChaliceArgs.h"
+#include "MugArgs.h"
 
 #include <string_view>
 #include <vector>
@@ -11,7 +11,7 @@
 
 #include "ThorsLogging/ThorsLogging.h"
 
-namespace ThorsAnvil::ThorsChalice
+namespace ThorsAnvil::ThorsMug
 {
 
 struct SplitArg
@@ -24,18 +24,18 @@ struct SplitArg
 using Paths         = std::vector<FS::path>;
 using VerbosityMap  = std::map<std::string_view, loguru::Verbosity>;
 
-class ChaliceCLA
+class MugCLA
 {
     static const Paths          searchPath;
     static const VerbosityMap   verbosity;
 
-    ChaliceCLAInterface&        args;
+    MugCLAInterface&        args;
     bool                        setConfig = false;
 
     SplitArg    splitArgument(std::string_view arg);
     void        parseArguments(std::vector<std::string_view> const& arguments);
     public:
-        ChaliceCLA(std::vector<std::string_view> const& arguments, ChaliceCLAInterface& args);
+        MugCLA(std::vector<std::string_view> const& arguments, MugCLAInterface& args);
 
         void displayHelp(std::string_view command, std::ostream& output = std::cout);
 };

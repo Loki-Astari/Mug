@@ -1,5 +1,5 @@
-#ifndef THORSANVIL_THORS_CHALICE_CHALICE_ARGS_H
-#define THORSANVIL_THORS_CHALICE_CHALICE_ARGS_H
+#ifndef THORSANVIL_THORS_MUG_MUG_ARGS_H
+#define THORSANVIL_THORS_MUG_MUG_ARGS_H
 
 #include <string_view>
 #include <filesystem>
@@ -9,10 +9,10 @@
 
 namespace FS = std::filesystem;
 
-namespace ThorsAnvil::ThorsChalice
+namespace ThorsAnvil::ThorsMug
 {
 
-struct ChaliceCLAInterface
+struct MugCLAInterface
 {
     virtual void setHelp()                              = 0;
     virtual void setSilent()                            = 0;
@@ -22,7 +22,7 @@ struct ChaliceCLAInterface
     virtual void logSetLevel(loguru::Verbosity level)   = 0;
 };
 
-struct ChaliceArgs: public ChaliceCLAInterface
+struct MugArgs: public MugCLAInterface
 {
     bool        help    = false;
     bool        silent  = false;

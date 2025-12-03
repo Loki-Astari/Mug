@@ -1,5 +1,5 @@
-#ifndef THORSANVIL_THORS_CHALICE_DLLIB_H
-#define THORSANVIL_THORS_CHALICE_DLLIB_H
+#ifndef THORSANVIL_THORS_MUG_DLLIB_H
+#define THORSANVIL_THORS_MUG_DLLIB_H
 
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
@@ -21,18 +21,18 @@ namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
 extern "C"
 {
-    typedef void*(*ChaliceFunc)();
+    typedef void*(*MugFunc)();
 }
 
-typedef void (*ChaliceHanlde)(ThorsAnvil::Nisse::HTTP::Request&, ThorsAnvil::Nisse::HTTP::Response&);
+typedef void (*MugHanlde)(ThorsAnvil::Nisse::HTTP::Request&, ThorsAnvil::Nisse::HTTP::Response&);
 
-namespace ThorsAnvil::ThorsChalice
+namespace ThorsAnvil::ThorsMug
 {
 
-class ChalicePlugin
+class MugPlugin
 {
     public:
-        virtual ~ChalicePlugin() {}
+        virtual ~MugPlugin() {}
         virtual void registerHandlers(NisHttp::HTTPHandler& handler, std::string const& name) = 0;
 };
 
@@ -41,7 +41,7 @@ class DLLib
     FS::path                    path;
     FS::file_time_type          lastModified;
     void*                       lib             = nullptr;
-    ChalicePlugin*              plugin          = nullptr;
+    MugPlugin*              plugin          = nullptr;
 
     private:
         void reload();

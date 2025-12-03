@@ -1,10 +1,10 @@
 #include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
-#if !(defined(DISABLE_TEST) && (DISABLE_TEST == 1))
-
+#if !(defined(DISABLE_SLACKTEST) && (DISABLE_SLACKTEST == 1))
 
 #include "APIChatSchedule.h"
+#include "Environment.h"
 #include "SlackClient.h"
 #include "SlackBlockKit.h"
 
@@ -21,11 +21,12 @@ using ThorsAnvil::Slack::API::Chat::DeleteScheduledMessage;
 using ThorsAnvil::Slack::API::Chat::ScheduledMessagesList;
 
 extern SlackClient             client;
+extern Environment             environment;
 
 TEST(APIChatScheduleTest, CreateScheduledMessage)
 {
     ScheduleMessage::Reply      reply;
-    client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    client.sendMessage(ScheduleMessage{.channel = environment.slackChannel, .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
     BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
@@ -42,12 +43,12 @@ TEST(APIChatScheduleTest, CreateScheduledMessage)
 TEST(APIChatScheduledTest, DeleteScheduledMessage)
 {
     ScheduleMessage::Reply          reply1;
-    client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 120, .text = "I hope the tour went well, Mr. Wonka."}, reply1, true);
+    client.sendMessage(ScheduleMessage{.channel = environment.slackChannel, .post_at = time(nullptr) + 120, .text = "I hope the tour went well, Mr. Wonka."}, reply1, true);
     ASSERT_TRUE(reply1.ok);
 
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(5s);
-    DeleteScheduledMessage  message{.channel = "C09RU2URYMS", .scheduled_message_id = reply1.scheduled_message_id};
+    DeleteScheduledMessage  message{.channel = environment.slackChannel, .scheduled_message_id = reply1.scheduled_message_id};
     DeleteScheduledMessage::Reply   reply2;
     client.sendMessage(message, reply2, true);
     ASSERT_TRUE(reply2.ok);
@@ -56,19 +57,19 @@ TEST(APIChatScheduledTest, DeleteScheduledMessage)
 TEST(APIChatScheduledTest, ListScheduledMessage)
 {
     ScheduledMessagesList::Reply    reply0;
-    client.sendMessage(ScheduledMessagesList{.channel = "C09RU2URYMS"}, reply0, true);
+    client.sendMessage(ScheduledMessagesList{.channel = environment.slackChannel}, reply0, true);
     std::size_t originalSize = reply0.scheduled_messages.size();
 
     ScheduleMessage::Reply          reply1;
-    client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."}, reply1, true);
+    client.sendMessage(ScheduleMessage{.channel = environment.slackChannel, .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."}, reply1, true);
     ASSERT_TRUE(reply1.ok);
     ScheduleMessage::Reply          reply2;
-    client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."}, reply2, true);
+    client.sendMessage(ScheduleMessage{.channel = environment.slackChannel, .post_at = time(nullptr) + 60, .text = "I hope the tour went well, Mr. Wonka."}, reply2, true);
     ASSERT_TRUE(reply2.ok);
 
 
     ScheduledMessagesList::Reply    reply3;
-    client.sendMessage(ScheduledMessagesList{.channel = "C09RU2URYMS"}, reply3, true);
+    client.sendMessage(ScheduledMessagesList{.channel = environment.slackChannel}, reply3, true);
     ASSERT_TRUE(reply3.ok);
     ASSERT_EQ(2, reply3.scheduled_messages.size() - originalSize);
     // Can tell the order.

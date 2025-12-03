@@ -13,7 +13,7 @@ Documentation: https://docs.slack.dev/reference/methods/chat.scheduleMessage
 Response:
 {
     "scheduled_message_id": "Q0A0H8V2U2V",
-    "channel": "C09RU2URYMS",
+    "channel": "<Your Slack Channel>",
     "post_at": 1764215063,
     "message":
     {
@@ -73,14 +73,14 @@ Response:
   [
     {
       "id": "Q09UVPWRPP1",
-      "channel_id": "C09RU2URYMS",
+      "channel_id": "<Your Slack Channel>",
       "post_at": 1764139506,
       "date_created": 1764139446,
       "text": "A timed message"
     },
     {
       "id": "Q0A00QD9K0U",
-      "channel_id": "C09RU2URYMS",
+      "channel_id": "<Your Slack Channel>",
       "post_at": 1764139506,
       "date_created": 1764139446,
       "text": "A timed message"
