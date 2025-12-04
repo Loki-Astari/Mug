@@ -1,16 +1,15 @@
 #ifndef THORSANVIL_THORS_MUG_DLLIB_H
 #define THORSANVIL_THORS_MUG_DLLIB_H
 
+#include "ThorsMugConfig.h"
+
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 #include "NisseHTTP/HTTPHandler.h"
 
-#include <mutex>
-#include <condition_variable>
 #include <map>
 #include <vector>
 #include <string>
-
 #include <cstddef>
 #include <filesystem>
 

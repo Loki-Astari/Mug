@@ -5,6 +5,7 @@
 
 #include "ThorsSlackConfig.h"
 #include "ThorSerialize/Traits.h"
+#include <ctime>
 #include <string>
 
 namespace ThorsAnvil::Slack::Event

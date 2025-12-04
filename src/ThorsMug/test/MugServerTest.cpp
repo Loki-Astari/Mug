@@ -15,8 +15,9 @@
 #include "HTTPResponse.h"
 
 #include <sstream>
+#include <latch>
 
-using namespace std::chrono_literals;
+//using namespace std::chrono_literals;
 
 /*
  * Some locations were we build do not currently support std::jthread.
@@ -49,14 +50,17 @@ TEST(MugServer, ServiceRunManuallyStopped)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
     ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
+    std::latch                          latch(1);
 
     auto work = [&]() {
-        server.run();
+        server.run(
+                [&latch](){latch.count_down();}
+        );
     };
 
     LocalJthread     serverThread(work);
 
-    std::this_thread::sleep_for(250ms);
+    latch.wait();
     server.stopHard();
 }
 
@@ -64,23 +68,24 @@ TEST(MugServer, ServiceRunDefaultConfigHitControl)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
     ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
+    std::latch                          latch(1);
 
     auto work = [&]() {
-        server.run();
+        server.run(
+                [&latch](){latch.count_down();}
+        );
     };
 
     LocalJthread     serverThread(work);
 
     // Touch the control point to shut down the server.
-    std::this_thread::sleep_for(250ms);
+    latch.wait();
     ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    {
-        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
-        headers.add("host", "localhost");
-        headers.add("content-length", "0");
-        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-        request.addHeaders(headers);
-    }
+    ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+    headers.add("host", "localhost");
+    headers.add("content-length", "0");
+    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+    request.addHeaders(headers);
 }
 
 TEST(MugServer, ServiceRunModifiedControl)
@@ -100,23 +105,24 @@ TEST(MugServer, ServiceRunModifiedControl)
 
 
     ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
+    std::latch                          latch(1);
 
     auto work = [&]() {
-        server.run();
+        server.run(
+                [&latch](){latch.count_down();}
+        );
     };
 
     LocalJthread     serverThread(work);
 
     // Touch the control point to shut down the server.
-    std::this_thread::sleep_for(250ms);
+    latch.wait();
     ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8078});
-    {
-        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
-        headers.add("host", "localhost");
-        headers.add("content-length", "0");
-        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-        request.addHeaders(headers);
-    }
+    ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+    headers.add("host", "localhost");
+    headers.add("content-length", "0");
+    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+    request.addHeaders(headers);
 }
 
 TEST(MugServer, ServiceRunAddServer)
@@ -141,23 +147,24 @@ TEST(MugServer, ServiceRunAddServer)
     }
 
     ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
+    std::latch                          latch(1);
 
     auto work = [&]() {
-        server.run();
+        server.run(
+                [&latch](){latch.count_down();}
+        );
     };
 
     LocalJthread     serverThread(work);
 
     // Touch the control point to shut down the server.
-    std::this_thread::sleep_for(250ms);
+    latch.wait();
     ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    {
-        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
-        headers.add("host", "localhost");
-        headers.add("content-length", "0");
-        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-        request.addHeaders(headers);
-    }
+    ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+    headers.add("host", "localhost");
+    headers.add("content-length", "0");
+    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+    request.addHeaders(headers);
 }
 
 TEST(MugServer, ServiceRunAddServerWithFile)
@@ -188,23 +195,24 @@ TEST(MugServer, ServiceRunAddServerWithFile)
 
 
     ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
+    std::latch                          latch(1);
 
     auto work = [&]() {
-        server.run();
+        server.run(
+                [&latch](){latch.count_down();}
+        );
     };
 
     LocalJthread     serverThread(work);
 
     // Touch the control point to shut down the server.
-    std::this_thread::sleep_for(250ms);
+    latch.wait();
     ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    {
-        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
-        headers.add("host", "localhost");
-        headers.add("content-length", "0");
-        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-        request.addHeaders(headers);
-    }
+    ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+    headers.add("host", "localhost");
+    headers.add("content-length", "0");
+    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+    request.addHeaders(headers);
 }
 
 TEST(MugServer, ServiceRunAddServerWithFileValidateWorks)
@@ -235,36 +243,37 @@ TEST(MugServer, ServiceRunAddServerWithFileValidateWorks)
     }
 
     ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
+    std::latch                          latch(1);
+    std::latch                          waitForExit(1);
 
     auto work = [&]() {
-        server.run();
+        server.run(
+                [&latch](){latch.count_down();}
+        );
+        waitForExit.count_down();
     };
 
     LocalJthread     serverThread(work);
+    latch.wait();
 
-    {
-        // Talk to server.
-        std::this_thread::sleep_for(20ms);
-        ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8070});
+    ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8070});
 
-        socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/files/page1");
+    socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/files/page1");
 
-        ThorsAnvil::ThorsSocket::HTTPResponse   response;
-        socketData >> response;
+    ThorsAnvil::ThorsSocket::HTTPResponse   response;
+    socketData >> response;
 
-        ASSERT_EQ("Data for page 1\n", response.getBody());
-    }
+    ASSERT_EQ("Data for page 1\n", response.getBody());
 
     // Touch the control point to shut down the server.
-    std::this_thread::sleep_for(250ms);
     ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    {
-        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
-        headers.add("host", "localhost");
-        headers.add("content-length", "0");
-        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-        request.addHeaders(headers);
-    }
+    ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+    headers.add("host", "localhost");
+    headers.add("content-length", "0");
+    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+    request.addHeaders(headers);
+    // request.flushRequest();
+    waitForExit.wait();
 }
 
 TEST(MugServer, CallALoadedLib)
@@ -295,36 +304,33 @@ TEST(MugServer, CallALoadedLib)
     }
 
     ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
+    std::latch                          latch(1);
 
     auto work = [&]() {
-        server.run();
+        server.run(
+                [&latch](){latch.count_down();}
+        );
     };
 
     LocalJthread     serverThread(work);
+    latch.wait();
 
-    {
-        // Talk to server.
-        std::this_thread::sleep_for(20ms);
-        ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8070});
+    // Talk to server.
+    ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8070});
 
-        socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/Plop/");
+    socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/Plop/");
 
-        ThorsAnvil::ThorsSocket::HTTPResponse   response;
-        socketData >> response;
+    ThorsAnvil::ThorsSocket::HTTPResponse   response;
+    socketData >> response;
 
-        ASSERT_EQ(305, response.getCode());
-
-    }
+    ASSERT_EQ(305, response.getCode());
 
     // Touch the control point to shut down the server.
-    std::this_thread::sleep_for(250ms);
     ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    {
-        ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
-        headers.add("host", "localhost");
-        headers.add("content-length", "0");
-        ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-        request.addHeaders(headers);
-    }
+    ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
+    headers.add("host", "localhost");
+    headers.add("content-length", "0");
+    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
+    request.addHeaders(headers);
 }
 

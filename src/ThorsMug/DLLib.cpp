@@ -2,7 +2,6 @@
 
 #include "ThorsLogging/ThorsLogging.h"
 #include <dlfcn.h>
-#include <filesystem>
 
 using namespace ThorsAnvil::ThorsMug;
 
@@ -42,14 +41,14 @@ void DLLib::swap(DLLib& other) noexcept
 
 char const* DLLib::safeDLerror()
 {
-    char const* message = dlerror();
+    char const* message = ::dlerror();
     return message == nullptr ? "" : message;
 }
 
 DLLib::~DLLib()
 {
     if (lib) {
-        int status = dlclose(lib);
+        int status = ::dlclose(lib);
         if (status != 0) {
             ThorsLogError("DLLib", "~DLLib", "dlclose() failed: ", safeDLerror());
         }
@@ -73,14 +72,14 @@ void DLLib::reload()
 {
     ThorsLogDebug("DLLib", "reload", "Reload DLL: ", path);
     std::error_code ec;
-    lib = dlopen(FS::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL);
+    lib = ::dlopen(FS::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL);
     if (lib == nullptr) {
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlopen() failed: ", safeDLerror());
     }
 
-    void*           mugFuncSym = dlsym(lib, "mugFunction");
+    void*           mugFuncSym = ::dlsym(lib, "mugFunction");
     if (mugFuncSym == nullptr) {
-        dlclose(lib);
+        ::dlclose(lib);
         lib = nullptr;
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlsym() failed: ", safeDLerror());
     }

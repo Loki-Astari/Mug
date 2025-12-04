@@ -1,15 +1,19 @@
 #ifndef THORSANVIL_THORS_MUG_MUG_CLA_H
 #define THORSANVIL_THORS_MUG_MUG_CLA_H
 
-#include "MugArgs.h"
+#include "ThorsMugConfig.h"
 
+#include "MugArgs.h"
+#include "ThorsLogging/ThorsLogging.h"
+
+#include <string>
 #include <string_view>
 #include <vector>
 #include <map>
 #include <filesystem>
 #include <iostream>
 
-#include "ThorsLogging/ThorsLogging.h"
+namespace FS = std::filesystem;
 
 namespace ThorsAnvil::ThorsMug
 {

@@ -37,7 +37,9 @@ TEST(MugArgsTest, addSysLog)
 TEST(MugArgsTest, setLogLevelAll)
 {
     ThorsAnvil::ThorsMug::MugArgs   args;
+    int oldLogLevel = loguru::g_stderr_verbosity;
 
     args.logSetLevel(loguru::Verbosity_5);
     EXPECT_EQ(loguru::g_stderr_verbosity, loguru::Verbosity_5);
+    loguru::g_stderr_verbosity = oldLogLevel;
 }

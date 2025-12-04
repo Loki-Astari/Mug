@@ -7,12 +7,15 @@
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
 
+#include <ctime>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <utility>
 #include <vector>
 #include <optional>
+#include <type_traits>
 
 namespace ThorsAnvil::Slack::API
 {

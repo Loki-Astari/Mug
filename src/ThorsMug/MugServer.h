@@ -1,14 +1,21 @@
 #ifndef THORSANVIL_THORS_MUG_MUG_SERVER_H
 #define THORSANVIL_THORS_MUG_MUG_SERVER_H
 
+#include "ThorsMugConfig.h"
 #include "MugConfig.h"
 #include "DLLib.h"
 #include "NisseServer/NisseServer.h"
 #include "NisseHTTP/PyntHTTPControl.h"
 #include "NisseHTTP/HTTPHandler.h"
+
+#include <cstddef>
+#include <vector>
+#include <optional>
 #include <filesystem>
+#include <utility>
 
 
+namespace FS        = std::filesystem;
 namespace NisServer = ThorsAnvil::Nisse::Server;
 namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
@@ -44,7 +51,7 @@ class MugServer: public NisServer::NisseServer
     Hanlders                    servers;
 
     TASock::ServerInit getServerInit(std::optional<FS::path> certPath, int port);
-    void handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, FS::path const& contentDir);
+    void handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, std::filesystem::path const& contentDir);
 
     public:
         MugServer(MugConfig const& config, MugServerMode mode);

@@ -1,14 +1,14 @@
 #ifndef THORSANVIL_THORS_MUG_MUG_CONFIG_H
 #define THORSANVIL_THORS_MUG_MUG_CONFIG_H
 
-#include <string>
-#include <vector>
-#include <filesystem>
-
+#include "ThorsMugConfig.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
 
-namespace FS = std::filesystem;
+#include <string>
+#include <optional>
+#include <vector>
+
 
 namespace ThorsAnvil::ThorsMug
 {

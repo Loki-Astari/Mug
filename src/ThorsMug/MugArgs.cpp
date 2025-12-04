@@ -1,4 +1,5 @@
 #include "MugArgs.h"
+#include <string>
 
 using namespace ThorsAnvil::ThorsMug;
 

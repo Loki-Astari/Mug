@@ -1,21 +1,25 @@
 #ifndef THORSANVIL_SLACK_SLACKCLIENT_H
 #define THORSANVIL_SLACK_SLACKCLIENT_H
 
-#include "ThorSerialize/ParserConfig.h"
-#include "ThorSerialize/PrinterConfig.h"
 #include "ThorsSlackConfig.h"
 #include "API.h"
+#include "SlackStream.h"
 #include "NisseHTTP/ClientRequest.h"
 #include "NisseHTTP/ClientResponse.h"
 #include "NisseHTTP/HeaderResponse.h"
 #include "NisseHTTP/StreamInput.h"
 #include "NisseHTTP/Util.h"
-#include "SlackStream.h"
+#include "ThorSerialize/ParserConfig.h"
+#include "ThorSerialize/PrinterConfig.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/JsonThor.h"
 
 #include <string>
+#include <string_view>
 #include <iostream>
+#include <functional>
+#include <utility>
+#include <variant>
 
 namespace ThorsAnvil::Slack
 {

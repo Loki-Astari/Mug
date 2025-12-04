@@ -1,7 +1,10 @@
 #ifndef THORSANVIL_THORSSOCKET_HTTP_SEND_H
 #define THORSANVIL_THORSSOCKET_HTTP_SEND_H
 
+#include "ThorsMugConfig.h"
+
 #include <ostream>
+#include <iomanip>
 #include <string_view>
 
 namespace ThorsAnvil::ThorsSocket

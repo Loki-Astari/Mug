@@ -1,13 +1,18 @@
 #ifndef THORSANVIL_THORSSOCKET_HTTP_RESPONSE_H
 #define THORSANVIL_THORSSOCKET_HTTP_RESPONSE_H
 
+#include "ThorsMugConfig.h"
+
 #include <cctype>
 #include <cstddef>
+#include <utility>
 #include <map>
 #include <sstream>
-#include <istream>
+#include <iostream>
+#include <iomanip>
 #include <string>
 #include <string_view>
+#include <algorithm>
 
 #include <iostream>
 
