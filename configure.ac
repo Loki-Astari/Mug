@@ -22,6 +22,31 @@ AX_THOR_CHECK_USE_BOOST([1.70], [], [
     ])
 ])
 
+sedStrip='s/-.*//'
+UNAME=`uname -s | sed "${sedStrip}"`
+AS_IF(
+    [test "x${UNAME}" = "xMSYS_NT" || test "x${UNAME}" = "xMINGW64_NT" ],
+    [
+        AC_MSG_NOTICE([Windows])
+        AC_MSG_ERROR([Currently not supporting Windows])
+    ]
+)
+AS_IF(
+    [test "x${UNAME}" = "xLinux"],
+    [
+        AC_MSG_NOTICE([Linux])
+        AC_DEFINE([SHARED_LIB_EXTENSION], [so], ["Extension used by shared libs"])
+        AC_DEFINE([DLOPEN_PLAT_FLAG], [RTLD_DEEPBIND], ["Extra flags used by dlopen"])
+    ]
+)
+AS_IF(
+    [test "x${UNAME}" = "xDarwin"],
+    [
+        AC_MSG_NOTICE([Darwin])
+        AC_DEFINE([SHARED_LIB_EXTENSION], [dylib], ["Extension used by shared libs"])
+        AC_DEFINE([DLOPEN_PLAT_FLAG], [0], ["Extra flags used by dlopen"])
+    ]
+)
 
 LT_INIT
 

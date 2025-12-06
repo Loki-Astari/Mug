@@ -9,6 +9,9 @@
 
     
 
+/* "Extra flags used by dlopen" */
+#undef DLOPEN_PLAT_FLAG
+
 /* define if the Boost library is available */
 #undef HAVE_BOOST
 
@@ -83,6 +86,9 @@
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
+
+/* "Extension used by shared libs" */
+#undef SHARED_LIB_EXTENSION
 
 /* Define to 1 if all of the C89 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for

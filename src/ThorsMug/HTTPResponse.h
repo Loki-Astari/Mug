@@ -92,7 +92,13 @@ class HTTPResponse
                 std::size_t     bodySize = body.size();
                 body.resize(bodySize + chunkSize);
                 stream.read(&body[bodySize], chunkSize);
-                stream.ignore(2);
+                // On linux the ignore will ignore the next two
+                // bytes then force a call to underflow. But because there
+                // is no data left on the stream this will result in a hang.
+                //stream.ignore(2);
+                // To compensate for this use `read()` rather than `ignore()`
+                char buffer[2];
+                stream.read(buffer, 2);
                 if (chunkSize == 0) {
                     break;
                 }

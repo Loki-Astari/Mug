@@ -17,7 +17,9 @@
 #include <sstream>
 #include <latch>
 
-//using namespace std::chrono_literals;
+#define QUOTE1(X)   #X
+#define QUOTE(X)    QUOTE1(X)
+#define SLIB        "." QUOTE( SHARED_LIB_EXTENSION )
 
 /*
  * Some locations were we build do not currently support std::jthread.
@@ -272,7 +274,7 @@ TEST(MugServer, ServiceRunAddServerWithFileValidateWorks)
     headers.add("content-length", "0");
     ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
     request.addHeaders(headers);
-    // request.flushRequest();
+    request.flushRequest();
     waitForExit.wait();
 }
 
@@ -288,7 +290,7 @@ TEST(MugServer, CallALoadedLib)
                     "actions": [
                         {
                             "type":     "Lib",
-                            "rootDir":  "../L3/release/libL3.dylib",
+                            "rootDir":  "../L3/release/libL3)" SLIB R"(",
                             "path":     "/page1"
                         }
                     ]
@@ -305,11 +307,13 @@ TEST(MugServer, CallALoadedLib)
 
     ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
     std::latch                          latch(1);
+    std::latch                          waitForExit(1);
 
     auto work = [&]() {
         server.run(
                 [&latch](){latch.count_down();}
         );
+        waitForExit.count_down();
     };
 
     LocalJthread     serverThread(work);
@@ -332,5 +336,7 @@ TEST(MugServer, CallALoadedLib)
     headers.add("content-length", "0");
     ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
     request.addHeaders(headers);
+    request.flushRequest();
+    waitForExit.wait();
 }
 

@@ -72,7 +72,7 @@ void DLLib::reload()
 {
     ThorsLogDebug("DLLib", "reload", "Reload DLL: ", path);
     std::error_code ec;
-    lib = ::dlopen(FS::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL);
+    lib = ::dlopen(FS::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL | DLOPEN_PLAT_FLAG);
     if (lib == nullptr) {
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlopen() failed: ", safeDLerror());
     }

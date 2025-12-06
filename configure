@@ -6245,6 +6245,45 @@ fi
 
 
 
+sedStrip='s/-.*//'
+UNAME=`uname -s | sed "${sedStrip}"`
+if test "x${UNAME}" = "xMSYS_NT" || test "x${UNAME}" = "xMINGW64_NT"
+then :
+
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Windows" >&5
+printf "%s\n" "$as_me: Windows" >&6;}
+        as_fn_error $? "Currently not supporting Windows" "$LINENO" 5
+
+
+fi
+if test "x${UNAME}" = "xLinux"
+then :
+
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Linux" >&5
+printf "%s\n" "$as_me: Linux" >&6;}
+
+printf "%s\n" "#define SHARED_LIB_EXTENSION so" >>confdefs.h
+
+
+printf "%s\n" "#define DLOPEN_PLAT_FLAG RTLD_DEEPBIND" >>confdefs.h
+
+
+
+fi
+if test "x${UNAME}" = "xDarwin"
+then :
+
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Darwin" >&5
+printf "%s\n" "$as_me: Darwin" >&6;}
+
+printf "%s\n" "#define SHARED_LIB_EXTENSION dylib" >>confdefs.h
+
+
+printf "%s\n" "#define DLOPEN_PLAT_FLAG 0" >>confdefs.h
+
+
+
+fi
 
 
 case `pwd` in
