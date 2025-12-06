@@ -6252,7 +6252,7 @@ then :
 
         { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Windows" >&5
 printf "%s\n" "$as_me: Windows" >&6;}
-        as_fn_error $? "Currently not supporting Windows" "$LINENO" 5
+        AC_MSG_Notice(Currently not supporting Windows)
 
 
 fi

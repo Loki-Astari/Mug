@@ -28,7 +28,7 @@ AS_IF(
     [test "x${UNAME}" = "xMSYS_NT" || test "x${UNAME}" = "xMINGW64_NT" ],
     [
         AC_MSG_NOTICE([Windows])
-        AC_MSG_ERROR([Currently not supporting Windows])
+        AC_MSG_Notice([Currently not supporting Windows])
     ]
 )
 AS_IF(

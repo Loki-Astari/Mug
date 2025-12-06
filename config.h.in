@@ -6,6 +6,10 @@
 #define  THORS_THORSMUG_CONFIG_H
 #ifndef  THORS_PACKAGE_INFO_CONFIG_H
 #define  THORS_PACKAGE_INFO_CONFIG_H
+#ifndef  THORS_PACKAGE_INFO_CONFIG_H
+#define  THORS_PACKAGE_INFO_CONFIG_H
+#ifndef  THORS_PACKAGE_INFO_CONFIG_H
+#define  THORS_PACKAGE_INFO_CONFIG_H
 
     
 
@@ -106,6 +110,13 @@
 
 
     
+
+
+/* Enable to use header only libraries */
+
+/* For header only convert to inline */
+
+
 #endif
 
 
