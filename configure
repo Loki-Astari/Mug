@@ -6252,7 +6252,8 @@ then :
 
         { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Windows" >&5
 printf "%s\n" "$as_me: Windows" >&6;}
-        AC_MSG_Notice(Currently not supporting Windows)
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Currently not supporting Windows" >&5
+printf "%s\n" "$as_me: Currently not supporting Windows" >&6;}
 
 
 fi
