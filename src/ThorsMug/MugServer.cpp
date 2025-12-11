@@ -58,9 +58,18 @@ void MugServer::handleRequestPath(NisHttp::Request& request, NisHttp::Response& 
         return;
     }
 
-    // Create an async File stream for the file we found.
+    // Create an nonblocking File stream for the file we found.
     TASock::SocketStream    file{TASock::Socket{TASock::FileInfo{filePath.string(), TASock::FileMode::Read}, TASock::Blocking::No}};
-    //NisServer::AsyncStream  async(file, request.getContext(), NisServer::EventType::Read);
+    if (!file) {
+        // Could not open file so return a 404
+        response.setStatus(404);
+        return;
+    }
+
+    // Set the async callback functions.
+    // If reading the file would cause the read to block this returns control of the thread to the server
+    // to handle other work.
+    NisServer::AsyncStream  async(file, request.getContext(), NisServer::EventType::Read);
 
     // Stream the file to the output stream (this is an async operation).
     // So if the streaming blocks the thread will be released to do other work.
