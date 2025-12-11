@@ -25,35 +25,36 @@ class DLLib
     FS::path                    path;
     FS::file_time_type          lastModified;
     void*                       lib             = nullptr;
-    MugPlugin*              plugin          = nullptr;
+    MugPlugin*                  plugin          = nullptr;
+    using HandlerRef = std::reference_wrapper<NisHttp::HTTPHandler>;
+    using Config     = std::pair<HandlerRef, std::string>;
+    std::vector<Config>         configs;
 
     private:
-        void reload();
-        char const* safeDLerror();
+        void load();
+        void unload();
+        void loadOnly();
+        void unloadOnly();
+        static char const* safeDLerror();
 
     public:
-        DLLib();
         DLLib(FS::path const& path);
         DLLib(DLLib const&)             = delete;
         DLLib& operator=(DLLib const&)  = delete;
-        DLLib(DLLib&& move)             noexcept;
-        DLLib& operator=(DLLib&&)       noexcept;
-        void swap(DLLib& other)         noexcept;
+        DLLib(DLLib&& move)             = delete;
+        DLLib& operator=(DLLib&&)       = delete;
         ~DLLib();
 
-        void registerHandlers(NisHttp::HTTPHandler& handler, std::string const& name);
         bool check();
+        void init(NisHttp::HTTPHandler& handler, std::string const& configPath);
 };
 
 class DLLibMap
 {
-    std::map<std::string, std::size_t>  libNameMap;
-    std::vector<DLLib>                  loadedLibs;
+    std::map<std::string, DLLib>  libs;
     public:
-    std::size_t load(std::string const& path);
-    void        registerHandlers(std::size_t index, NisHttp::HTTPHandler& handler, std::string const& name)  {loadedLibs[index].registerHandlers(handler, name);}
-    void        check(std::size_t index)                                            {loadedLibs[index].check();}
-    void        checkAll()                                                          {for (auto& lib: loadedLibs){lib.check();}}
+        void    load(NisHttp::HTTPHandler& handler, std::string const& pluginPath, std::string const& configPath);
+        void    checkAll()                                                          {for (auto& lib: libs){lib.second.check();}}
 };
 
 }

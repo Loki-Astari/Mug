@@ -28,7 +28,10 @@ class MugPlugin
 {
     public:
         virtual ~MugPlugin()                                                            {}
-        virtual void registerHandlers(NisHttp::HTTPHandler& handler, std::string const& name) = 0;
+        virtual void spinUp()                                                           {}
+        virtual void spinDown()                                                         {}
+        virtual void initPlugin(NisHttp::HTTPHandler& handler, std::string const& config)   = 0;
+        virtual void destPlugin(NisHttp::HTTPHandler& handler)                              = 0;
 };
 
 }

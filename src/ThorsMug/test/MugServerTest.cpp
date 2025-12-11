@@ -17,9 +17,9 @@
 #include <sstream>
 #include <latch>
 
-#define QUOTE1(X)   #X
-#define QUOTE(X)    QUOTE1(X)
-#define SLIB        "." QUOTE( SHARED_LIB_EXTENSION )
+#define LOCAL_QUOTE1(X)     #X
+#define LOCAL_QUOTE(X)      LOCAL_QUOTE1(X)
+#define SLIB                "." LOCAL_QUOTE( SHARED_LIB_EXTENSION )
 
 /*
  * Some locations were we build do not currently support std::jthread.
@@ -36,19 +36,19 @@ class LocalJthread: public std::thread
         }
 };
 
-TEST(MugServer, CreateHeadless)
+TEST(MugServerTest, CreateHeadless)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
     ThorsAnvil::ThorsMug::MugServerMode mode = ThorsAnvil::ThorsMug::Headless;
     ThorsAnvil::ThorsMug::MugServer     server(config, mode);
 }
-TEST(MugServer, CreateActive)
+TEST(MugServerTest, CreateActive)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
     ThorsAnvil::ThorsMug::MugServerMode mode = ThorsAnvil::ThorsMug::Active;
     ThorsAnvil::ThorsMug::MugServer     server(config, mode);
 }
-TEST(MugServer, ServiceRunManuallyStopped)
+TEST(MugServerTest, ServiceRunManuallyStopped)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
     ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
@@ -66,7 +66,7 @@ TEST(MugServer, ServiceRunManuallyStopped)
     server.stopHard();
 }
 
-TEST(MugServer, ServiceRunDefaultConfigHitControl)
+TEST(MugServerTest, ServiceRunDefaultConfigHitControl)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
     ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
@@ -90,9 +90,8 @@ TEST(MugServer, ServiceRunDefaultConfigHitControl)
     request.addHeaders(headers);
 }
 
-TEST(MugServer, ServiceRunModifiedControl)
+TEST(MugServerTest, ServiceRunModifiedControl)
 {
-    using ThorsAnvil::ThorsMug::ActionType;
     std::stringstream   configStream(R"(
         {
             "controlPort": 8078,
@@ -127,9 +126,8 @@ TEST(MugServer, ServiceRunModifiedControl)
     request.addHeaders(headers);
 }
 
-TEST(MugServer, ServiceRunAddServer)
+TEST(MugServerTest, ServiceRunAddServer)
 {
-    using ThorsAnvil::ThorsMug::ActionType;
     std::stringstream   configStream(R"(
         {
             "controlPort": 8079,
@@ -169,9 +167,8 @@ TEST(MugServer, ServiceRunAddServer)
     request.addHeaders(headers);
 }
 
-TEST(MugServer, ServiceRunAddServerWithFile)
+TEST(MugServerTest, CallALoadedLib)
 {
-    using ThorsAnvil::ThorsMug::ActionType;
     std::stringstream   configStream(R"(
         {
             "controlPort": 8079,
@@ -180,118 +177,8 @@ TEST(MugServer, ServiceRunAddServerWithFile)
                     "port":     8070,
                     "actions": [
                         {
-                            "type":     "File",
-                            "rootDir":  "./test/data/pages",
-                            "path":     "page1"
-                        }
-                    ]
-                }
-            ]
-        }
-    )");
-    ThorsAnvil::ThorsMug::MugConfig     config;
-
-    if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
-        ASSERT_TRUE(false);
-    }
-
-
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
-    std::latch                          latch(1);
-
-    auto work = [&]() {
-        server.run(
-                [&latch](){latch.count_down();}
-        );
-    };
-
-    LocalJthread     serverThread(work);
-
-    // Touch the control point to shut down the server.
-    latch.wait();
-    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
-    headers.add("host", "localhost");
-    headers.add("content-length", "0");
-    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-    request.addHeaders(headers);
-}
-
-TEST(MugServer, ServiceRunAddServerWithFileValidateWorks)
-{
-    using ThorsAnvil::ThorsMug::ActionType;
-    std::stringstream   configStream(R"(
-        {
-            "controlPort": 8079,
-            "servers": [
-                {
-                    "port":     8070,
-                    "actions": [
-                        {
-                            "type":     "File",
-                            "rootDir":  "./test/data/pages",
-                            "path":     "/files"
-                        }
-                    ]
-                }
-            ]
-        }
-    )");
-
-    ThorsAnvil::ThorsMug::MugConfig     config;
-
-    if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
-        ASSERT_TRUE(false);
-    }
-
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
-    std::latch                          latch(1);
-    std::latch                          waitForExit(1);
-
-    auto work = [&]() {
-        server.run(
-                [&latch](){latch.count_down();}
-        );
-        waitForExit.count_down();
-    };
-
-    LocalJthread     serverThread(work);
-    latch.wait();
-
-    ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8070});
-
-    socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/files/page1");
-
-    ThorsAnvil::ThorsSocket::HTTPResponse   response;
-    socketData >> response;
-
-    ASSERT_EQ("Data for page 1\n", response.getBody());
-
-    // Touch the control point to shut down the server.
-    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
-    headers.add("host", "localhost");
-    headers.add("content-length", "0");
-    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-    request.addHeaders(headers);
-    request.flushRequest();
-    waitForExit.wait();
-}
-
-TEST(MugServer, CallALoadedLib)
-{
-    using ThorsAnvil::ThorsMug::ActionType;
-    std::stringstream   configStream(R"(
-        {
-            "controlPort": 8079,
-            "servers": [
-                {
-                    "port":     8070,
-                    "actions": [
-                        {
-                            "type":     "Lib",
-                            "rootDir":  "../L3/release/libL3)" SLIB R"(",
-                            "path":     "/page1"
+                            "pluginPath":  "../L3/release/libL3)" SLIB R"(",
+                            "configPath":  "/page1"
                         }
                     ]
                 }

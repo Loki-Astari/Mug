@@ -13,53 +13,33 @@
 namespace ThorsAnvil::ThorsMug
 {
 
-enum class ActionType {File, Lib};
-
-
-struct Action
+struct Plugin
 {
-    ActionType                  type;
-    std::string                 rootDir;
-    std::string                 path;
-    // For File:
-    //      rootDir:        The directory on the file system where files will be loaded from.
-    //      path:           registered with Nisse to match against input request.
-    //                      Will match requests of the form:
-    //                          http://Hostname/<path>/{FilePath}
-    //
-    //          The file loaded from the server will be "<rootDir>/<FilePath>" (after normalization)
-    //          Note: If path tries to dip below root (using ../../ etc) it will log an error and return a 400
-    //
-    //          Example:
-    //              If
-    //                  path = "/files"
-    //                  rootDir = "/etc/pages"
-    //              Then
-    //                  GET http://localhost:8080/files/mydata/file.html
-    //              Will retrieve:
-    //                  /etc/pages/mydata/file.html
-    // For Lib:
-    //      rootDir:        The path to the shared library.
-    //      path:           registered with Nisse to match against input request.
+    std::string                 pluginPath;    // The path to the shared library.
+    std::string                 configPath;    // The path to config for this instance.
 };
 
+// A Port config is a port with optional SSL certificate to listen to.
+// This has a list of plugins that are registered for this port.
+// Each plugin is dynmaically loaded at runtime.
 struct PortConfig
 {
-    int                         port;
-    std::optional<std::string>  certPath;
-    std::vector<Action>         actions;
+    int                         port;           // Port to listen on
+    std::optional<std::string>  certPath;       // The location of the SSL Certification (if any)
+    std::vector<Plugin>         actions;        // Plugins that will be passed an ThorsAnvil::NissaHttp::HTTPHandler object
 };
 
+// The Mug server configuraiton.
 struct MugConfig
 {
-    int                         controlPort         = 8079;
-    int                         libraryCheckTime    = 0;
-    std::vector<PortConfig>     servers;
+    int                         controlPort         = 8079;     // Can send a stop command to this port.
+    int                         libraryCheckTime    = 0;        // How often to check for library updates (mill-seconds). If 0 no checks.
+    std::vector<PortConfig>     servers;                        // Ports with actions to load.
 };
 
 }
 
-ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::Action, type, rootDir, path);
+ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::Plugin, pluginPath, configPath);
 ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::PortConfig, port, certPath, actions);
 ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::MugConfig, servers, controlPort, libraryCheckTime);
 

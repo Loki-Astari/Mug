@@ -6,9 +6,6 @@
 using namespace ThorsAnvil::ThorsMug;
 
 
-DLLib::DLLib()
-{}
-
 DLLib::DLLib(FS::path const& path)
     : path(path)
 {
@@ -16,27 +13,10 @@ DLLib::DLLib(FS::path const& path)
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "DLLib", "Empty path used for library");
     }
 
-    reload();
-}
-
-DLLib::DLLib(DLLib&& move) noexcept
-{
-    swap(move);
-}
-
-DLLib& DLLib::operator=(DLLib&& move) noexcept
-{
-    swap(move);
-    return *this;
-}
-
-void DLLib::swap(DLLib& other) noexcept
-{
-    using std::swap;
-    swap(path,          other.path);
-    swap(lastModified,  other.lastModified);
-    swap(lib,           other.lib);
-    swap(plugin,        other.plugin);
+    loadOnly();
+    // Expect DLLibMap::load() to call init() separately.
+    // This is because one instance is created for all configured values.
+    // But each instance is initialized with its own configuration file.
 }
 
 char const* DLLib::safeDLerror()
@@ -47,28 +27,41 @@ char const* DLLib::safeDLerror()
 
 DLLib::~DLLib()
 {
-    if (lib) {
-        int status = ::dlclose(lib);
-        if (status != 0) {
-            ThorsLogError("DLLib", "~DLLib", "dlclose() failed: ", safeDLerror());
-        }
-    }
-}
-
-void DLLib::registerHandlers(NisHttp::HTTPHandler& handler, std::string const& name)
-{
-    if (plugin == nullptr) {
-        ThorsLogAndThrowError(std::runtime_error, "DLLib", "registerHandlers", "Calling unloaded fuction");
-    }
-    plugin->registerHandlers(handler, name);
+    unload();
 }
 
 bool DLLib::check()
 {
-    return !(path.empty() || lastModified == FS::last_write_time(path));
+    FS::file_time_type modifyTime = FS::last_write_time(path);
+    if (modifyTime > lastModified) {
+        lastModified = modifyTime;
+        unload();
+        load();
+        return true;
+    }
+    return false;
 }
 
-void DLLib::reload()
+void DLLib::load()
+{
+    loadOnly();
+    for (auto& config: configs) {
+        std::cerr << "Reload: " << config.second << "\n";
+        ThorsLogDebug("DLLib", "load", "initPlugin ", config.second);
+        plugin->initPlugin(config.first, config.second);
+    }
+}
+
+void DLLib::unload()
+{
+    for (auto& config: configs) {
+        ThorsLogDebug("DLLib", "load", "destPlugin ", config.second);
+        plugin->destPlugin(config.first);
+    }
+    unloadOnly();
+}
+
+void DLLib::loadOnly()
 {
     ThorsLogDebug("DLLib", "reload", "Reload DLL: ", path);
     std::error_code ec;
@@ -79,7 +72,8 @@ void DLLib::reload()
 
     void*           mugFuncSym = ::dlsym(lib, "mugFunction");
     if (mugFuncSym == nullptr) {
-        ::dlclose(lib);
+        // TODO: Some issues that need to be worked out
+        //::dlclose(lib);
         lib = nullptr;
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlsym() failed: ", safeDLerror());
     }
@@ -88,22 +82,38 @@ void DLLib::reload()
 
     MugFunc     mugFunc     = reinterpret_cast<MugFunc>(mugFuncSym);
     void*       mugPluginV  = (*mugFunc)();
-    plugin                      = reinterpret_cast<MugPlugin*>(mugPluginV);
+    plugin                  = reinterpret_cast<MugPlugin*>(mugPluginV);
+    plugin->spinUp();
 }
 
-std::size_t DLLibMap::load(std::string const& path)
+void DLLib::unloadOnly()
 {
+    plugin->spinDown();
+    int status = ::dlclose(lib);
+    if (status != 0) {
+        ThorsLogError("DLLib", "unloadOnly", "dlclose() failed: ", safeDLerror());
+    }
+}
+
+
+void DLLib::init(NisHttp::HTTPHandler& handler, std::string const& configPath)
+{
+    ThorsLogDebug("DLLib", "init", "Called ", plugin);
+    configs.emplace_back(handler, configPath);
+    plugin->initPlugin(handler, configPath);
+}
+
+void DLLibMap::load(NisHttp::HTTPHandler& handler, std::string const& pluginPath, std::string const& configPath)
+{
+    ThorsLogDebug("DLLib", "load ", pluginPath, " : ", configPath);
     std::error_code ec;
-    FS::path    libPath = FS::canonical(path, ec);
+    FS::path    libPath = FS::canonical(pluginPath, ec);
     if (libPath.empty()) {
-        ThorsLogAndThrowError(std::runtime_error, "DLLibMap", "load", "Invalid path to shared library: ", path);
+        ThorsLogAndThrowError(std::runtime_error, "DLLibMap", "load", "Invalid path to shared library: ", pluginPath);
     }
-    auto find = libNameMap.find(libPath.string());
-    if (find != std::end(libNameMap)) {
-        return find->second;
-    }
-    std::size_t result = loadedLibs.size();
-    libNameMap[libPath.string()] = result;
-    loadedLibs.emplace_back(libPath);
-    return result;
+    // Note the plugin may have already been loaded.
+    //      If it has we will not create a new object but reuse the DLLObject.
+    //      Thus not call spinUp() again.
+    auto inserted = libs.emplace(libPath.string(), libPath);
+    inserted.first->second.init(handler, configPath);
 }

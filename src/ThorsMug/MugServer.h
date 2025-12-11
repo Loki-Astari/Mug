@@ -45,13 +45,12 @@ class MugServer: public NisServer::NisseServer
 
     // PyntControl create access point that can be used to cleanly shut down server.
     NisHttp::PyntHTTPControl    control;
-    // HTTPHandler
+
+    Hanlders                    servers;
     DLLibMap                    libraries;
     LibraryChecker              libraryChecker;
-    Hanlders                    servers;
 
     TASock::ServerInit getServerInit(std::optional<FS::path> certPath, int port);
-    void handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, std::filesystem::path const& contentDir);
 
     public:
         MugServer(MugConfig const& config, MugServerMode mode);

@@ -9,9 +9,13 @@ class L4Plugin: public ThorsAnvil::ThorsMug::MugPlugin
         response.setStatus(404);
     }
     public:
-        virtual void registerHandlers(NisHttp::HTTPHandler& handler, std::string const& /*name*/) override
+        virtual void initPlugin(NisHttp::HTTPHandler& handler, std::string const& /*name*/) override
         {
-            handler.addPath("/Plop/{Command}",[&](ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response){handle(request, response);});
+            handler.addPath("/Plop/{Command}",[&](ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response){handle(request, response);return true;});
+        }
+        virtual void destPlugin(NisHttp::HTTPHandler& handler) override
+        {
+            handler.remPath("/Plop/{Command}");
         }
 };
 
