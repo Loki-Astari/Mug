@@ -2,9 +2,8 @@
 #define THORSANVIL_THORS_MUG_DLLIB_H
 
 #include "ThorsMugConfig.h"
+#include "MugPlugin.h"
 
-#include "NisseHTTP/Request.h"
-#include "NisseHTTP/Response.h"
 #include "NisseHTTP/HTTPHandler.h"
 
 #include <map>
@@ -18,22 +17,8 @@ namespace FS        = std::filesystem;
 namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
 
-extern "C"
-{
-    typedef void*(*MugFunc)();
-}
-
-typedef void (*MugHanlde)(ThorsAnvil::Nisse::HTTP::Request&, ThorsAnvil::Nisse::HTTP::Response&);
-
 namespace ThorsAnvil::ThorsMug
 {
-
-class MugPlugin
-{
-    public:
-        virtual ~MugPlugin() {}
-        virtual void registerHandlers(NisHttp::HTTPHandler& handler, std::string const& name) = 0;
-};
 
 class DLLib
 {

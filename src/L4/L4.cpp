@@ -1,4 +1,4 @@
-#include "../ThorsMug/DLLib.h"
+#include "../ThorsMug/MugPlugin.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 
