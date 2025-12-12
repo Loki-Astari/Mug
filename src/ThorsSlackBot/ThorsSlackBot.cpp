@@ -31,10 +31,15 @@ SlackBot::SlackBot()
     client.sendMessage(ThorsAnvil::Slack::API::Auth::Test{}, [&](ThorsAnvil::Slack::API::Auth::Test::Reply&& result){botId = result.user_id;});
 }
 
-void SlackBot::registerHandlers(NisHttp::HTTPHandler& handler, std::string const& /*name*/)
+void SlackBot::initPlugin(NisHttp::HTTPHandler& handler, std::string const& /*name*/)
 {
-    handler.addPath(NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request& request, NisHTTP::Response& response){handleEvent(request, response);});
-    handler.addPath(NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request& request, NisHTTP::Response& response){handleCommand(request, response);});
+    handler.addPath(NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request& request, NisHTTP::Response& response){handleEvent(request, response);return true;});
+    handler.addPath(NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request& request, NisHTTP::Response& response){handleCommand(request, response);return true;});
+}
+void SlackBot::destPlugin(NisHttp::HTTPHandler& handler)
+{
+    handler.remPath(NisHTTP::Method::POST, "/event");
+    handler.remPath(NisHTTP::Method::POST, "/command/speak");
 }
 
 void SlackBot::sendWelcomeMessage(std::string const& channel, std::string const& user)

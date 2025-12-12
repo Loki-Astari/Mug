@@ -37,7 +37,8 @@ class SlackBot: public ThorsAnvil::ThorsSlack::SlackPlugin
     public:
         SlackBot();
 
-        virtual void registerHandlers(NisHttp::HTTPHandler& handler, std::string const& name) override;
+        virtual void initPlugin(NisHttp::HTTPHandler& handler, std::string const& config) override;
+        virtual void destPlugin(NisHttp::HTTPHandler& handler) override;
 
 };
 

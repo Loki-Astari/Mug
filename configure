@@ -21128,7 +21128,7 @@ fi
 
 
 
-    ac_config_headers="$ac_config_headers config.h src/ThorsMug/ThorsMugConfig.h:config.h.in src/ThorsSlack/ThorsSlackConfig.h:config.h.in src/ThorsSlackBot/ThorsSlackBotConfig.h:config.h.in"
+    ac_config_headers="$ac_config_headers config.h src/ThorsMug/ThorsMugConfig.h:config.h.in src/ThorsSlack/ThorsSlackConfig.h:config.h.in src/ThorsSlackBot/ThorsSlackBotConfig.h:config.h.in src/ThorsWebServer/ThorsWebServerConfig.h:config.h.in"
 
     ac_config_files="$ac_config_files Makefile.extra Makefile.config:build/autotools/build/Makefile.config.in:Makefile.config.in"
 
@@ -22262,6 +22262,7 @@ do
     "src/ThorsMug/ThorsMugConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsMug/ThorsMugConfig.h:config.h.in" ;;
     "src/ThorsSlack/ThorsSlackConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsSlack/ThorsSlackConfig.h:config.h.in" ;;
     "src/ThorsSlackBot/ThorsSlackBotConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsSlackBot/ThorsSlackBotConfig.h:config.h.in" ;;
+    "src/ThorsWebServer/ThorsWebServerConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsWebServer/ThorsWebServerConfig.h:config.h.in" ;;
     "Makefile.extra") CONFIG_FILES="$CONFIG_FILES Makefile.extra" ;;
     "Makefile.config") CONFIG_FILES="$CONFIG_FILES Makefile.config:build/autotools/build/Makefile.config.in:Makefile.config.in" ;;
 
