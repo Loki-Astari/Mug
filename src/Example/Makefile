@@ -1,5 +1,5 @@
 THORSANVIL_ROOT             = $(realpath ../)
 
-TARGET                      = L5 L4 L3 ThorsMug ThorsSlack Example
+TARGET                      = ThorsSlackBot ThorsWebServer
 
 include $(THORSANVIL_ROOT)/build/tools/Project.Makefile
