@@ -1,9 +1,10 @@
 THORSANVIL_ROOT             = $(realpath ../../../)
 
-TARGET                      = SlackMug.slib SlackCLI.prog
-TEST_ONLY					= YES
+TARGET                      = WebServerMug.slib
+NO_HEADER					= YES
 FILE_WARNING_FLAGS			= -Wno-missing-braces -Wno-deprecated-copy-with-user-provided-dtor -Wno-deprecated-declarations
 LDLIBS_EXTERN_BUILD			= Nisse ThorSerialize
+
 
 include $(THORSANVIL_ROOT)/build/tools/Makefile
 

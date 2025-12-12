@@ -1,5 +1,5 @@
 THORSANVIL_ROOT             = $(realpath ../)
 
-TARGET                      = TestExtra ThorsMug ThorsSlack Example Mug
+TARGET                      = ThorsMug ThorsSlack TestExtra Mug
 
 include $(THORSANVIL_ROOT)/build/tools/Project.Makefile
