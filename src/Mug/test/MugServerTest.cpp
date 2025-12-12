@@ -177,7 +177,7 @@ TEST(MugServerTest, CallALoadedLib)
                     "port":     8070,
                     "actions": [
                         {
-                            "pluginPath":  "../L3/release/libL3)" SLIB R"(",
+                            "pluginPath":  "../TestExtra/L3/release/libL3)" SLIB R"(",
                             "configPath":  "/page1"
                         }
                     ]

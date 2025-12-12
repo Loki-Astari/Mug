@@ -20,7 +20,7 @@ namespace FS = std::filesystem;
 TEST(DLLibTest, LoadL3)
 {
     std::error_code ec;
-    ThorsAnvil::ThorsMug::DLLib   dlLib1(FS::canonical(FS::path("../L3/release/libL3" SLIB), ec));
+    ThorsAnvil::ThorsMug::DLLib   dlLib1(FS::canonical(FS::path("../TestExtra/L3/release/libL3" SLIB), ec));
 }
 TEST(DLLibTest, LoadFailEmpty)
 {
@@ -42,7 +42,7 @@ TEST(DLLibTest, LoadFailWithPath)
 TEST(DLLibTest, LoadOKFunctionBad)
 {
     std::error_code ec;
-    auto action = [&](){ThorsAnvil::ThorsMug::DLLib   dlLib1(FS::canonical(FS::path("../L5/release/libL5" SLIB), ec));};
+    auto action = [&](){ThorsAnvil::ThorsMug::DLLib   dlLib1(FS::canonical(FS::path("../TestExtra/L5/release/libL5" SLIB), ec));};
     EXPECT_THROW(
                  action(),
                  std::runtime_error
@@ -52,7 +52,7 @@ TEST(DLLibTest, LoadOKFunctionBad)
 TEST(DLLibTest, LoadL3Call)
 {
     std::error_code                     ec;
-    ThorsAnvil::ThorsMug::DLLib         dlLib1(FS::canonical(FS::path("../L3/release/libL3" SLIB), ec));
+    ThorsAnvil::ThorsMug::DLLib         dlLib1(FS::canonical(FS::path("../TestExtra/L3/release/libL3" SLIB), ec));
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8070\r\n"
                                                "content-length: 0\r\n"
@@ -71,7 +71,7 @@ TEST(DLLibTest, LoadL3Call)
 TEST(DLLibTest, LoadL4Call)
 {
     std::error_code                     ec;
-    ThorsAnvil::ThorsMug::DLLib         dlLib1(FS::canonical(FS::path("../L4/release/libL4" SLIB), ec));
+    ThorsAnvil::ThorsMug::DLLib         dlLib1(FS::canonical(FS::path("../TestExtra/L4/release/libL4" SLIB), ec));
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8070\r\n"
                                                "content-length: 0\r\n"
@@ -91,7 +91,7 @@ TEST(DLLibTest, LoadL4Call)
 TEST(DLLibTest, CallCheck)
 {
     std::error_code                     ec;
-    ThorsAnvil::ThorsMug::DLLib         dlLib1(FS::canonical(FS::path("../L4/release/libL4" SLIB), ec));
+    ThorsAnvil::ThorsMug::DLLib         dlLib1(FS::canonical(FS::path("../TestExtra/L4/release/libL4" SLIB), ec));
     std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
                                                "host: thorsanvil.dev:8070\r\n"
                                                "content-length: 0\r\n"
@@ -113,7 +113,7 @@ TEST(DLLibTest, CallCheck)
 
 TEST(DLLibTest, CheckOnEmpty)
 {
-    ThorsAnvil::ThorsMug::DLLib         dlLib(FS::canonical(FS::path("../L3/release/libL3" SLIB)));
+    ThorsAnvil::ThorsMug::DLLib         dlLib(FS::canonical(FS::path("../TestExtra/L3/release/libL3" SLIB)));
     EXPECT_EQ(false, dlLib.check());
 }
 

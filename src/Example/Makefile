@@ -1,4 +1,4 @@
-THORSANVIL_ROOT             = $(realpath ../)
+THORSANVIL_ROOT             = $(realpath ../..)
 
 TARGET                      = ThorsSlackBot ThorsWebServer
 

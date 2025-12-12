@@ -1,4 +1,4 @@
-THORSANVIL_ROOT             = $(realpath ../../)
+THORSANVIL_ROOT             = $(realpath ../../../)
 
 TARGET                      = WebServerPlugin.slib
 TEST_ONLY					= YES
@@ -10,4 +10,4 @@ include $(THORSANVIL_ROOT)/build/tools/Makefile
 
 done:
 	echo "Stopping Mug"
-	curl localhost:8079?command=stophard
+	# curl localhost:8079?command=stophard

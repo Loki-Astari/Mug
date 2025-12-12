@@ -1,4 +1,4 @@
-THORSANVIL_ROOT             = $(realpath ../../)
+THORSANVIL_ROOT             = $(realpath ../../../)
 
 TARGET                      = ThorsSlackBot.slib SlackCLI.prog
 TEST_ONLY					= YES
@@ -9,4 +9,4 @@ include $(THORSANVIL_ROOT)/build/tools/Makefile
 
 done:
 	echo "Stopping Mug"
-	curl localhost:8079?command=stophard
+	# curl localhost:8079?command=stophard

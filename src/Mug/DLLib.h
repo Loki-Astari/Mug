@@ -2,7 +2,7 @@
 #define THORSANVIL_THORS_MUG_DLLIB_H
 
 #include "ThorsMugConfig.h"
-#include "MugPlugin.h"
+#include "ThorsMug/MugPlugin.h"
 
 #include "NisseHTTP/HTTPHandler.h"
 
