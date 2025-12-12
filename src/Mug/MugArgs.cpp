@@ -13,12 +13,12 @@ void MugArgs::setSilent()
     silent = true;
 }
 
-void MugArgs::setConfigFile(FS::path file)
+void MugArgs::setConfigFile(std::filesystem::path file)
 {
     configPath = file;
 }
 
-void MugArgs::logAddFile(FS::path file)
+void MugArgs::logAddFile(std::filesystem::path file)
 {
     loguru::add_file(std::string(file).c_str(), loguru::FileMode::Truncate, loguru::g_stderr_verbosity);
 }

@@ -24,40 +24,40 @@ struct MockArguments: public ThorsAnvil::ThorsMug::MugCLAInterface
 {
     std::size_t                 classCount      = 0;
     std::array<std::size_t, 6>  methodCallCount = {0, 0, 0, 0, 0, 0};
-    FS::path                    config;
-    FS::path                    logFile;
+    std::filesystem::path       config;
+    std::filesystem::path       logFile;
     std::string                 appName;
     loguru::Verbosity           verbosity;
 
-    virtual void logAddFile(FS::path file)              override
+    virtual void logAddFile(std::filesystem::path file)     override
     {
         ++classCount;
         ++methodCallCount[0];
         logFile = file;
     }
-    virtual void logAddSys(std::string_view app)        override
+    virtual void logAddSys(std::string_view app)            override
     {
         ++classCount;
         ++methodCallCount[1];
         appName = app;
     }
-    virtual void logSetLevel(loguru::Verbosity level)   override
+    virtual void logSetLevel(loguru::Verbosity level)       override
     {
         ++classCount;
         ++methodCallCount[2];
         verbosity = level;
     }
-    virtual void setHelp()                              override
+    virtual void setHelp()                                  override
     {
         ++classCount;
         ++methodCallCount[3];
     }
-    virtual void setSilent()                            override
+    virtual void setSilent()                                override
     {
         ++classCount;
         ++methodCallCount[4];
     }
-    virtual void setConfigFile(FS::path file)           override
+    virtual void setConfigFile(std::filesystem::path file)  override
     {
         ++classCount;
         ++methodCallCount[5];

@@ -12,7 +12,7 @@
 using namespace ThorsAnvil::ThorsMug;
 
 
-TASock::ServerInit MugServer::getServerInit(std::optional<FS::path> certPath, int port)
+TASock::ServerInit MugServer::getServerInit(std::optional<std::filesystem::path> certPath, int port)
 {
     // If there is not certificate simply use a normal port.
     if (!certPath.has_value()) {
@@ -21,8 +21,8 @@ TASock::ServerInit MugServer::getServerInit(std::optional<FS::path> certPath, in
 
     // We have a certificate path.
     // Assume the "full certificate chain" and "private key" files are on the path provided.
-    TASock::CertificateInfo     certificate{FS::canonical(FS::path(*certPath) /= "fullchain.pem"),
-                                            FS::canonical(FS::path(*certPath) /= "privkey.pem")
+    TASock::CertificateInfo     certificate{std::filesystem::canonical(std::filesystem::path(*certPath) /= "fullchain.pem"),
+                                            std::filesystem::canonical(std::filesystem::path(*certPath) /= "privkey.pem")
                                            };
     TASock::SSLctx              ctx{TASock::SSLMethodType::Server, certificate};
     // Return an SSL configured port

@@ -1,4 +1,3 @@
-#include "Mug.h"
 #include "MugArgs.h"
 #include "MugCLA.h"
 #include "MugServer.h"
@@ -33,7 +32,7 @@ int main(int argc, char* argv[])
             parser.displayHelp(argv[0]);
             ThorsLogAndThrowError(std::runtime_error, "ThorsMug", "main", "No config file set. Not explicitly set and default ones don't exist");
         }
-        if (!FS::exists(arguments.configPath)) {
+        if (!std::filesystem::exists(arguments.configPath)) {
             parser.displayHelp(argv[0]);
             ThorsLogAndThrowError(std::runtime_error, "ThorsMug", "main", "Specified config file does not exist. Config File: ", arguments.configPath);
         }

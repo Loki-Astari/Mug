@@ -9,26 +9,25 @@
 #include <map>
 #include <vector>
 #include <string>
-#include <cstddef>
+#include <functional>
 #include <filesystem>
-
-
-namespace FS        = std::filesystem;
-namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
 
 namespace ThorsAnvil::ThorsMug
 {
 
+using ThorsAnvil::Nisse::HTTP::HTTPHandler;
+
 class DLLib
 {
-    FS::path                    path;
-    FS::file_time_type          lastModified;
-    void*                       lib             = nullptr;
-    MugPlugin*                  plugin          = nullptr;
-    using HandlerRef = std::reference_wrapper<NisHttp::HTTPHandler>;
+    using HandlerRef = std::reference_wrapper<HTTPHandler>;
     using Config     = std::pair<HandlerRef, std::string>;
-    std::vector<Config>         configs;
+
+    std::filesystem::path           path;
+    std::filesystem::file_time_type lastModified;
+    void*                           lib             = nullptr;
+    MugPlugin*                      plugin          = nullptr;
+    std::vector<Config>             configs;
 
     private:
         void load();
@@ -38,7 +37,7 @@ class DLLib
         static char const* safeDLerror();
 
     public:
-        DLLib(FS::path const& path);
+        DLLib(std::filesystem::path const& path);
         DLLib(DLLib const&)             = delete;
         DLLib& operator=(DLLib const&)  = delete;
         DLLib(DLLib&& move)             = delete;
@@ -46,15 +45,15 @@ class DLLib
         ~DLLib();
 
         bool check();
-        void init(NisHttp::HTTPHandler& handler, std::string const& configPath);
+        void init(HTTPHandler& handler, std::string const& configPath);
 };
 
 class DLLibMap
 {
     std::map<std::string, DLLib>  libs;
     public:
-        void    load(NisHttp::HTTPHandler& handler, std::string const& pluginPath, std::string const& configPath);
-        void    checkAll()                                                          {for (auto& lib: libs){lib.second.check();}}
+        void    load(HTTPHandler& handler, std::string const& pluginPath, std::string const& configPath);
+        void    checkAll()    {for (auto& lib: libs){lib.second.check();}}
 };
 
 }

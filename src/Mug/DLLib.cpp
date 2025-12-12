@@ -6,7 +6,7 @@
 using namespace ThorsAnvil::ThorsMug;
 
 
-DLLib::DLLib(FS::path const& path)
+DLLib::DLLib(std::filesystem::path const& path)
     : path(path)
 {
     if (path.empty()) {
@@ -32,7 +32,7 @@ DLLib::~DLLib()
 
 bool DLLib::check()
 {
-    FS::file_time_type modifyTime = FS::last_write_time(path);
+    std::filesystem::file_time_type modifyTime = std::filesystem::last_write_time(path);
     if (modifyTime > lastModified) {
         lastModified = modifyTime;
         unload();
@@ -65,7 +65,7 @@ void DLLib::loadOnly()
 {
     ThorsLogDebug("DLLib", "reload", "Reload DLL: ", path);
     std::error_code ec;
-    lib = ::dlopen(FS::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL | DLOPEN_PLAT_FLAG);
+    lib = ::dlopen(std::filesystem::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL | DLOPEN_PLAT_FLAG);
     if (lib == nullptr) {
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlopen() failed: ", safeDLerror());
     }
@@ -77,7 +77,7 @@ void DLLib::loadOnly()
         lib = nullptr;
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlsym() failed: ", safeDLerror());
     }
-    lastModified = FS::last_write_time(path);
+    lastModified = std::filesystem::last_write_time(path);
 
 
     MugFunc     mugFunc     = reinterpret_cast<MugFunc>(mugFuncSym);
@@ -107,7 +107,7 @@ void DLLibMap::load(NisHttp::HTTPHandler& handler, std::string const& pluginPath
 {
     ThorsLogDebug("DLLib", "load ", pluginPath, " : ", configPath);
     std::error_code ec;
-    FS::path    libPath = FS::canonical(pluginPath, ec);
+    std::filesystem::path    libPath = std::filesystem::canonical(pluginPath, ec);
     if (libPath.empty()) {
         ThorsLogAndThrowError(std::runtime_error, "DLLibMap", "load", "Invalid path to shared library: ", pluginPath);
     }

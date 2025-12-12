@@ -4,7 +4,6 @@
 #include "ThorsMugConfig.h"
 
 #include "MugArgs.h"
-#include "ThorsLogging/ThorsLogging.h"
 
 #include <string>
 #include <string_view>
@@ -12,8 +11,6 @@
 #include <map>
 #include <filesystem>
 #include <iostream>
-
-namespace FS = std::filesystem;
 
 namespace ThorsAnvil::ThorsMug
 {
@@ -25,7 +22,7 @@ struct SplitArg
     bool                hasValue;
 };
 
-using Paths         = std::vector<FS::path>;
+using Paths         = std::vector<std::filesystem::path>;
 using VerbosityMap  = std::map<std::string_view, loguru::Verbosity>;
 
 class MugCLA
@@ -33,7 +30,7 @@ class MugCLA
     static const Paths          searchPath;
     static const VerbosityMap   verbosity;
 
-    MugCLAInterface&        args;
+    MugCLAInterface&            args;
     bool                        setConfig = false;
 
     SplitArg    splitArgument(std::string_view arg);

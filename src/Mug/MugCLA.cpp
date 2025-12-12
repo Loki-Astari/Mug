@@ -140,7 +140,7 @@ MugCLA::MugCLA(std::vector<std::string_view> const& arguments, MugCLAInterface& 
     {
         for (auto path: searchPath)
         {
-            if (FS::exists(path))
+            if (std::filesystem::exists(path))
             {
                 args.setConfigFile(path);
                 break;

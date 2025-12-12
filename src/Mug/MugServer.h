@@ -5,28 +5,29 @@
 #include "MugConfig.h"
 #include "DLLib.h"
 #include "NisseServer/NisseServer.h"
+#include "NisseServer/TimerAction.h"
 #include "NisseHTTP/PyntHTTPControl.h"
 #include "NisseHTTP/HTTPHandler.h"
 
-#include <cstddef>
 #include <vector>
 #include <optional>
 #include <filesystem>
-#include <utility>
 
-
-namespace FS        = std::filesystem;
-namespace NisServer = ThorsAnvil::Nisse::Server;
-namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
 namespace ThorsAnvil::ThorsMug
 {
 
+using ThorsAnvil::Nisse::Server::NisseServer;
+using ThorsAnvil::Nisse::Server::TimerAction;
+using ThorsAnvil::Nisse::HTTP::HTTPHandler;
+using ThorsAnvil::Nisse::HTTP::PyntHTTPControl;
+
+
 enum MugServerMode {Headless, Active};
 
-class MugServer: public NisServer::NisseServer
+class MugServer: public NisseServer
 {
-    class LibraryChecker: public NisServer::TimerAction
+    class LibraryChecker: public TimerAction
     {
         MugServer& server;
         public:
@@ -41,16 +42,15 @@ class MugServer: public NisServer::NisseServer
 
     static constexpr std::size_t workerCount = 4;
 
-    using Hanlders = std::vector<NisHttp::HTTPHandler>;
+    using Hanlders = std::vector<HTTPHandler>;
 
     // PyntControl create access point that can be used to cleanly shut down server.
-    NisHttp::PyntHTTPControl    control;
-
+    PyntHTTPControl             control;
     Hanlders                    servers;
     DLLibMap                    libraries;
     LibraryChecker              libraryChecker;
 
-    TASock::ServerInit getServerInit(std::optional<FS::path> certPath, int port);
+    TASock::ServerInit getServerInit(std::optional<std::filesystem::path> certPath, int port);
 
     public:
         MugServer(MugConfig const& config, MugServerMode mode);

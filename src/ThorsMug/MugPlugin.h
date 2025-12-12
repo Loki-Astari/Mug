@@ -8,7 +8,6 @@
 #include "NisseHTTP/HTTPHandler.h"
 
 #include <string>
-#include <istream>
 
 
 namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
