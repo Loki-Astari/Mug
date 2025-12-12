@@ -1,5 +1,5 @@
 THORSANVIL_ROOT             = $(realpath ../..)
 
-TARGET                      = ThorsSlackBot ThorsWebServer
+TARGET                      = SlackMug WebServerMug
 
 include $(THORSANVIL_ROOT)/build/tools/Project.Makefile

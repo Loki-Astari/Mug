@@ -1,7 +1,7 @@
 #ifndef THORSANVIL_SLACKCLI_ENVIRONMENT_H
 #define THORSANVIL_SLACKCLI_ENVIRONMENT_H
 
-#include "ThorsSlackBotConfig.h"
+#include "SlackMugConfig.h"
 #include "ThorSerialize/Traits.h"
 #include <string>
 

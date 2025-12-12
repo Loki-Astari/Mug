@@ -1,7 +1,7 @@
 #ifndef THORSANVIL_SLACK_THORSSLACKBOT_H
 #define THORSANVIL_SLACK_THORSSLACKBOT_H
 
-#include "ThorsSlackBotConfig.h"
+#include "SlackMugConfig.h"
 #include "WelcomeMessage.h"
 #include "ThorsSlack/EventCallbackReaction.h"
 #include "ThorsSlack/EventCallbackMessage.h"

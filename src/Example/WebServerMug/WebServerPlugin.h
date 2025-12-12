@@ -1,7 +1,7 @@
 #ifndef THORSANVIL_THORS_MUG_WEB_SERVER_H
 #define THORSANVIL_THORS_MUG_WEB_SERVER_H
 
-#include "ThorsWebServerConfig.h"
+#include "WebServerMugConfig.h"
 #include "ThorsMug/MugPlugin.h"
 
 #include <string>

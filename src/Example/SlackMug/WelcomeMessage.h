@@ -1,7 +1,7 @@
 #ifndef THORSANVIL_SLACK_WELCOME_MESSAGE_H
 #define THORSANVIL_SLACK_WELCOME_MESSAGE_H
 
-#include "ThorsSlackBotConfig.h"
+#include "SlackMugConfig.h"
 #include "ThorsSlack/APIChatMessage.h"
 #include "ThorsSlack/SlackBlockKit.h"
 
