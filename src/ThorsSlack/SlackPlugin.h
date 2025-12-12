@@ -7,7 +7,7 @@
 #include "EventCallbackMessage.h"
 #include "EventURLVerification.h"
 
-#include "ThorsMug/DLLib.h"
+#include "ThorsMug/MugPlugin.h"
 #include "ThorsSlack/EventCallbackReaction.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
