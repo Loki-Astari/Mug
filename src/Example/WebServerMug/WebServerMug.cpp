@@ -1,4 +1,4 @@
-#include "WebServerPlugin.h"
+#include "WebServerMug.h"
 
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"

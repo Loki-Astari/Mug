@@ -1,4 +1,4 @@
-#include "ThorsSlackBot.h"
+#include "SlackMug.h"
 
 #include "WelcomeMessage.h"
 #include "Environment.h"
