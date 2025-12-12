@@ -51,6 +51,6 @@ AS_IF(
 LT_INIT
 
 AX_THOR_FEATURE_HEADER_ONLY_VARIANT([THORSMUG])
-AX_THOR_FUNC_TERM_BUILD([THORSMUG], [src/Mug/ThorsMugConfig.h:config.h.in src/ThorsMug/ThorsMugConfig.h:config.h.in src/ThorsSlack/ThorsSlackConfig.h:config.h.in src/Example/SlackMug/SlackMugConfig.h:config.h.in src/Example/WebServerMug/WebServerMugConfig.h:config.h.in])
+AX_THOR_FUNC_TERM_BUILD([THORSMUG], [src/Mug/ThorsMugConfig.h:config.h.in src/ThorsMug/ThorsMugConfig.h:config.h.in src/ThorsSlack/ThorsSlackConfig.h:config.h.in src/TestExtra/SlackMug/SlackMugConfig.h:config.h.in src/TestExtra/WebServerMug/WebServerMugConfig.h:config.h.in])
 
 AC_OUTPUT
