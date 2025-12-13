@@ -593,7 +593,7 @@ PACKAGE_STRING='ThorsMug 0.1'
 PACKAGE_BUGREPORT='loki.Astari+ThorsMug@gmail.com'
 PACKAGE_URL=''
 
-ac_unique_file="src/ThorsMug/mug.cpp"
+ac_unique_file="src/Mug/mug.cpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stddef.h>
@@ -3922,7 +3922,7 @@ fi
 
 
 
-    if test "src/ThorsMug/mug.cpp" != ""
+    if test "src/Mug/mug.cpp" != ""
 then :
 
 
