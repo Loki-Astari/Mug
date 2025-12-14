@@ -7,9 +7,9 @@ using namespace ThorsAnvil::ThorsMug;
 const Paths             MugCLA::searchPath = {"./mug.cfg", "/etc/mug.cfg", "/opt/homebrew/etc/mug.cfg"};
 const VerbosityMap      MugCLA::verbosity  = {
                                                     {"All",     loguru::Verbosity_9},
-                                                    {"Trace",   loguru::Verbosity_8},
-                                                    {"Track",   loguru::Verbosity_7},
-                                                    {"Debug",   loguru::Verbosity_6},
+                                                    {"Trace",   loguru::Verbosity_7},
+                                                    {"Track",   loguru::Verbosity_5},
+                                                    {"Debug",   loguru::Verbosity_3},
                                                     {"Info",    loguru::Verbosity_INFO},
                                                     {"Warn",    loguru::Verbosity_WARNING},
                                                     {"Error",   loguru::Verbosity_ERROR},

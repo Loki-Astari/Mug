@@ -21,7 +21,7 @@ struct Plugin
 
 // A Port config is a port with optional SSL certificate to listen to.
 // This has a list of plugins that are registered for this port.
-// Each plugin is dynmaically loaded at runtime.
+// Each plugin is dynamically loaded at runtime.
 struct PortConfig
 {
     int                         port;           // Port to listen on
@@ -29,7 +29,7 @@ struct PortConfig
     std::vector<Plugin>         actions;        // Plugins that will be passed an ThorsAnvil::NissaHttp::HTTPHandler object
 };
 
-// The Mug server configuraiton.
+// The Mug server configuration.
 struct MugConfig
 {
     int                         controlPort         = 8079;     // Can send a stop command to this port.
