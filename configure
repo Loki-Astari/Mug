@@ -593,7 +593,7 @@ PACKAGE_STRING='ThorsMug 0.1'
 PACKAGE_BUGREPORT='loki.Astari+ThorsMug@gmail.com'
 PACKAGE_URL=''
 
-ac_unique_file="src/ThorsMug/mug.cpp"
+ac_unique_file="src/Mug/mug.cpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stddef.h>
@@ -3922,7 +3922,7 @@ fi
 
 
 
-    if test "src/ThorsMug/mug.cpp" != ""
+    if test "src/Mug/mug.cpp" != ""
 then :
 
 
@@ -21128,7 +21128,7 @@ fi
 
 
 
-    ac_config_headers="$ac_config_headers config.h src/ThorsMug/ThorsMugConfig.h:config.h.in src/ThorsSlack/ThorsSlackConfig.h:config.h.in src/ThorsSlackBot/ThorsSlackBotConfig.h:config.h.in"
+    ac_config_headers="$ac_config_headers config.h src/Mug/ThorsMugConfig.h:config.h.in src/ThorsMug/ThorsMugConfig.h:config.h.in src/ThorsSlack/ThorsSlackConfig.h:config.h.in src/TestExtra/SlackMug/SlackMugConfig.h:config.h.in src/TestExtra/WebServerMug/WebServerMugConfig.h:config.h.in"
 
     ac_config_files="$ac_config_files Makefile.extra Makefile.config:build/autotools/build/Makefile.config.in:Makefile.config.in"
 
@@ -22259,9 +22259,11 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
+    "src/Mug/ThorsMugConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/Mug/ThorsMugConfig.h:config.h.in" ;;
     "src/ThorsMug/ThorsMugConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsMug/ThorsMugConfig.h:config.h.in" ;;
     "src/ThorsSlack/ThorsSlackConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsSlack/ThorsSlackConfig.h:config.h.in" ;;
-    "src/ThorsSlackBot/ThorsSlackBotConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsSlackBot/ThorsSlackBotConfig.h:config.h.in" ;;
+    "src/TestExtra/SlackMug/SlackMugConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/TestExtra/SlackMug/SlackMugConfig.h:config.h.in" ;;
+    "src/TestExtra/WebServerMug/WebServerMugConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/TestExtra/WebServerMug/WebServerMugConfig.h:config.h.in" ;;
     "Makefile.extra") CONFIG_FILES="$CONFIG_FILES Makefile.extra" ;;
     "Makefile.config") CONFIG_FILES="$CONFIG_FILES Makefile.config:build/autotools/build/Makefile.config.in:Makefile.config.in" ;;
 

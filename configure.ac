@@ -4,7 +4,7 @@ AC_PREREQ([2.65])
 AC_CONFIG_MACRO_DIR([build/autotools/m4])
 AC_CONFIG_AUX_DIR([build/autotools/build])
 
-AX_THOR_FUNC_INIT_BUILD([ThorsMug], [src/ThorsMug/mug.cpp])
+AX_THOR_FUNC_INIT_BUILD([ThorsMug], [src/Mug/mug.cpp])
 
 
 #
@@ -51,6 +51,6 @@ AS_IF(
 LT_INIT
 
 AX_THOR_FEATURE_HEADER_ONLY_VARIANT([THORSMUG])
-AX_THOR_FUNC_TERM_BUILD([THORSMUG], [src/ThorsMug/ThorsMugConfig.h:config.h.in src/ThorsSlack/ThorsSlackConfig.h:config.h.in src/ThorsSlackBot/ThorsSlackBotConfig.h:config.h.in ])
+AX_THOR_FUNC_TERM_BUILD([THORSMUG], [src/Mug/ThorsMugConfig.h:config.h.in src/ThorsMug/ThorsMugConfig.h:config.h.in src/ThorsSlack/ThorsSlackConfig.h:config.h.in src/TestExtra/SlackMug/SlackMugConfig.h:config.h.in src/TestExtra/WebServerMug/WebServerMugConfig.h:config.h.in])
 
 AC_OUTPUT
