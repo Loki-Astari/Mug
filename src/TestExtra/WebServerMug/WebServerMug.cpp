@@ -11,6 +11,13 @@ using namespace ThorsAnvil::ThorsMug::WebServer;
 namespace NisServer = ThorsAnvil::Nisse::Server;
 namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
+WebServerPlugin     webServer;
+
+extern "C" void* mugFunction()
+{
+    return dynamic_cast<ThorsAnvil::ThorsMug::MugPlugin*>(&webServer);
+}
+
 void WebServerPlugin::initPlugin(NisHttp::HTTPHandler& handler, std::string const& config)
 {
     handler.addPath(NisHttp::Method::GET,

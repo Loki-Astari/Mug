@@ -55,7 +55,7 @@ void DLLib::load()
 void DLLib::unload()
 {
     for (auto& config: configs) {
-        ThorsLogDebug("DLLib", "load", "destPlugin ", config.second);
+        ThorsLogDebug("DLLib", "unload", "destPlugin ", config.second);
         plugin->destPlugin(config.first);
     }
     unloadOnly();
@@ -63,19 +63,18 @@ void DLLib::unload()
 
 void DLLib::loadOnly()
 {
-    ThorsLogDebug("DLLib", "reload", "Reload DLL: ", path);
+    ThorsLogDebug("DLLib", "loadOnly", "Reload DLL: ", path);
     std::error_code ec;
     lib = ::dlopen(std::filesystem::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL | DLOPEN_PLAT_FLAG);
     if (lib == nullptr) {
-        ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlopen() failed: ", safeDLerror());
+        ThorsLogAndThrowError(std::runtime_error, "DLLib", "loadOnly", "dlopen() failed: ", safeDLerror());
     }
 
     void*           mugFuncSym = ::dlsym(lib, "mugFunction");
     if (mugFuncSym == nullptr) {
-        // TODO: Some issues that need to be worked out
-        //::dlclose(lib);
+        ::dlclose(lib);
         lib = nullptr;
-        ThorsLogAndThrowError(std::runtime_error, "DLLib", "reload", "dlsym() failed: ", safeDLerror());
+        ThorsLogAndThrowError(std::runtime_error, "DLLib", "loadOnly", "dlsym() failed: ", safeDLerror());
     }
     lastModified = std::filesystem::last_write_time(path);
 
@@ -105,7 +104,7 @@ void DLLib::init(NisHttp::HTTPHandler& handler, std::string const& configPath)
 
 void DLLibMap::load(NisHttp::HTTPHandler& handler, std::string const& pluginPath, std::string const& configPath)
 {
-    ThorsLogDebug("DLLib", "load ", pluginPath, " : ", configPath);
+    ThorsLogDebug("DLLibMap", "load ", pluginPath, " : ", configPath);
     std::error_code ec;
     std::filesystem::path    libPath = std::filesystem::canonical(pluginPath, ec);
     if (libPath.empty()) {

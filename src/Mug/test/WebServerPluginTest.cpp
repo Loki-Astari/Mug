@@ -1,21 +1,14 @@
 #include "gtest/gtest.h"
 
-#include "ThorsWebServerConfig.h"
-#include "WebServerPlugin.h"
-#include "ThorsMug/MugServer.h"
-#include "ThorsMug/MugConfig.h"
+#include "ThorsMugConfig.h"
+#include "MugServer.h"
+#include "MugConfig.h"
 
 #include "ThorSerialize/JsonThor.h"
 #include "NisseHTTP/ClientRequest.h"
 
-#if 0
-#include "NisseHTTP/ClientStream.h"
-#include "NisseHTTP/Util.h"
-#include "ThorsSocket/Socket.h"
-#include "ThorsSocket/SocketStream.h"
-
-#include <sstream>
-#endif
+#include "HTTPSend.h"
+#include "HTTPResponse.h"
 
 #include <latch>
 #include <thread>
@@ -39,7 +32,7 @@ class LocalJthread: public std::thread
         }
 };
 
-TEST(MugServer, ServiceRunAddServerWithFile)
+TEST(WebServerPluginTest, ServiceRunAddServerWithFile)
 {
     std::stringstream   configStream(R"(
         {
@@ -49,7 +42,7 @@ TEST(MugServer, ServiceRunAddServerWithFile)
                     "port":     8070,
                     "actions": [
                         {
-                            "pluginPath":  "ThorsWebBot" SLIB,
+                            "pluginPath":  "../TestExtra/WebServerMug/debug/libWebServerMug)" SLIB R"(",
                             "configPath":  "test/data/pages"
                         }
                     ]
@@ -84,8 +77,7 @@ TEST(MugServer, ServiceRunAddServerWithFile)
     request.addHeaders(headers);
 }
 
-#if 0
-TEST(MugServer, ServiceRunAddServerWithFileValidateWorks)
+TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
 {
     std::stringstream   configStream(R"(
         {
@@ -95,9 +87,8 @@ TEST(MugServer, ServiceRunAddServerWithFileValidateWorks)
                     "port":     8070,
                     "actions": [
                         {
-                            "type":     "File",
-                            "rootDir":  "./test/data/pages",
-                            "path":     "/files"
+                            "pluginPath":  "../TestExtra/WebServerMug/debug/libWebServerMug)" SLIB R"(",
+                            "configPath":  "test/data/pages"
                         }
                     ]
                 }
@@ -144,4 +135,4 @@ TEST(MugServer, ServiceRunAddServerWithFileValidateWorks)
     request.flushRequest();
     waitForExit.wait();
 }
-#endif
+

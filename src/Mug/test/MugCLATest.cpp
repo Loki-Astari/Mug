@@ -158,7 +158,17 @@ TEST(MugCLATest, setLogLevelTrace)
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[2]);
-    ASSERT_EQ(loguru::Verbosity_8, mockArgs.verbosity);
+    ASSERT_EQ(loguru::Verbosity_7, mockArgs.verbosity);
+}
+TEST(MugCLATest, setLogLevelTrack)
+{
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logLevel=Track"}, mockArgs);
+
+    // Call to load
+    ASSERT_EQ(1, mockArgs.classCount);
+    ASSERT_EQ(1, mockArgs.methodCallCount[2]);
+    ASSERT_EQ(loguru::Verbosity_5, mockArgs.verbosity);
 }
 TEST(MugCLATest, setLogLevelDebug)
 {
@@ -168,7 +178,7 @@ TEST(MugCLATest, setLogLevelDebug)
     // Call to load
     ASSERT_EQ(1, mockArgs.classCount);
     ASSERT_EQ(1, mockArgs.methodCallCount[2]);
-    ASSERT_EQ(loguru::Verbosity_6, mockArgs.verbosity);
+    ASSERT_EQ(loguru::Verbosity_3, mockArgs.verbosity);
 }
 TEST(MugCLATest, setLogLevelInfo)
 {
