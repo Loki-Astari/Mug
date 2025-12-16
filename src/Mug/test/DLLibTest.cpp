@@ -51,38 +51,38 @@ TEST(DLLibTest, LoadOKFunctionBad)
 
 TEST(DLLibTest, LoadL3Call)
 {
-    std::error_code                     ec;
-    ThorsAnvil::ThorsMug::DLLib         dlLib1(FS::canonical(FS::path("../TestExtra/L3/release/libL3" SLIB), ec));
-    std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
-                                               "host: thorsanvil.dev:8070\r\n"
-                                               "content-length: 0\r\n"
-                                               "\r\n"
-                                              };
-    std::stringstream                   output;
-    ThorsAnvil::Nisse::HTTP::Request    request("", input);
-    ThorsAnvil::Nisse::HTTP::Response   response(output, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1, 200);
-
-
+    std::error_code                         ec;
     ThorsAnvil::Nisse::HTTP::HTTPHandler    handler;
+    ThorsAnvil::ThorsMug::DLLib             dlLib1(FS::canonical(FS::path("../TestExtra/L3/release/libL3" SLIB), ec));
+    std::stringstream                       input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
+                                                  "host: thorsanvil.dev:8070\r\n"
+                                                  "content-length: 0\r\n"
+                                                  "\r\n"
+                                            };
+    std::stringstream                       output;
+    ThorsAnvil::Nisse::HTTP::Request        request("", input);
+    ThorsAnvil::Nisse::HTTP::Response       response(output, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1, 200);
+
+
     dlLib1.init(handler, "L3");
     handler.processRequest(request, response);
     EXPECT_EQ(305, response.getCode().code);
 }
 TEST(DLLibTest, LoadL4Call)
 {
-    std::error_code                     ec;
-    ThorsAnvil::ThorsMug::DLLib         dlLib1(FS::canonical(FS::path("../TestExtra/L4/release/libL4" SLIB), ec));
-    std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
-                                               "host: thorsanvil.dev:8070\r\n"
-                                               "content-length: 0\r\n"
-                                               "\r\n"
-                                              };
-    std::stringstream                   output;
-    ThorsAnvil::Nisse::HTTP::Request    request("", input);
-    ThorsAnvil::Nisse::HTTP::Response   response(output, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1, 200);
-
-
+    std::error_code                         ec;
     ThorsAnvil::Nisse::HTTP::HTTPHandler    handler;
+    ThorsAnvil::ThorsMug::DLLib             dlLib1(FS::canonical(FS::path("../TestExtra/L4/release/libL4" SLIB), ec));
+    std::stringstream                       input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
+                                                  "host: thorsanvil.dev:8070\r\n"
+                                                  "content-length: 0\r\n"
+                                                  "\r\n"
+                                            };
+    std::stringstream                       output;
+    ThorsAnvil::Nisse::HTTP::Request        request("", input);
+    ThorsAnvil::Nisse::HTTP::Response       response(output, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1, 200);
+
+
     dlLib1.init(handler, "L4");
     handler.processRequest(request, response);
     EXPECT_EQ(404, response.getCode().code);
@@ -90,19 +90,19 @@ TEST(DLLibTest, LoadL4Call)
 
 TEST(DLLibTest, CallCheck)
 {
-    std::error_code                     ec;
-    ThorsAnvil::ThorsMug::DLLib         dlLib1(FS::canonical(FS::path("../TestExtra/L4/release/libL4" SLIB), ec));
-    std::stringstream                   input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
-                                               "host: thorsanvil.dev:8070\r\n"
-                                               "content-length: 0\r\n"
-                                               "\r\n"
-                                              };
-    std::stringstream                   output;
-    ThorsAnvil::Nisse::HTTP::Request    request("", input);
-    ThorsAnvil::Nisse::HTTP::Response   response(output, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1, 200);
-
-
+    std::error_code                         ec;
     ThorsAnvil::Nisse::HTTP::HTTPHandler    handler;
+    ThorsAnvil::ThorsMug::DLLib             dlLib1(FS::canonical(FS::path("../TestExtra/L4/release/libL4" SLIB), ec));
+    std::stringstream                       input{"GET /Plop/path/twist.gue?p=1&q=12#34 HTTP/1.1\r\n"
+                                                   "host: thorsanvil.dev:8070\r\n"
+                                                   "content-length: 0\r\n"
+                                                   "\r\n"
+                                            };
+    std::stringstream                       output;
+    ThorsAnvil::Nisse::HTTP::Request        request("", input);
+    ThorsAnvil::Nisse::HTTP::Response       response(output, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1, 200);
+
+
     dlLib1.init(handler, "L4");
     handler.processRequest(request, response);
     EXPECT_EQ(404, response.getCode().code);
