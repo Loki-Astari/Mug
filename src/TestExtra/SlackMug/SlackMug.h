@@ -14,7 +14,7 @@
 #include <string>
 #include <map>
 
-class SlackBot: public ThorsAnvil::ThorsSlack::SlackPlugin
+class SlackMug: public ThorsAnvil::ThorsSlack::SlackPlugin
 {
         using WelcomeMessage = ThorsAnvil::Slack::WelcomeMessage;
 
@@ -35,7 +35,7 @@ class SlackBot: public ThorsAnvil::ThorsSlack::SlackPlugin
 
         void sendWelcomeMessage(std::string const& channel, std::string const& user);
     public:
-        SlackBot();
+        SlackMug();
 
         virtual void initPlugin(NisHttp::HTTPHandler& handler, std::string const& config) override;
         virtual void destPlugin(NisHttp::HTTPHandler& handler) override;
