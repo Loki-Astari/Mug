@@ -1,6 +1,89 @@
 #ifndef THORSANVIL_SLACK_BLOCKKIT_H
 #define THORSANVIL_SLACK_BLOCKKIT_H
 
+#if 0
+/*
+- A Simplification of Blocks in these comment.
+-
+Blocks:                                         =   Vec<Block>
+Block:                                          =   One Of
+                                                        Actions
+                                                        Context
+                                                        ContextActions
+                                                        Divider
+                                                        File
+                                                        Header                  => ElTextPlain
+                                                        Image
+                                                        Input
+                                                        Markdown
+                                                        RichText
+                                                        Section                 => ElText or Vec<ElText>
+                                                        Table                   => Vec<Vec<RichText>>
+                                                        Video
+
+ElTextPlain:                                    =   Plain
+
+ElText:                                         =   Plain | MarkDwn
+
+RichText:                                       =   Vec<ElRichTextObj>
+
+ElRichTextObj:                                  =   One Of
+                                                        RichTextSection         => Vec<RtElement>
+                                                        RichTextList            => Vec<RichTextSection>
+                                                        RichTextPreformatted    => Vec<RtElement>
+                                                        RichTextQuote           => Vec<RtElement>
+
+RtElement:                                      =   One Of
+                                                        ElRtBroadcast
+                                                        ElRtColor
+                                                        ElRtChannel
+                                                        ElRtDate
+                                                        ElRtEmoji
+                                                        ElRtLink
+                                                        ElRtText
+                                                        ElRtUser
+                                                        ElRtUserGroup
+
+Input:                                          =   One Of
+                                                        ElActCheckbox
+                                                        ElActDatePicker
+                                                        ElActDatetimePicker
+                                                        ElActEMail
+                                                        ElActNumberInput
+                                                        ElActPlainTextInput
+                                                        ElActRadioButton
+                                                        ElActRichTextInput
+                                                        ElActSelectMenu
+                                                        ElActTimePicker
+                                                        ElActURLInput
+
+ContextActions:                                 = Vec<ElFeedbackButton>
+
+ElFeedbackButton:                               = ElButton ElButton
+
+ElButton:                                       = ElText
+
+Context:                                        = Vec<ElImgItem>
+
+ElImgItem:                                      = One Of
+                                                        ElImg
+                                                        ElTextPlain
+                                                        ElTextMarkDown
+
+Actions:                                        = Vec<ElActive>
+
+ElActive:                                       = One Of
+                                                        ElActButton
+                                                        ElActCheckbox
+                                                        ElActDatePicker
+                                                        ElActDatetimePicker
+                                                        ElActOverflowMenu
+                                                        ElActRadioButton
+                                                        ElActSelectMenu
+                                                        ElActTimePicker
+*/
+#endif
+
 #include "ThorsSlackConfig.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
@@ -854,19 +937,19 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::RichTextQuote, elements, borde
 // -- Rich Text
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ElColInfo, align, is_wrapped);
 /// ----
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Actions, elements);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Context, elements);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ContextActions, elements);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Divider);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::File, external_id, source);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Header, text);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Image, alt_text, image_url, slack_file, title);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Input, label, element, dispatch_action, hint, optional);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Markdown, text);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Actions, elements, block_id);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Context, elements, block_id);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::ContextActions, elements, block_id);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Divider, block_id);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::File, external_id, source, block_id);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Header, text, block_id);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Image, alt_text, image_url, slack_file, title, block_id);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Input, label, element, dispatch_action, block_id, hint, optional);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Markdown, text, block_id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::RichText, elements, block_id);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Section, text, fields, accessory, expand);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Table, rows, column_settings);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Video, alt_text, author_name, description, provider_icon_url, provider_name, title, title_url, thumbnail_url, video_url);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Section, text, fields, block_id, accessory, expand);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Table, block_id, rows, column_settings);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::BlockKit::Video, alt_text, author_name, block_id, description, provider_icon_url, provider_name, title, title_url, thumbnail_url, video_url);
 
 
 #endif
