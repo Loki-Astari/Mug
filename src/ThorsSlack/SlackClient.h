@@ -3,6 +3,7 @@
 
 #include "ThorsSlackConfig.h"
 #include "API.h"
+#include "APIAuth.h"
 #include "SlackStream.h"
 #include "NisseHTTP/ClientRequest.h"
 #include "NisseHTTP/ClientResponse.h"
@@ -50,6 +51,7 @@ class SlackClient
 {
     Nisse::HeaderResponse   botHeaders;
     Nisse::HeaderResponse   userHeaders;
+    std::string             botId;
     private:
         template<typename T>
         void sendMessageData(T const& message, SlackStream& stream)
@@ -107,7 +109,14 @@ class SlackClient
             userHeaders.add("Connection", "close");
             userHeaders.add("Content-Type", "application/json; charset=utf-8");
             userHeaders.add("Authorization", "Bearer " + userToken);
+
+            sendMessage(ThorsAnvil::Slack::API::Auth::Test{},
+                        [&](ThorsAnvil::Slack::API::Auth::Test::Reply&& result)
+                        {
+                            botId = result.user_id;
+                        });
         }
+        std::string const& getBotId()   {return botId;}
 
         template<typename T>
         void  sendMessage(T const& message, SuccFunc<typename T::Reply>&& succ = [](typename T::Reply&&){}, FailFunc&& fail = [](API::Error&&){})
