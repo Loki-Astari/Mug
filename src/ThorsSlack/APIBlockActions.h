@@ -124,6 +124,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackContainer, type, message_ts, c
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackTeam, id, domain);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackEnterprise);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackChannel, id, name);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackView);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackSelectedCheckBox, type, selected_options);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackState, values);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackAction, type, action_id, block_id, action_ts, selected_date, selected_date_time, selected_time, text, value, selected_options, selected_option);
@@ -257,8 +258,10 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BlockActions, trigger_id, user, tea
             "block_id": "Ym8Fe",
             "action_id": "xbzI5",
             "action_ts": "1766301998.142073",
-            "selected_option": {
-                "text": {
+            "selected_option":
+            {
+                "text":
+                {
                     "type": "plain_text",
                     "text": "Done",
                     "emoji": true
@@ -275,8 +278,10 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BlockActions, trigger_id, user, tea
             "block_id": "JZeMg",
             "action_id": "HeZXe",
             "action_ts": "1766302220.823687",
-            "selected_option": {
-                "text": {
+            "selected_option":
+            {
+                "text":
+                {
                     "type": "plain_text",
                     "text": "Important",
                     "emoji": true
@@ -304,7 +309,8 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BlockActions, trigger_id, user, tea
           "action_id": "aQqei",
           "action_ts": "1766298664.946604",
           "value": "ButtonPressed",
-          "text": {
+          "text":
+          {
             "type": "plain_text",
             "text": "Button",
             "emoji": true
@@ -318,8 +324,10 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BlockActions, trigger_id, user, tea
             "block_id": "uaE8k",
             "action_id": "MyOverflow",
             "action_ts": "1766301218.876122",
-            "selected_option": {
-                "text": {
+            "selected_option":
+            {
+                "text":
+                {
                     "type": "plain_text",
                     "text": "Important",
                     "emoji": true
@@ -330,5 +338,4 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BlockActions, trigger_id, user, tea
     ]
 }
 
-}
 #endif
