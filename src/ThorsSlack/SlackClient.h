@@ -89,14 +89,14 @@ class SlackClient
             hit = true;
             std::string_view    body = input.preloadStreamIntoBuffer();
             if (body.find(R"("ok":false)") != std::string_view::npos) {
-                ThorsLogDebug("SlackClient", "getEventType", "Found: Error");
+                ThorsLogDebug("ThorsAnvil::Slack::SlackClient", "getEventType", "Found: Error");
                 return "ThorsAnvil::Slack::API::Error";
             }
             if (body.find(R"("ok":true)") != std::string_view::npos) {
-                ThorsLogDebug("SlackClient", "getEventType", "Found: Result: ", T::polyMorphicSerializerName());
+                ThorsLogDebug("ThorsAnvil::Slack::SlackClient", "getEventType", "Found: Result: ", T::polyMorphicSerializerName());
                 return T::polyMorphicSerializerName();
             }
-            ThorsLogDebug("SlackClient", "getEventType", "Found: Fallback object members");
+            ThorsLogDebug("ThorsAnvil::Slack::SlackClient", "getEventType", "Found: Fallback object members");
             return "";
         }
     public:

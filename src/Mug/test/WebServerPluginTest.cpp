@@ -81,7 +81,7 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
 {
     std::stringstream   configStream(R"(
         {
-            "controlPort": 8079,
+            "controlPort": 8078,
             "servers": [
                 {
                     "port":     8070,
@@ -126,7 +126,7 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
     ASSERT_EQ("Data for page 1\n", response.getBody());
 
     // Touch the control point to shut down the server.
-    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
+    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8078});
     ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
     headers.add("host", "localhost");
     headers.add("content-length", "0");
