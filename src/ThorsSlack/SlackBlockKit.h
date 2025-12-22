@@ -100,6 +100,7 @@ namespace ThorsAnvil::Slack::BlockKit
 {
 
 using OptString         = std::optional<std::string>;
+using OptTime           = std::optional<std::time_t>;
 using OptInt            = std::optional<int>;
 using OptBool           = std::optional<bool>;
 using VecString         = std::vector<std::string>;
@@ -231,7 +232,7 @@ using OptVector     = std::optional<std::vector<T>>;
         // https://docs.slack.dev/reference/block-kit/block-elements/datetime-picker-element/
         //std::string                 type;           // always "datetimepicker"
         OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
-        OptInt                      initial_date_time; // The initial date and time that is selected when the element is loaded, represented as a UNIX timestamp in seconds. This should be in the format of 10 digits, for example 1628633820 represents the date and time August 10th, 2021 at 03:17pm PST.
+        OptTime                     initial_date_time; // The initial date and time that is selected when the element is loaded, represented as a UNIX timestamp in seconds. This should be in the format of 10 digits, for example 1628633820 represents the date and time August 10th, 2021 at 03:17pm PST.
         OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a time is selected.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
         ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActDatetimePicker, datetimepicker);
