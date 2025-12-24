@@ -5,6 +5,7 @@
 #include "APIBlockActions.h"
 #include "Event.h"
 #include "EventCallback.h"
+#include "SlashCommand.h"
 #include "EventCallbackMessage.h"
 #include "EventCallbackReaction.h"
 #include "EventURLVerification.h"
@@ -45,6 +46,9 @@ class SlackEventHandler
         // https://api.slack.com/apps/<Application ID>/interactive-messages?
         // i.e. Interactivity & Shortcuts tab in your application configuration.
         void handleUserActions(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response);
+        // https://api.slack.com/apps/<Application ID>/slash-commands?
+        // i.e. Slash command handlings
+        void handleSlashCommand(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response);
 
     private:
         std::string getEventType(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response, bool& found);
@@ -136,6 +140,14 @@ class SlackEventHandler
             response.setStatus(501);
         }
 
+        /*
+         * The following methods is called from: handleSlashCommand
+         */
+        virtual void handleSlashCommand(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response, SlashCommand const& /*command*/)
+        {
+            ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleSlashCommand", "Call to unimplemented method");
+            response.setStatus(501);
+        }
         struct VisitorEvent
         {
             SlackEventHandler&                  plugin;
@@ -307,6 +319,14 @@ void SlackEventHandler::handleUserActions(ThorsAnvil::Nisse::HTTP::Request& requ
         ThorsLogError("UserTodoSlackEventHandler", "handleUserActions", "Unknown Actions", type);
     }
 }
+
+inline
+void SlackEventHandler::handleSlashCommand(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response)
+{
+    SlashCommand        command(request);
+    handleSlashCommand(request, response, command);
+}
+
 }
 
 #endif
