@@ -33,8 +33,8 @@ void SlackMug::handleCommand(NisHTTP::Request& request, NisHTTP::Response& respo
 
 void SlackMug::initPlugin(NisHttp::HTTPHandler& handler, std::string const& /*name*/)
 {
-    handler.addPath(NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request& request, NisHTTP::Response& response){eventHandler.handleEvent(request, response);return true;});
-    handler.addPath(NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request& request, NisHTTP::Response& response){handleCommand(request, response);return true;});
+    handler.addPath(NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request& request, NisHTTP::Response& response){eventHandler.handleEvent(request, response);return true;}, [&](NisHTTP::Request& request){return eventHandler.validateRequest(request);});
+    handler.addPath(NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request& request, NisHTTP::Response& response){handleCommand(request, response);return true;},            [&](NisHTTP::Request& request){return eventHandler.validateRequest(request);});
 }
 void SlackMug::destPlugin(NisHttp::HTTPHandler& handler)
 {

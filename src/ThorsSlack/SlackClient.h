@@ -89,14 +89,14 @@ class SlackClient
             hit = true;
             std::string_view    body = input.preloadStreamIntoBuffer();
             if (body.find(R"("ok":false)") != std::string_view::npos) {
-                ThorsLogDebug("ThorsAnvil::Slack::SlackClient", "getEventType", "Found: Error");
+                ThorsLogInfo("ThorsAnvil::Slack::SlackClient", "getEventType", "Found: Error");
                 return "ThorsAnvil::Slack::API::Error";
             }
             if (body.find(R"("ok":true)") != std::string_view::npos) {
-                ThorsLogDebug("ThorsAnvil::Slack::SlackClient", "getEventType", "Found: Result: ", T::polyMorphicSerializerName());
+                ThorsLogInfo("ThorsAnvil::Slack::SlackClient", "getEventType", "Found: Result: ", T::polyMorphicSerializerName());
                 return T::polyMorphicSerializerName();
             }
-            ThorsLogDebug("ThorsAnvil::Slack::SlackClient", "getEventType", "Found: Fallback object members");
+            ThorsLogTrack("ThorsAnvil::Slack::SlackClient", "getEventType", "Found: Fallback object members");
             return "";
         }
     public:
@@ -131,17 +131,7 @@ class SlackClient
             Nisse::StreamInput      input(stream, response.getContentSize());
             OutputType              reply;
             bool hit = false;
-            if constexpr (ThorsAnvil::Serialize::Traits<typename T::Reply>::type == ThorsAnvil::Serialize::TraitType::Invalid) {
-                std::cerr << "Response Data\n";
-                std::string line;
-                while (std::getline(input, line)) {
-                    std::cerr << ">" << line << "<\n";
-                }
-                std::cerr << "==============\n";
-            }
-            else {
-                input >> Ser::jsonImporter(reply, Ser::ParserConfig{}.setIdentifyDynamicClass([&](Ser::DataInputStream&){return getEventType<ResultType>(input, hit);}));
-            }
+            input >> Ser::jsonImporter(reply, Ser::ParserConfig{}.setIdentifyDynamicClass([&](Ser::DataInputStream&){return getEventType<ResultType>(input, hit);}));
 
             std::visit(VisitResult<ResultType>{std::move(succ), std::move(fail)}, reply);
         }

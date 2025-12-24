@@ -36,6 +36,9 @@ class SlackEventHandler
     public:
         SlackEventHandler(std::string_view slackSecret);
 
+        // Method to validate Slack message comes from slack.
+        bool validateRequest(ThorsAnvil::Nisse::HTTP::Request& request);
+
         // https://api.slack.com/apps/<Application ID>/event-subscriptions?
         // i.e. Event Subscriptions tab in your application configuration.
         void handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response);
@@ -44,7 +47,6 @@ class SlackEventHandler
         void handleUserActions(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response);
 
     private:
-        bool validateRequest(ThorsAnvil::Nisse::HTTP::Request& request);
         std::string getEventType(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response, bool& found);
 
         void handleURLVerificationEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::EventURLVerification const& event);
@@ -167,28 +169,15 @@ SlackEventHandler::SlackEventHandler(std::string_view slackSecret)
 inline
 void SlackEventHandler::handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response)
 {
-    /*
-     * TODO:
-     * =====
-     * Validate that the request is timely.
-     * and that it is correctly signed.
-     * See: https://docs.slack.dev/authentication/verifying-requests-from-slack
-     */
-    if (!validateRequest(request)) {
-        response.setStatus(400);
-        return;
-    }
-
     using ThorsAnvil::Nisse::HTTP::HeaderResponse;
     using namespace std::string_literals;
-    ThorsLogDebug("ThorsAnvil::Slack::SlackEventHandler", "handleEvent", "Message Recieved: ", request);
+    ThorsLogTrack("ThorsAnvil::Slack::SlackEventHandler", "handleEvent", "Message Recieved: ", request);
 
     ThorsAnvil::Slack::Event::Event     event;
     bool found = false;
     ThorsAnvil::Serialize::ParserConfig config;
     config.setIdentifyDynamicClass([&](ThorsAnvil::Serialize::DataInputStream&){return getEventType(request, response, found);});
     request.body() >> ThorsAnvil::Serialize::jsonImporter(event, config);
-    ThorsLogDebugWithData(event, "ThorsAnvil::Slack::SlackEventHandler", "handleEvent", "Message Body: ");
 
     std::visit(VisitorEvent{*this, request, response}, event);
 }
@@ -196,6 +185,15 @@ void SlackEventHandler::handleEvent(ThorsAnvil::Nisse::HTTP::Request& request, T
 inline
 bool SlackEventHandler::validateRequest(ThorsAnvil::Nisse::HTTP::Request& request)
 {
+#if 0
+    /*
+     * TODO:
+     * =====
+     * Validate that the request is timely.
+     * and that it is correctly signed.
+     * See: https://docs.slack.dev/authentication/verifying-requests-from-slack
+     */
+#endif
     std::string const&  sig = request.variables()["x-slack-signature"];
     std::string const&  timestampStr = request.variables()["x-slack-request-timestamp"];
     auto                timestamp = std::stoll(timestampStr);
@@ -231,18 +229,17 @@ std::string SlackEventHandler::getEventType(ThorsAnvil::Nisse::HTTP::Request& re
     if (!found) {
         found = true;
         std::string_view    body = request.preloadStreamIntoBuffer();
-        ThorsLogTrack("ThorsAnvil::Slack::SlackEventHandler", "getEventType", "Event Sent: ", body);
         if (body.find(R"("type":"url_verification")") != std::string_view::npos) {
-            ThorsLogDebug("ThorsAnvil::Slack::SlackEventHandler", "getEventType", "Found: url_verification");
+            ThorsLogTrack("ThorsAnvil::Slack::SlackEventHandler", "getEventType", "Found: url_verification");
             return "url_verification";
         }
         if (body.find(R"("type":"event_callback")") != std::string_view::npos) {
-            ThorsLogDebug("ThorsAnvil::Slack::SlackEventHandler", "getEventType", "Found: event_callback");
+            ThorsLogTrack("ThorsAnvil::Slack::SlackEventHandler", "getEventType", "Found: event_callback");
             return "event_callback";
         }
         ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "getEventType", "Could not identify event type: ERROR");
     }
-    ThorsLogDebug("ThorsAnvil::Slack::SlackEventHandler", "getEventType", "Found: Fallback object members");
+    ThorsLogTrack("ThorsAnvil::Slack::SlackEventHandler", "getEventType", "Found: Fallback object members");
     return "";
 }
 
@@ -250,7 +247,7 @@ std::string SlackEventHandler::getEventType(ThorsAnvil::Nisse::HTTP::Request& re
 inline
 void SlackEventHandler::handleURLVerificationEvent(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::EventURLVerification const& event)
 {
-    ThorsLogDebug("ThorsAnvil::Slack::SlackEventHandler", "handleURLVerificationEvent", "Sending URL Verification");
+    ThorsLogTrack("ThorsAnvil::Slack::SlackEventHandler", "handleURLVerificationEvent", "Sending URL Verification");
     ThorsAnvil::Nisse::HTTP::HeaderResponse  headers;
     headers.add("Content-Type", "application/json; charset=utf-8");
 
@@ -266,14 +263,14 @@ void SlackEventHandler::handleURLVerificationEvent(ThorsAnvil::Nisse::HTTP::Requ
 inline
 void SlackEventHandler::handleCallbackEvent(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response,ThorsAnvil::Slack::Event::EventCallback const& event)
 {
-    ThorsLogDebug("ThorsAnvil::Slack::SlackEventHandler", "handleCallbackEvent", "Handling callback event");
+    ThorsLogTrack("ThorsAnvil::Slack::SlackEventHandler", "handleCallbackEvent", "Handling callback event");
     std::visit(VisitorCallbackEvent{*this, request, response}, event.event);
 }
 
 inline
 void SlackEventHandler::handleUserActions(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response)
 {
-    ThorsLogDebug("ThorsAnvil::Slack::TodoSlackEventHandler", "handleUserActions", "Recievent User Action");
+    ThorsLogTrack("ThorsAnvil::Slack::TodoSlackEventHandler", "handleUserActions", "Recievent User Action");
     std::stringstream stream(request.variables()["payload"]);
 
     API::BlockActions       event;

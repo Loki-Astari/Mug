@@ -34,7 +34,7 @@ MugServer::MugServer(MugConfig const& config, MugServerMode /*mode*/)
     , control(*this)
     , libraryChecker(*this)
 {
-    ThorsLogDebug("MugServer", "MugServer", "Create Server");
+    ThorsLogInfo("MugServer", "MugServer", "Create Server");
     servers.reserve(config.servers.size());
 
     for (auto const& server: config.servers) {

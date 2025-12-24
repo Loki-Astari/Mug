@@ -46,8 +46,7 @@ void DLLib::load()
 {
     loadOnly();
     for (auto& config: configs) {
-        std::cerr << "Reload: " << config.second << "\n";
-        ThorsLogDebug("DLLib", "load", "initPlugin ", config.second);
+        ThorsLogInfo("DLLib", "load", "initPlugin ", config.second);
         plugin->initPlugin(config.first, config.second);
     }
 }
@@ -55,7 +54,7 @@ void DLLib::load()
 void DLLib::unload()
 {
     for (auto& config: configs) {
-        ThorsLogDebug("DLLib", "unload", "destPlugin ", config.second);
+        ThorsLogInfo("DLLib", "unload", "destPlugin ", config.second);
         plugin->destPlugin(config.first);
     }
     unloadOnly();
@@ -63,7 +62,7 @@ void DLLib::unload()
 
 void DLLib::loadOnly()
 {
-    ThorsLogDebug("DLLib", "loadOnly", "Reload DLL: ", path);
+    ThorsLogInfo("DLLib", "loadOnly", "Reload DLL: ", path);
     std::error_code ec;
     lib = ::dlopen(std::filesystem::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL | DLOPEN_PLAT_FLAG);
     if (lib == nullptr) {
@@ -97,14 +96,14 @@ void DLLib::unloadOnly()
 
 void DLLib::init(NisHttp::HTTPHandler& handler, std::string const& configPath)
 {
-    ThorsLogDebug("DLLib", "init", "Called ", plugin);
+    ThorsLogInfo("DLLib", "init", "Called ", plugin);
     configs.emplace_back(handler, configPath);
     plugin->initPlugin(handler, configPath);
 }
 
 void DLLibMap::load(NisHttp::HTTPHandler& handler, std::string const& pluginPath, std::string const& configPath)
 {
-    ThorsLogDebug("DLLibMap", "load ", pluginPath, " : ", configPath);
+    ThorsLogInfo("DLLibMap", "load ", pluginPath, " : ", configPath);
     std::error_code ec;
     std::filesystem::path    libPath = std::filesystem::canonical(pluginPath, ec);
     if (libPath.empty()) {
