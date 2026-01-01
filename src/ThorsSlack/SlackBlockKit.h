@@ -113,6 +113,12 @@ ElActive:                                       = One Of
 #include <initializer_list>
 #include <ctime>
 
+namespace ThorsAnvil::Slack::API
+{
+    struct SlackSelectedCheckBox;
+    struct SlackPlainTextInput;
+}
+
 namespace ThorsAnvil::Slack::BlockKit
 {
 

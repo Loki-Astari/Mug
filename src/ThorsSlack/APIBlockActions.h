@@ -51,6 +51,7 @@ struct SlackView
 {};
 using OptSlackView = std::optional<SlackView>;
 
+// The value for a CheckBox
 struct SlackSelectedCheckBox
 {
     // std::string                         type;               // checkboxes
@@ -60,12 +61,43 @@ struct SlackSelectedCheckBox
     ThorsAnvil_TypeFieldName(type);
 };
 
-using SlackValue  = std::map<std::string, SlackSelectedCheckBox>;
+// The value for a text input field.
+struct SlackPlainTextInput
+{
+    //std::string                         type;               // plain_text_input
+    std::string                         value;
+
+    std::string const&  getValue() const {return value;}
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::SlackPlainTextInput, plain_text_input);
+    ThorsAnvil_TypeFieldName(type);
+};
+
+using InputValue = std::variant<SlackSelectedCheckBox, SlackPlainTextInput>;
+
+// action_id of the "InputElement" object
+// Note The "InputElement" is part of the "Input" object.
+using SlackValue  = std::map<std::string, InputValue>;
+
+// block_id of the "Input" object
 using SlackValues = std::map<std::string, SlackValue>;
 
 struct SlackState
 {
     SlackValues                         values;
+    template<typename T>
+    typename T::ValueReturnType const& getValue(std::string const& block_id, std::string const& action_id) const
+    {
+        auto findBlock = values.find(block_id);
+        if (findBlock != std::end(values)) {
+            auto const& actionMap = findBlock->second;
+            auto findAction = actionMap.find(action_id);
+            if (findAction != std::end(actionMap)) {
+                return std::get<typename T::ValueStorageType>(findAction->second).getValue();
+            }
+        }
+        static typename T::ValueReturnType nullOption;
+        return nullOption;
+    }
 };
 using OptSlackState = std::optional<SlackState>;
 
