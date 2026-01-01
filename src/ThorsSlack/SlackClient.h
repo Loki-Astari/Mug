@@ -135,6 +135,25 @@ class SlackClient
 
             std::visit(VisitResult<ResultType>{std::move(succ), std::move(fail)}, reply);
         }
+        /*
+         * This is used to check the SLACK response object to validate that it matches the documentation.
+         * You should not be using this unless you are doing some debugging or setting up a new response type
+         */
+        template<typename T>
+        void  validateMessage(T const& message)
+        {
+            SlackStream             stream;
+            std::cerr << "Sending: " << ThorsAnvil::Serialize::jsonExporter(message) << "\n----------\n";
+            sendMessageData(message, stream);
+
+            Nisse::ClientResponse   response(stream);
+            Nisse::StreamInput      input(stream, response.getContentSize());
+            std::string line;
+            while (std::getline(input, line)) {
+                std::cerr << "L: " << line << "\n";
+            }
+            std::cerr << "DONE\n\n";
+        }
         template<typename T>
         bool  sendMessage(T const& message, typename T::Reply& result, bool dumpError = false)
         {
