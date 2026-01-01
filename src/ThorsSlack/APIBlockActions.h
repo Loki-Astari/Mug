@@ -53,8 +53,11 @@ using OptSlackView = std::optional<SlackView>;
 
 struct SlackSelectedCheckBox
 {
-    std::string                         type;
+    // std::string                         type;               // checkboxes
     BK::OptVecElOption                  selected_options;
+    BK::OptVecElOption const&  getValue() const {return selected_options;}
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::SlackSelectedCheckBox, checkboxes);
+    ThorsAnvil_TypeFieldName(type);
 };
 
 using SlackValue  = std::map<std::string, SlackSelectedCheckBox>;
@@ -125,7 +128,8 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackTeam, id, domain);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackEnterprise);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackChannel, id, name);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackView);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackSelectedCheckBox, type, selected_options);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackSelectedCheckBox, selected_options);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackPlainTextInput, value);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackState, values);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::SlackAction, type, action_id, block_id, action_ts, selected_date, selected_date_time, selected_time, text, value, selected_options, selected_option);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BlockActions, trigger_id, user, team, container, api_app_id, enterprise, is_enterprise_install, channel, message, view, actions, state, token, response_url, hash, function_data, interactivity, bot_access_token);

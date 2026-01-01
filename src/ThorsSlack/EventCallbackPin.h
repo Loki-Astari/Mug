@@ -172,7 +172,7 @@ struct PinAdded
     PinnedInfo                  pinned_info;
     std::string                 event_ts;
 
-    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::ReactionAdded, pin_added);
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::PinAdded, pin_added);
     ThorsAnvil_TypeFieldName(type);
 };
 
@@ -187,7 +187,7 @@ struct PinRemoved
     PinnedInfo                  pinned_info;
     bool                        has_pins;
     std::string                 event_ts;
-    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::ReactionAdded, pin_removed);
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::PinRemoved, pin_removed);
     ThorsAnvil_TypeFieldName(type);
 };
 

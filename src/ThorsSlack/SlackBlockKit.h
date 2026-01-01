@@ -140,7 +140,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptBool                     verbatim;       // When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed.
                                                     // When set to true, Slack will continue to process all markdown formatting and manual parsing strings, but it won’t modify any plain-text content. For example, channel names will not be hyperlinked.
                                                     // This field is only usable when type is mrkdwn.
-        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElTextMarkDown, plain_text);
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElTextPlain, plain_text);
         ThorsAnvil_TypeFieldName(type);
     };
     using OptElTextPlain = std::optional<ElTextPlain>;
@@ -219,6 +219,8 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElActCheckbox
     {
+        using ValueStorageType = API::SlackSelectedCheckBox;
+        using ValueReturnType  = OptVecElOption;
         // https://docs.slack.dev/reference/block-kit/block-elements/checkboxes-element/
         //std::string                 type;           // always "checkboxes".
         OptString                   action_id;      // An identifier for the action triggered when the checkbox group is changed. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
@@ -241,7 +243,7 @@ using OptVector     = std::optional<std::vector<T>>;
         OptElConfirm                confirm;        // A confirm object that defines an optional confirmation dialog that appears after a date is selected.
         OptBool                     focus_on_load;  // Indicates whether the element will be set to auto focus within the view object. Only one element can be set to true. Defaults to false.
         OptElTextPlain              placeholder;    // A plain_text only text object that defines the placeholder text shown on the datepicker. Maximum length for the text in this field is 150 characters.
-        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::OptActDatepicker, datepicker);
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElActDatePicker, datepicker);
         ThorsAnvil_TypeFieldName(type);
     };
     struct ElActDatetimePicker
@@ -342,6 +344,8 @@ using OptVector     = std::optional<std::vector<T>>;
     };
     struct ElActPlainTextInput
     {
+        using ValueStorageType = API::SlackPlainTextInput;
+        using ValueReturnType  = std::string;
         // https://docs.slack.dev/reference/block-kit/block-elements/plain-text-input-element/
         // std::string                 type;           // always "plain_text_input"
         OptString                   action_id;      // An identifier for the input value when the parent modal is submitted. You can use this when you receive a view_submission payload to identify the value of the input element. Should be unique among all other action_ids in the containing block. Maximum length is 255 characters.
@@ -384,7 +388,7 @@ using OptVector     = std::optional<std::vector<T>>;
         std::string                 alt_text;       // A plain-text summary of the image. This should not contain any markup.
         OptString                   image_url;      // The URL for a publicly hosted image. You must provide either an image_url or slack_file. Maximum length for this field is 3000 characters.
         OptElImageFile              slack_file;     // A Slack image file object that defines the source of the image.
-        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElImage, image);
+        ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ElImg, image);
         ThorsAnvil_TypeFieldName(type);
     };
     using ElImgItem = std::variant<ElImg, ElTextPlain, ElTextMarkDown>;
@@ -587,7 +591,7 @@ struct ContextActions
     std::vector<ElFeedbackButton> elements;       // Max 5 elements.
                                                 // An array of feedback buttons elements and icon button elements.
     OptString                   block_id;
-    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::Context_Actions, context_actions);
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::BlockKit::ContextActions, context_actions);
     ThorsAnvil_TypeFieldName(type);
 };
 struct Divider

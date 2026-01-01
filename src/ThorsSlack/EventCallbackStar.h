@@ -53,7 +53,7 @@ struct StarAdded
     std::string                 user;
     StarItem                    item;
     std::string                 event_ts;
-    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::ReactionAdded, star_added);
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::StarAdded, star_added);
     ThorsAnvil_TypeFieldName(type);
 };
 struct StarRemoved
@@ -62,7 +62,7 @@ struct StarRemoved
     std::string                 user;
     StarItem                    item;
     std::string                 event_ts;
-    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::ReactionAdded, star_removed);
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::StarRemoved, star_removed);
     ThorsAnvil_TypeFieldName(type);
 };
 

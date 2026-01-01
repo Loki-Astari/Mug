@@ -69,7 +69,7 @@ struct ReactionRemoved
     ReactionItem                item;                   // doc
     std::string                 item_user;
     std::string                 event_ts;               // doc
-    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::ReactionAdded, reaction_removed);
+    ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::ReactionRemoved, reaction_removed);
     ThorsAnvil_TypeFieldName(type);
 };
 
