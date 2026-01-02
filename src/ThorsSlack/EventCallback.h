@@ -9,6 +9,7 @@
 #include "EventCallbackReaction.h"
 #include "EventCallbackPin.h"
 #include "EventCallbackStar.h"
+#include "EventCallbackAppMentioned.h"
 #include "ThorSerialize/Traits.h"
 #include "ThorSerialize/SerUtil.h"
 #include <string>
@@ -19,7 +20,7 @@
 namespace ThorsAnvil::Slack::Event
 {
 
-using CallbackMessage = std::variant<Message, ReactionAdded, ReactionRemoved, PinAdded, PinRemoved, StarAdded, StarRemoved>;
+using CallbackMessage = std::variant<Message, ReactionAdded, ReactionRemoved, PinAdded, PinRemoved, StarAdded, StarRemoved, AppMentioned>;
 
 struct Enterprise
 {};
