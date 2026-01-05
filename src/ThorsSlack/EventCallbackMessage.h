@@ -63,24 +63,38 @@ namespace ThorsAnvil::Slack::Event
   "event_context": "4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMDk1WEpISDU4OSIsImFpZCI6IkEwOVJRRlhTRUtDIiwiY2lkIjoiQzA5UlUyVVJZTVMifQ"
 }
 #endif
+
+using OptString = std::optional<std::string>;
+using OptInt = std::optional<int>;
+using OptBool = std::optional<bool>;
+using VecString = std::vector<std::string>;
+using OptVecString = std::optional<VecString>;
 struct Message
 {
     //std::string                 type;                           // doc
-    std::string                 user;                           // doc
-    std::string                 ts;                             // doc
-    std::string                 client_msg_id;
-    std::string                 text;                           // doc
-    std::string                 team;
-    BlockKit::OptBlocks         blocks;
-    std::string                 channel;                        // doc
-    std::string                 event_ts;                       // doc
-    std::string                 channel_type;                   // doc
+    std::string                 user;                           // doc      C
+    std::string                 ts;                             // doc      C
+    std::string                 client_msg_id;                  //          C
+    std::string                 text;                           // doc      C
+    std::string                 team;                           //          C
+    BlockKit::OptBlocks         blocks;                         //          C
+    OptString                   channel;                        // doc
+    OptString                   event_ts;                       // doc
+    OptString                   channel_type;                   // doc
+    // --
+    OptString                   thread_ts;
+    OptInt                      reply_count;
+    OptInt                      reply_users_count;
+    OptString                   latest_reply;
+    OptVecString                reply_users;
+    OptBool                     is_locked;
+    OptBool                     subscribed;
     ThorsAnvil_VariantSerializerWithName(ThorsAnvil::Slack::Event::Message, message);
     ThorsAnvil_TypeFieldName(type);
 };
 
 }
 
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Event::Message, user, ts, client_msg_id, text, team, blocks, channel, event_ts, channel_type);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::Event::Message, user, ts, client_msg_id, text, team, blocks, channel, event_ts, channel_type, thread_ts, reply_count, reply_users_count, latest_reply, reply_users, is_locked, subscribed);
 
 #endif

@@ -37,6 +37,8 @@ struct Authorization
 using VecAuthorization = std::vector<Authorization>;
 using Team = std::string;
 using OptString = std::optional<std::string>;
+using OptBool = std::optional<bool>;
+using OptInt = std::optional<int>;
 using VecTeam = std::vector<Team>;
 using OptVecTeam = std::optional<VecTeam>;
 using OptContext = std::optional<Context*>;

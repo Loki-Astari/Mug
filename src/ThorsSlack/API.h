@@ -54,6 +54,7 @@ struct BotProfile
     std::time_t                 updated;
     std::string                 team_id;
 };
+using OptBotProfile = std::optional<BotProfile>;
 
 struct Reaction
 {
@@ -69,17 +70,26 @@ struct Message
     std::string                 user;
     std::string                 type;
     std::string                 ts;
-    std::string                 bot_id;
-    std::string                 app_id;
+    OptString                   client_msg_id;
+    OptString                   bot_id;
+    OptString                   app_id;
     std::string                 text;
     std::string                 team;
-    BotProfile                  bot_profile;
+    OptString                   thread_ts;
+    OptInt                      reply_count;
+    OptInt                      reply_users_count;
+    OptString                   latest_reply;
+    OptVecString                reply_users;
+    OptBool                     is_locked;
+    OptBool                     subscribed;
+    OptBotProfile               bot_profile;
     BlockKit::Blocks            blocks;
     OptVecString                pinned_to;
     OptString                   permalink;
     OptVecReaction              reactions;
 };
 using OptMessage = std::optional<Message>;
+using VecMessage = std::vector<Message>;
 
 struct ResponseMetaData
 {
@@ -193,7 +203,7 @@ ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ListReply, ok, items, response_meta
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotIcon, image_36, image_48, image_72);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::BotProfile, id, app_id, user_id, name, icons, deleted, updated, team_id);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Reaction, name, users, count);
-ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Message, user, type, ts, bot_id, app_id, text, team, bot_profile, blocks, pinned_to, permalink, reactions);
+ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Message, user, type, ts, client_msg_id, bot_id, app_id, text, team, thread_ts, reply_count, reply_users_count, latest_reply, reply_users, is_locked, subscribed, bot_profile, blocks, pinned_to, permalink, reactions);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::ResponseMetaData, messages);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::OK, ok);
 ThorsAnvil_MakeTrait(ThorsAnvil::Slack::API::Error, ok, error, needed, provided, errors, warning, warnings, response_metadata);

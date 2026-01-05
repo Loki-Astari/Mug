@@ -18,13 +18,13 @@ void SlackEventHandler::handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Requ
 
         client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage{.channel = channel, .text = text});
         if (event.text == "start") {
-            sendWelcomeMessage(event.channel, userId);
+            sendWelcomeMessage(event.channel.value(), userId);
             return;
         }
         if (event.text.find("POP")) {
             client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage
                                {
-                                    .channel = event.channel,
+                                    .channel = event.channel.value(),
                                     .text = "We saw a bad work!!!",
                                     .thread_ts = event.ts,
                                });
