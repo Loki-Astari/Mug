@@ -178,7 +178,7 @@ TEST(MugServerTest, CallALoadedLib)
                     "actions": [
                         {
                             "pluginPath":  "../TestExtra/L3/release/libL3)" SLIB R"(",
-                            "configPath":  "/page1"
+                            "config":  "/page1"
                         }
                     ]
                 }

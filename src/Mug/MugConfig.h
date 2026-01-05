@@ -15,8 +15,8 @@ namespace ThorsAnvil::ThorsMug
 
 struct Plugin
 {
-    std::string                 pluginPath;    // The path to the shared library.
-    std::string                 configPath;    // The path to config for this instance.
+    std::string                     pluginPath;    // The path to the shared library.
+    ThorsAnvil::Serialize::AnyBlock config;        // The config information for the plugin.
 };
 
 // A Port config is a port with optional SSL certificate to listen to.
@@ -39,7 +39,7 @@ struct MugConfig
 
 }
 
-ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::Plugin, pluginPath, configPath);
+ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::Plugin, pluginPath, config);
 ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::PortConfig, port, certPath, actions);
 ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::MugConfig, servers, controlPort, libraryCheckTime);
 

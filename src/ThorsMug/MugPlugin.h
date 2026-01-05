@@ -15,7 +15,7 @@ namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
 extern "C"
 {
-    typedef void*(*MugFunc)();
+    typedef void*(*MugFunc)(char const* config);
 }
 
 typedef void (*MugHanlde)(ThorsAnvil::Nisse::HTTP::Request&, ThorsAnvil::Nisse::HTTP::Response&);
@@ -26,11 +26,9 @@ namespace ThorsAnvil::ThorsMug
 class MugPlugin
 {
     public:
-        virtual ~MugPlugin()                                                            {}
-        virtual void spinUp()                                                           {}
-        virtual void spinDown()                                                         {}
-        virtual void initPlugin(NisHttp::HTTPHandler& handler, std::string const& config)   = 0;
-        virtual void destPlugin(NisHttp::HTTPHandler& handler)                              = 0;
+        virtual ~MugPlugin()                                    {}
+        virtual void initPlugin(NisHttp::HTTPHandler& handler)  = 0;
+        virtual void destPlugin(NisHttp::HTTPHandler& handler)  = 0;
 };
 
 }

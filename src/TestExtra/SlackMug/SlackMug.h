@@ -21,9 +21,9 @@ class SlackMug: public ThorsAnvil::ThorsMug::MugPlugin
         void handleCommand(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response);
 
     public:
-        SlackMug();
+        SlackMug(char const* config);
 
-        virtual void initPlugin(NisHttp::HTTPHandler& handler, std::string const& config) override;
+        virtual void initPlugin(NisHttp::HTTPHandler& handler) override;
         virtual void destPlugin(NisHttp::HTTPHandler& handler) override;
 
 };

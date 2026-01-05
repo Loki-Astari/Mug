@@ -12,11 +12,14 @@ namespace ThorsAnvil::ThorsMug::WebServer
 
 class WebServerPlugin: public ThorsAnvil::ThorsMug::MugPlugin
 {
+    std::filesystem::path const contentDir;
+
     public:
-        virtual void initPlugin(NisHttp::HTTPHandler& handler, std::string const& config) override;
+        WebServerPlugin(std::string const& config);
+        virtual void initPlugin(NisHttp::HTTPHandler& handler) override;
         virtual void destPlugin(NisHttp::HTTPHandler& handler) override;
 
-        void handleRequestPath(NisHttp::Request& request, NisHttp::Response& response, std::filesystem::path const& contentDir);
+        void handleRequestPath(NisHttp::Request& request, NisHttp::Response& response);
 };
 
 }

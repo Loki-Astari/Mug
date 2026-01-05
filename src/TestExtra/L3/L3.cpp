@@ -16,7 +16,7 @@ class L3Plugin: public ThorsAnvil::ThorsMug::MugPlugin
         }
     }
     public:
-        virtual void initPlugin(NisHttp::HTTPHandler& handler, std::string const& /*name*/) override
+        virtual void initPlugin(NisHttp::HTTPHandler& handler) override
         {
             handler.addPath("/Plop/{Command}",[&](ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response){handle(request, response);return true;});
         }
@@ -29,7 +29,7 @@ class L3Plugin: public ThorsAnvil::ThorsMug::MugPlugin
 L3Plugin    l3;
 
 
-extern "C" void* mugFunction()
+extern "C" void* mugFunction(char const*)
 {
     return dynamic_cast<ThorsAnvil::ThorsMug::MugPlugin*>(&l3);
 }

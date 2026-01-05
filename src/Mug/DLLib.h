@@ -2,8 +2,9 @@
 #define THORSANVIL_THORS_MUG_DLLIB_H
 
 #include "ThorsMugConfig.h"
+#include "MugConfig.h"
 #include "ThorsMug/MugPlugin.h"
-
+#include "ThorSerialize/Traits.h"
 #include "NisseHTTP/HTTPHandler.h"
 
 #include <map>
@@ -21,38 +22,47 @@ using ThorsAnvil::Nisse::HTTP::HTTPHandler;
 class DLLib
 {
     using HandlerRef = std::reference_wrapper<HTTPHandler>;
-    using Config     = std::pair<HandlerRef, std::string>;
+    struct Config
+    {
+        HandlerRef      handler;
+        std::string     config;
+        MugPlugin*      plugin;
+    };
 
-    std::filesystem::path           path;
-    std::filesystem::file_time_type lastModified;
-    void*                           lib             = nullptr;
-    MugPlugin*                      plugin          = nullptr;
-    std::vector<Config>             configs;
-
-    private:
-        void load();
-        void unload();
-        void loadOnly();
-        void unloadOnly();
-        static char const* safeDLerror();
+    std::filesystem::path               path;
+    std::filesystem::file_time_type     lastModified;
+    void*                               lib             = nullptr;
+    MugFunc                             mugFunc;
+    std::vector<Config>                 instances;
 
     public:
-        DLLib(std::filesystem::path const& path);
         DLLib(DLLib const&)             = delete;
         DLLib& operator=(DLLib const&)  = delete;
         DLLib(DLLib&& move)             = delete;
         DLLib& operator=(DLLib&&)       = delete;
-        ~DLLib();
 
+        DLLib(std::filesystem::path const&);
+        ~DLLib();
+        void addInstance(HTTPHandler& handler, Plugin const& name);
         bool check();
-        void init(HTTPHandler& handler, std::string const& configPath);
+    private:
+        void load();
+        void unload();
+
+        void loadLibrary();
+
+        static char const* safeDLerror();
+
 };
 
 class DLLibMap
 {
-    std::map<std::string, DLLib>  libs;
+    using Container = std::map<std::filesystem::path, DLLib>;
+    using Iterator = Container::iterator;
+
+    Container   libs;
     public:
-        void    load(HTTPHandler& handler, std::string const& pluginPath, std::string const& configPath);
+        void    load(HTTPHandler& handler, Plugin const& pluginInfo);
         void    checkAll()    {for (auto& lib: libs){lib.second.check();}}
 };
 

@@ -43,7 +43,7 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFile)
                     "actions": [
                         {
                             "pluginPath":  "../TestExtra/WebServerMug/debug/libWebServerMug)" SLIB R"(",
-                            "configPath":  "test/data/pages"
+                            "config":      "test/data/pages"
                         }
                     ]
                 }
@@ -88,7 +88,7 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
                     "actions": [
                         {
                             "pluginPath":  "../TestExtra/WebServerMug/debug/libWebServerMug)" SLIB R"(",
-                            "configPath":  "test/data/pages"
+                            "config":      "test/data/pages"
                         }
                     ]
                 }

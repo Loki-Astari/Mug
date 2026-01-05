@@ -41,9 +41,9 @@ MugServer::MugServer(MugConfig const& config, MugServerMode /*mode*/)
         ThorsLogDebug("MugServer", "MugServer", "Adding Server: ", server.port);
         servers.emplace_back();
         for (auto const& action: server.actions) {
-            ThorsLogDebug("MugServer", "MugServer", "  Adding Action: ", action.pluginPath, " Config: ", action.configPath);
+            ThorsLogDebug("MugServer", "MugServer", "  Adding Action: ", action.pluginPath, " Config: ", action.config.getString());
 
-            libraries.load(servers.back(), action.pluginPath, action.configPath);
+            libraries.load(servers.back(), action);
         }
         listen(getServerInit(server.certPath, server.port), servers.back());
     }
