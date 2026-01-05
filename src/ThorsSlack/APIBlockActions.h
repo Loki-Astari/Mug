@@ -103,7 +103,7 @@ using OptSlackState = std::optional<SlackState>;
 
 struct SlackAction
 {
-    std::string                         type;               // "checkboxes", "datepicker", "datetimepicker", "radio_buttons", "static_select", "timepicker", "button", "overflow",
+    std::string                         type;               // "checkboxes", "datepicker", "datetimepicker", "radio_buttons", "static_select", "timepicker", "button", "overflow", plain_text_input
 
     std::string                         action_id;
     std::string                         block_id;

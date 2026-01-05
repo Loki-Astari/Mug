@@ -38,7 +38,7 @@ using ThorsAnvil::Nisse::HTTP::Request;
 using ThorsAnvil::Nisse::HTTP::Response;
 
 using EventObject = std::variant<API::BlockActions, API::Views::ViewSubmission>;
-using CmdEvent  = std::variant<SlashCommand const*, Event::Message const*, Event::ReactionAdded const*, Event::ReactionRemoved const*, Event::PinAdded const*, Event::PinRemoved const*, Event::StarAdded const*, Event::StarRemoved const*, Event::AppMentioned const*, API::Views::ViewSubmission const*>;
+using CmdEvent  = std::variant<SlashCommand const*, Event::EventCallback const*, API::Views::ViewSubmission const*>;
 
 
 class SlackEventHandler
@@ -46,8 +46,8 @@ class SlackEventHandler
         using Cmd       = std::function<void(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response, CmdEvent const& event)>;
         using CmdMap    = std::map<std::string, Cmd>;
 
-        std::string_view  slackSecret;
-        CmdMap            cmdMap;
+        std::string     slackSecret;
+        CmdMap          cmdMap;
     public:
         SlackEventHandler(std::string_view slackSecret, CmdMap&& cmdMap = {});
 
@@ -74,15 +74,15 @@ class SlackEventHandler
         /*
          * The following 7 methods are called from: handleCallbackEvent Which is called from handleEvent.
          */
-        virtual void handleCallbackMessageEvent(Request& request, Response& response, Event::Message const& event)                  { handleUsingCmdMap(request, response, &event, "Message", "handleCallbackMessageEvent");}
-        virtual void handleCallbackReactionAddedEvent(Request& request, Response& response, Event::ReactionAdded const& event)      { handleUsingCmdMap(request, response, &event, "Reaction/Add/" + event.reaction, "handleCallbackReactionAddedEvent");}
-        virtual void handleCallbackReactionRemovedEvent(Request& request, Response& response, Event::ReactionRemoved const& event)  { handleUsingCmdMap(request, response, &event, "Reaction/Rem/" + event.reaction, "handleCallbackReactionRemovedEvent");}
-        virtual void handleCallbackPinAddedEvent(Request& request, Response& response, Event::PinAdded const& event)                { handleUsingCmdMap(request, response, &event, "Pin/Add", "handleCallbackPinAddedEvent");}
-        virtual void handleCallbackPinRemovedEvent(Request& request, Response& response, Event::PinRemoved const& event)            { handleUsingCmdMap(request, response, &event, "Pin/Rem", "handleCallbackPinRemovedEvent");}
-        virtual void handleCallbackStarAddedEvent(Request& request, Response& response, Event::StarAdded const& event)              { handleUsingCmdMap(request, response, &event, "Star/Add", "handleCallbackStarAddedEvent");}
-        virtual void handleCallbackStarRemovedEvent(Request& request, Response& response, Event::StarRemoved const& event)          { handleUsingCmdMap(request, response, &event, "Star/Rem", "handleCallbackStarRemovedEvent");}
-        virtual void handleCallbackAppMentionedEvent(Request& request, Response& response, Event::AppMentioned const& event)        { handleUsingCmdMap(request, response, &event, "App/Mentioned", "handleCallbackAppMentionedEvent");}
-        virtual void handleActionsViewSubmit(Request& request, Response& response, API::Views::ViewSubmission const& event)         { handleUsingCmdMap(request, response, &event, "View/" + event.view.id, "handleActionsViewSubmit"); }
+        virtual void handleCallbackMessageEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::Message const&)                       { handleUsingCmdMap(request, response, &eventBase, "Event/Message", "handleCallbackMessageEvent");}
+        virtual void handleCallbackReactionAddedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::ReactionAdded const& event)     { handleUsingCmdMap(request, response, &eventBase, "Event/ReactionAdded/" + event.reaction, "handleCallbackReactionAddedEvent");}
+        virtual void handleCallbackReactionRemovedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::ReactionRemoved const& event) { handleUsingCmdMap(request, response, &eventBase, "Event/ReactionRemoved/" + event.reaction, "handleCallbackReactionRemovedEvent");}
+        virtual void handleCallbackPinAddedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::PinAdded const&)                     { handleUsingCmdMap(request, response, &eventBase, "Event/PinAdded", "handleCallbackPinAddedEvent");}
+        virtual void handleCallbackPinRemovedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::PinRemoved const&)                 { handleUsingCmdMap(request, response, &eventBase, "Event/PinRemoved", "handleCallbackPinRemovedEvent");}
+        virtual void handleCallbackStarAddedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::StarAdded const&)                   { handleUsingCmdMap(request, response, &eventBase, "Event/StarAdded", "handleCallbackStarAddedEvent");}
+        virtual void handleCallbackStarRemovedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::StarRemoved const&)               { handleUsingCmdMap(request, response, &eventBase, "Event/StarRemoved", "handleCallbackStarRemovedEvent");}
+        virtual void handleCallbackAppMentionedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::AppMentioned const&)             { handleUsingCmdMap(request, response, &eventBase, "Event/AppMentioned", "handleCallbackAppMentionedEvent");}
+        virtual void handleActionsViewSubmit(Request& request, Response& response, API::Views::ViewSubmission const& event)                                               { handleUsingCmdMap(request, response, &event, "View/ViewSubmission/" + event.view.id, "handleActionsViewSubmit"); }
 
         /*
          * The following 8 methods are called from: handleUserActions
@@ -124,18 +124,19 @@ class SlackEventHandler
         };
         struct VisitorCallbackEvent
         {
-            SlackEventHandler&      plugin;
-            Request&                request;
-            Response&               response;
+            SlackEventHandler&          plugin;
+            Event::EventCallback const& eventBase;
+            Request&                    request;
+            Response&                   response;
 
-            void operator()(Event::Message const& event)                 {plugin.handleCallbackMessageEvent(request, response, event);}
-            void operator()(Event::ReactionAdded const& event)           {plugin.handleCallbackReactionAddedEvent(request, response, event);}
-            void operator()(Event::ReactionRemoved const& event)         {plugin.handleCallbackReactionRemovedEvent(request, response, event);}
-            void operator()(Event::PinAdded const& event)                {plugin.handleCallbackPinAddedEvent(request, response, event);}
-            void operator()(Event::PinRemoved const& event)              {plugin.handleCallbackPinRemovedEvent(request, response, event);}
-            void operator()(Event::StarAdded const& event)               {plugin.handleCallbackStarAddedEvent(request, response, event);}
-            void operator()(Event::StarRemoved const& event)             {plugin.handleCallbackStarRemovedEvent(request, response, event);}
-            void operator()(Event::AppMentioned const& event)            {plugin.handleCallbackAppMentionedEvent(request, response, event);}
+            void operator()(Event::Message const& event)                 {plugin.handleCallbackMessageEvent(request, response, eventBase, event);}
+            void operator()(Event::ReactionAdded const& event)           {plugin.handleCallbackReactionAddedEvent(request, response, eventBase, event);}
+            void operator()(Event::ReactionRemoved const& event)         {plugin.handleCallbackReactionRemovedEvent(request, response, eventBase, event);}
+            void operator()(Event::PinAdded const& event)                {plugin.handleCallbackPinAddedEvent(request, response, eventBase, event);}
+            void operator()(Event::PinRemoved const& event)              {plugin.handleCallbackPinRemovedEvent(request, response, eventBase, event);}
+            void operator()(Event::StarAdded const& event)               {plugin.handleCallbackStarAddedEvent(request, response, eventBase, event);}
+            void operator()(Event::StarRemoved const& event)             {plugin.handleCallbackStarRemovedEvent(request, response, eventBase, event);}
+            void operator()(Event::AppMentioned const& event)            {plugin.handleCallbackAppMentionedEvent(request, response, eventBase, event);}
         };
         struct BlockIdGetter // Extract block_id from Block type
         {
@@ -271,7 +272,7 @@ inline
 void SlackEventHandler::handleCallbackEvent(Request& request, Response& response, Event::EventCallback const& event)
 {
     ThorsLogTrack("ThorsAnvil::Slack::SlackEventHandler", "handleCallbackEvent", "Handling callback event");
-    std::visit(VisitorCallbackEvent{*this, request, response}, event.event);
+    std::visit(VisitorCallbackEvent{*this, event, request, response}, event.event);
 }
 
 inline
@@ -313,7 +314,7 @@ void SlackEventHandler::handleUserActions(Request& request, Response& response)
             handleActionsButton(request, response, event, action.action_id, action.value.value());
         }
         else {
-            ThorsLogError("UserTodoSlackEventHandler", "handleUserActions", "Unknown Actions", type);
+            ThorsLogError("UserTodoSlackEventHandler", "handleUserActions", "Unknown Action: ", request.variables()["payload"]);
         }
     }
     else if (std::holds_alternative<API::Views::ViewSubmission>(eventObject)) {
