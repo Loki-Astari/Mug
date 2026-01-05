@@ -94,6 +94,7 @@ class SlackEventHandler
         virtual void handleActionsStaticMenu(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)            { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsStaticMenu", "Call to unimplemented method"); response.setStatus(501); }
         virtual void handleActionsOverflowMenu(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)          { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsOverflowMenu", "Call to unimplemented method"); response.setStatus(501); }
         virtual void handleActionsButton(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)                { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsButton", "Call to unimplemented method"); response.setStatus(501); }
+        virtual void handleActionsPlainTextInput(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)        { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsPlainTextInput", "Call to unimplemented method"); response.setStatus(501); }
         virtual void handleActionsCheckBox(Request& /*request*/, Response& response, API::BlockActions const& event, std::string const& action_id, BlockKit::VecElOption const& value);
 
 
@@ -312,6 +313,9 @@ void SlackEventHandler::handleUserActions(Request& request, Response& response)
         }
         else if (type == "button") {
             handleActionsButton(request, response, event, action.action_id, action.value.value());
+        }
+        else if (type == "plain_text_input") {
+            handleActionsPlainTextInput(request, response, event, action.action_id, action.value.value());
         }
         else {
             ThorsLogError("UserTodoSlackEventHandler", "handleUserActions", "Unknown Action: ", request.variables()["payload"]);
