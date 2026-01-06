@@ -9,7 +9,7 @@ using namespace std::literals::string_literals;
 
 int main()
 {
-    loguru::g_stderr_verbosity = 9;
+    ThorsLogLevel(9);
     const Environment     environment(".slackenv");
     ThorsLogDebug("main", "main", "SlackCLI ", environment.botToken);
 
