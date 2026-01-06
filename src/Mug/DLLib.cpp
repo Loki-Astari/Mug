@@ -17,15 +17,14 @@ DLLib::DLLib(std::filesystem::path const& path)
 DLLib::~DLLib()
 {
     unload();
-    //unloadLibrary();
+    unloadLibrary();
 }
 
 void DLLib::load()
 {
     for (auto& instance: instances) {
         ThorsLogInfo("DLLib", "load", "Plugin Config: ", instance.config);
-        void*       plugin      = mugFunc(instance.config.c_str());
-        instance.plugin         = reinterpret_cast<MugPlugin*>(plugin);
+        instance.plugin         = mugFunc(instance.config.c_str());
         instance.plugin->start(instance.handler);
     }
 }
@@ -42,8 +41,7 @@ void DLLib::addInstance(HTTPHandler& handler, Plugin const& pluginInfo)
 {
     ThorsLogInfo("DLLib", "addInstance", "Called ", path.c_str(), " ", pluginInfo.config.getString());
     std::string config = pluginInfo.config.getString();
-    void*       plugin = mugFunc(config.c_str());
-    MugPlugin*  pluginPtr = reinterpret_cast<MugPlugin*>(plugin);
+    MugPlugin*  pluginPtr = mugFunc(config.c_str());
     instances.emplace_back(handler, std::move(config), pluginPtr);
     pluginPtr->start(handler);
 }
