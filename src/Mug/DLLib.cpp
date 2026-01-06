@@ -17,6 +17,7 @@ DLLib::DLLib(std::filesystem::path const& path)
 DLLib::~DLLib()
 {
     unload();
+    //unloadLibrary();
 }
 
 void DLLib::load()
@@ -25,31 +26,31 @@ void DLLib::load()
         ThorsLogInfo("DLLib", "load", "Plugin Config: ", instance.config);
         void*       plugin      = mugFunc(instance.config.c_str());
         instance.plugin         = reinterpret_cast<MugPlugin*>(plugin);
-        instance.plugin->initPlugin(instance.handler);
+        instance.plugin->start(instance.handler);
     }
 }
 void DLLib::unload()
 {
     for (auto& instance: instances) {
         ThorsLogInfo("DLLib", "unload", "Plugin Config: ", instance.config);
-        instance.plugin->destPlugin(instance.handler);
+        instance.plugin->stop(instance.handler);
     }
 }
 
 
 void DLLib::addInstance(HTTPHandler& handler, Plugin const& pluginInfo)
 {
-    ThorsLogInfo("DLLib", "init", "Called ", path.c_str(), " ", pluginInfo.config.getString());
+    ThorsLogInfo("DLLib", "addInstance", "Called ", path.c_str(), " ", pluginInfo.config.getString());
     std::string config = pluginInfo.config.getString();
     void*       plugin = mugFunc(config.c_str());
     MugPlugin*  pluginPtr = reinterpret_cast<MugPlugin*>(plugin);
     instances.emplace_back(handler, std::move(config), pluginPtr);
-    pluginPtr->initPlugin(handler);
+    pluginPtr->start(handler);
 }
 
 void DLLib::loadLibrary()
 {
-    ThorsLogInfo("DLLib", "loadLibrary", "Reload DLL: ", path);
+    ThorsLogInfo("DLLib", "loadLibrary", "path: ", path);
     std::error_code ec;
     lib = ::dlopen(std::filesystem::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL | DLOPEN_PLAT_FLAG);
     if (lib == nullptr) {
@@ -64,6 +65,14 @@ void DLLib::loadLibrary()
     }
     lastModified = std::filesystem::last_write_time(path);
     mugFunc      = reinterpret_cast<MugFunc>(mugFuncSym);
+}
+
+void DLLib::unloadLibrary()
+{
+    ThorsLogInfo("DLLib", "unloadLibrary", "path: ", path);
+    if (lib) {
+        ::dlclose(lib);
+    }
 }
 
 char const* DLLib::safeDLerror()
@@ -81,7 +90,7 @@ bool DLLib::check()
         unload();
 
         // Reload the DLL
-        ::dlclose(lib);
+        unloadLibrary();
         lib = nullptr;
         loadLibrary();
 
@@ -102,7 +111,6 @@ void DLLibMap::load(NisHttp::HTTPHandler& handler, Plugin const& pluginInfo)
     }
     // Note the plugin may have already been loaded.
     //      If it has we will not create a new object but reuse the DLLObject.
-    //      Thus not call spinUp() again.
     Iterator find = libs.find(libPath.string());
     if (find == std::end(libs)) {
         auto insert = libs.emplace(libPath, libPath);

@@ -11,7 +11,7 @@
 #include <string>
 #include <map>
 
-class SlackMug: public ThorsAnvil::ThorsMug::MugPlugin
+class SlackMug: public ThorsAnvil::ThorsMug::MugPluginSimple
 {
         ThorsAnvil::Slack::SlackClient          client;
         SlackEventHandler                       eventHandler;
@@ -23,9 +23,7 @@ class SlackMug: public ThorsAnvil::ThorsMug::MugPlugin
     public:
         SlackMug(char const* config);
 
-        virtual void initPlugin(NisHttp::HTTPHandler& handler) override;
-        virtual void destPlugin(NisHttp::HTTPHandler& handler) override;
-
+        virtual std::vector<ThorsAnvil::ThorsMug::Action> getAction() override;
 };
 
 #endif

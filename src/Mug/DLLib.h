@@ -50,6 +50,7 @@ class DLLib
         void unload();
 
         void loadLibrary();
+        void unloadLibrary();
 
         static char const* safeDLerror();
 

@@ -7,7 +7,7 @@
 const Environment           environment("/Users/martinyork/Repo/ThorsMug/src/ThorsSlackMug/.slackenv");
 std::unique_ptr<SlackMug>   slackMug;
 
-extern "C" void* mugFunction(char const* config)
+extern "C" MugPlugin* mugFunction(char const* config)
 {
     slackMug.reset(new SlackMug(config));
     return dynamic_cast<ThorsAnvil::ThorsMug::MugPlugin*>(slackMug.get());
@@ -31,13 +31,10 @@ void SlackMug::handleCommand(NisHTTP::Request& request, NisHTTP::Response& respo
     response.setStatus(200);
 }
 
-void SlackMug::initPlugin(NisHttp::HTTPHandler& handler)
+std::vector<ThorsAnvil::ThorsMug::Action> SlackMug::getAction()
 {
-    handler.addPath(NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request& request, NisHTTP::Response& response){eventHandler.handleEvent(request, response);return true;}, [&](NisHTTP::Request& request){return eventHandler.validateRequest(request);});
-    handler.addPath(NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request& request, NisHTTP::Response& response){handleCommand(request, response);return true;},            [&](NisHTTP::Request& request){return eventHandler.validateRequest(request);});
-}
-void SlackMug::destPlugin(NisHttp::HTTPHandler& handler)
-{
-    handler.remPath(NisHTTP::Method::POST, "/event");
-    handler.remPath(NisHTTP::Method::POST, "/command/speak");
+    return {
+            {NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request& request, NisHTTP::Response& response){eventHandler.handleEvent(request, response);return true;}, [&](NisHTTP::Request& request){return eventHandler.validateRequest(request);}},
+            {NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request& request, NisHTTP::Response& response){handleCommand(request, response);return true;},            [&](NisHTTP::Request& request){return eventHandler.validateRequest(request);}}
+           };
 }

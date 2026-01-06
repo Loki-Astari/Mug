@@ -8,14 +8,16 @@
 #include "NisseHTTP/HTTPHandler.h"
 
 #include <string>
+#include <vector>
 
 
 namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
 
+class MugPlugin;
 extern "C"
 {
-    typedef void*(*MugFunc)(char const* config);
+    typedef MugPlugin*(*MugFunc)(char const* config);
 }
 
 typedef void (*MugHanlde)(ThorsAnvil::Nisse::HTTP::Request&, ThorsAnvil::Nisse::HTTP::Response&);
@@ -27,8 +29,37 @@ class MugPlugin
 {
     public:
         virtual ~MugPlugin()                                    {}
-        virtual void initPlugin(NisHttp::HTTPHandler& handler)  = 0;
-        virtual void destPlugin(NisHttp::HTTPHandler& handler)  = 0;
+        virtual void start(NisHttp::HTTPHandler& handler)  = 0;
+        virtual void stop(NisHttp::HTTPHandler& handler)  = 0;
+};
+
+struct Action
+{
+        NisHttp::Method         method;
+        std::string             path;
+        NisHttp::HTTPAction     action;
+        NisHttp::HTTPValidate   validate = [](NisHttp::Request&){return true;};
+};
+
+class MugPluginSimple: public MugPlugin
+{
+    public:
+        virtual void start(NisHttp::HTTPHandler& handler) override
+        {
+            auto data = getAction();
+            for (auto& item: data) {
+                handler.addPath(item.method, item.path, std::move(item.action), std::move(item.validate));
+            }
+        }
+        virtual void stop(NisHttp::HTTPHandler& handler) override
+        {
+            auto data = getAction();
+            for (auto& item: data) {
+                handler.remPath(item.method, item.path);
+            }
+        }
+
+        virtual std::vector<Action> getAction() = 0;
 };
 
 }

@@ -13,7 +13,7 @@ namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
 std::unique_ptr<WebServerPlugin>     webServer;
 
-extern "C" void* mugFunction(char const* config)
+extern "C" MugPlugin* mugFunction(char const* config)
 {
     webServer.reset(new WebServerPlugin(config));
     return dynamic_cast<ThorsAnvil::ThorsMug::MugPlugin*>(webServer.get());
@@ -23,21 +23,18 @@ WebServerPlugin::WebServerPlugin(std::string const& config)
     : contentDir(config.substr(1, config.size() - 2))
 {}
 
-void WebServerPlugin::initPlugin(NisHttp::HTTPHandler& handler)
+std::vector<ThorsAnvil::ThorsMug::Action> WebServerPlugin::getAction()
 {
-    handler.addPath(NisHttp::Method::GET,
-                    "/files/{FilePath}",
-                    [&](NisHttp::Request& request, NisHttp::Response& response)
+    return {
+            {   NisHttp::Method::GET,
+                "/files/{FilePath}",
+                [&](NisHttp::Request& request, NisHttp::Response& response)
                     {
                         handleRequestPath(request, response);
                         return true;
                     }
-                   );
-}
-
-void WebServerPlugin::destPlugin(NisHttp::HTTPHandler& handler)
-{
-    handler.remPath(NisHttp::Method::GET, "/files/{FilePath}");
+            }
+           };
 }
 
 void WebServerPlugin::handleRequestPath(NisHttp::Request& request, NisHttp::Response& response)
