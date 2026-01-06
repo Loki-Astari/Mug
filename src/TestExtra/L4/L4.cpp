@@ -18,7 +18,7 @@ class L4Plugin: public ThorsAnvil::ThorsMug::MugPluginSimple
 L4Plugin    l4;
 
 
-extern "C" MugPlugin* mugFunction(char const*)
+extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(char const*)
 {
-    return dynamic_cast<ThorsAnvil::ThorsMug::MugPlugin*>(&l4);
+    return &l4;
 }

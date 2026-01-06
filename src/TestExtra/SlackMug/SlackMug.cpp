@@ -7,10 +7,10 @@
 const Environment           environment("/Users/martinyork/Repo/ThorsMug/src/ThorsSlackMug/.slackenv");
 std::unique_ptr<SlackMug>   slackMug;
 
-extern "C" MugPlugin* mugFunction(char const* config)
+extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(char const* config)
 {
     slackMug.reset(new SlackMug(config));
-    return dynamic_cast<ThorsAnvil::ThorsMug::MugPlugin*>(slackMug.get());
+    return slackMug.get();
 }
 
 namespace Ser       = ThorsAnvil::Serialize;

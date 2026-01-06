@@ -14,12 +14,6 @@
 namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
 
-class MugPlugin;
-extern "C"
-{
-    typedef MugPlugin*(*MugFunc)(char const* config);
-}
-
 typedef void (*MugHanlde)(ThorsAnvil::Nisse::HTTP::Request&, ThorsAnvil::Nisse::HTTP::Response&);
 
 namespace ThorsAnvil::ThorsMug
@@ -61,6 +55,11 @@ class MugPluginSimple: public MugPlugin
 
         virtual std::vector<Action> getAction() = 0;
 };
+
+extern "C"
+{
+    typedef ThorsAnvil::ThorsMug::MugPlugin*(*MugFunc)(char const* config);
+}
 
 }
 

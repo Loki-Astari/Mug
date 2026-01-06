@@ -19,7 +19,7 @@ class L5Plugin: public ThorsAnvil::ThorsMug::MugPluginSimple
 L5Plugin    l5;
 
 
-extern "C" MugPlugin* mugFunctionNotCorrectName(char const*)
+extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugFunctionNotCorrectName(char const*)
 {
-    return dynamic_cast<ThorsAnvil::ThorsMug::MugPlugin*>(&l5);
+    return &l5;
 }

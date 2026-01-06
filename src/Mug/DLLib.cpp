@@ -55,7 +55,7 @@ void DLLib::loadLibrary()
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "loadLibrary", "dlopen() failed: ", safeDLerror());
     }
 
-    void*           mugFuncSym = ::dlsym(lib, "mugFunction");
+    void*           mugFuncSym = ::dlsym(lib, "mugCreateInstance");
     if (mugFuncSym == nullptr) {
         ::dlclose(lib);
         lib = nullptr;
