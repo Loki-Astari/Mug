@@ -18,7 +18,7 @@ class WebServerPlugin: public ThorsAnvil::ThorsMug::MugPluginSimple
         WebServerPlugin(std::string const& config);
         virtual std::vector<ThorsAnvil::ThorsMug::Action> getAction() override;
 
-        void handleRequestPath(NisHttp::Request& request, NisHttp::Response& response);
+        void handleRequestPath(NisHttp::Request const& request, NisHttp::Response& response);
 };
 
 }

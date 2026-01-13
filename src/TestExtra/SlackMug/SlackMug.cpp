@@ -21,7 +21,7 @@ SlackMug::SlackMug(char const*)
     , eventHandler(environment.slackSecret, client, messageCount)
 {}
 
-void SlackMug::handleCommand(NisHTTP::Request& request, NisHTTP::Response& response)
+void SlackMug::handleCommand(NisHTTP::Request const& request, NisHTTP::Response& response)
 {
     ThorsLogDebug("SlackMug", "handleCommand", "Recievent Command");
     std::string const& userId = request.variables()["user_id"];
@@ -34,7 +34,7 @@ void SlackMug::handleCommand(NisHTTP::Request& request, NisHTTP::Response& respo
 std::vector<ThorsAnvil::ThorsMug::Action> SlackMug::getAction()
 {
     return {
-            {NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request& request, NisHTTP::Response& response){eventHandler.handleEvent(request, response);return true;}, [&](NisHTTP::Request& request){return eventHandler.validateRequest(request);}},
-            {NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request& request, NisHTTP::Response& response){handleCommand(request, response);return true;},            [&](NisHTTP::Request& request){return eventHandler.validateRequest(request);}}
+            {NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request const& request, NisHTTP::Response& response){eventHandler.handleEvent(request, response);return true;}, [&](NisHTTP::Request const& request){return eventHandler.validateRequest(request);}},
+            {NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request const& request, NisHTTP::Response& response){handleCommand(request, response);return true;},            [&](NisHTTP::Request const& request){return eventHandler.validateRequest(request);}}
            };
 }

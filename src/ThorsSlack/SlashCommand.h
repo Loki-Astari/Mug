@@ -56,7 +56,7 @@ struct SlashCommand
     // etc.
     std::string         api_app_id;     // Your Slack app's unique identifier. Use this in conjunction with request signing to verify context for inbound requests.
 
-    SlashCommand(ThorsAnvil::Nisse::HTTP::Request& request)
+    SlashCommand(ThorsAnvil::Nisse::HTTP::Request const& request)
         : token(request.variables()["token"])
         , command(request.variables()["command"])
         , text(request.variables()["text"])

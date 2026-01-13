@@ -32,7 +32,7 @@ struct Action
         NisHttp::Method         method;
         std::string             path;
         NisHttp::HTTPAction     action;
-        NisHttp::HTTPValidate   validate = [](NisHttp::Request&){return true;};
+        NisHttp::HTTPValidate   validate = [](NisHttp::Request const&){return true;};
 };
 
 class MugPluginSimple: public MugPlugin

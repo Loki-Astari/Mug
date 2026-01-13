@@ -28,7 +28,7 @@ std::vector<ThorsAnvil::ThorsMug::Action> WebServerPlugin::getAction()
     return {
             {   NisHttp::Method::GET,
                 "/files/{FilePath}",
-                [&](NisHttp::Request& request, NisHttp::Response& response)
+                [&](NisHttp::Request const& request, NisHttp::Response& response)
                     {
                         handleRequestPath(request, response);
                         return true;
@@ -37,7 +37,7 @@ std::vector<ThorsAnvil::ThorsMug::Action> WebServerPlugin::getAction()
            };
 }
 
-void WebServerPlugin::handleRequestPath(NisHttp::Request& request, NisHttp::Response& response)
+void WebServerPlugin::handleRequestPath(NisHttp::Request const& request, NisHttp::Response& response)
 {
     ThorsLogDebug("MugServer", "handleRequestLib", "Handle file extract");
     // Get the path from the HTTP request object.

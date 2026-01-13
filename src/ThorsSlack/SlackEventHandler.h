@@ -40,10 +40,16 @@ using ThorsAnvil::Nisse::HTTP::Response;
 using EventObject = std::variant<API::BlockActions, API::Views::ViewSubmission>;
 using CmdEvent  = std::variant<SlashCommand const*, Event::EventCallback const*, API::Views::ViewSubmission const*>;
 
+struct SlackRequest
+{
+    ThorsAnvil::Nisse::HTTP::Request const&   request;
+    ThorsAnvil::Nisse::HTTP::Response&        response;
+    CmdEvent const&                           event;
+};
 
 class SlackEventHandler
 {
-        using Cmd       = std::function<void(ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response, CmdEvent const& event)>;
+        using Cmd       = std::function<void(SlackRequest const&)>;
         using CmdMap    = std::map<std::string, Cmd>;
 
         std::string     slackSecret;
@@ -52,72 +58,72 @@ class SlackEventHandler
         SlackEventHandler(std::string_view slackSecret, CmdMap&& cmdMap = {});
 
         // Method to validate Slack message comes from slack.
-        bool validateRequest(Request& request);
+        bool validateRequest(Request const& request);
 
         // https://api.slack.com/apps/<Application ID>/event-subscriptions?
         // i.e. Event Subscriptions tab in your application configuration.
-        void handleEvent(Request& request, Response& response);
+        void handleEvent(Request const& request, Response& response);
         // https://api.slack.com/apps/<Application ID>/interactive-messages?
         // i.e. Interactivity & Shortcuts tab in your application configuration.
-        void handleUserActions(Request& request, Response& response);
+        void handleUserActions(Request const& request, Response& response);
         // https://api.slack.com/apps/<Application ID>/slash-commands?
         // i.e. Slash command handlings
-        void handleSlashCommand(Request& request, Response& response);
+        void handleSlashCommand(Request const& request, Response& response);
 
     private:
-        std::string getEventType(Request& request, Response& response, bool& found);
+        std::string getEventType(Request const& request, Response& response, bool& found);
 
-        void handleURLVerificationEvent(Request& request, Response& response, Event::EventURLVerification const& event);
+        void handleURLVerificationEvent(Request const& request, Response& response, Event::EventURLVerification const& event);
 
-        void handleCallbackEvent(Request& request, Response& response, Event::EventCallback const& event);
+        void handleCallbackEvent(Request const& request, Response& response, Event::EventCallback const& event);
 
         /*
          * The following 7 methods are called from: handleCallbackEvent Which is called from handleEvent.
          */
-        virtual void handleCallbackMessageEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::Message const&)                       { handleUsingCmdMap(request, response, &eventBase, "Event/Message", "handleCallbackMessageEvent");}
-        virtual void handleCallbackReactionAddedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::ReactionAdded const& event)     { handleUsingCmdMap(request, response, &eventBase, "Event/ReactionAdded/" + event.reaction, "handleCallbackReactionAddedEvent");}
-        virtual void handleCallbackReactionRemovedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::ReactionRemoved const& event) { handleUsingCmdMap(request, response, &eventBase, "Event/ReactionRemoved/" + event.reaction, "handleCallbackReactionRemovedEvent");}
-        virtual void handleCallbackPinAddedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::PinAdded const&)                     { handleUsingCmdMap(request, response, &eventBase, "Event/PinAdded", "handleCallbackPinAddedEvent");}
-        virtual void handleCallbackPinRemovedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::PinRemoved const&)                 { handleUsingCmdMap(request, response, &eventBase, "Event/PinRemoved", "handleCallbackPinRemovedEvent");}
-        virtual void handleCallbackStarAddedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::StarAdded const&)                   { handleUsingCmdMap(request, response, &eventBase, "Event/StarAdded", "handleCallbackStarAddedEvent");}
-        virtual void handleCallbackStarRemovedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::StarRemoved const&)               { handleUsingCmdMap(request, response, &eventBase, "Event/StarRemoved", "handleCallbackStarRemovedEvent");}
-        virtual void handleCallbackAppMentionedEvent(Request& request, Response& response, Event::EventCallback const& eventBase, Event::AppMentioned const&)             { handleUsingCmdMap(request, response, &eventBase, "Event/AppMentioned", "handleCallbackAppMentionedEvent");}
-        virtual void handleActionsViewSubmit(Request& request, Response& response, API::Views::ViewSubmission const& event)                                               { handleUsingCmdMap(request, response, &event, "View/ViewSubmission/" + event.view.id, "handleActionsViewSubmit"); }
+        virtual void handleCallbackMessageEvent(Request const& request, Response& response, Event::EventCallback const& eventBase, Event::Message const&)                       { handleUsingCmdMap(request, response, &eventBase, "Event/Message", "handleCallbackMessageEvent");}
+        virtual void handleCallbackReactionAddedEvent(Request const& request, Response& response, Event::EventCallback const& eventBase, Event::ReactionAdded const& event)     { handleUsingCmdMap(request, response, &eventBase, "Event/ReactionAdded/" + event.reaction, "handleCallbackReactionAddedEvent");}
+        virtual void handleCallbackReactionRemovedEvent(Request const& request, Response& response, Event::EventCallback const& eventBase, Event::ReactionRemoved const& event) { handleUsingCmdMap(request, response, &eventBase, "Event/ReactionRemoved/" + event.reaction, "handleCallbackReactionRemovedEvent");}
+        virtual void handleCallbackPinAddedEvent(Request const& request, Response& response, Event::EventCallback const& eventBase, Event::PinAdded const&)                     { handleUsingCmdMap(request, response, &eventBase, "Event/PinAdded", "handleCallbackPinAddedEvent");}
+        virtual void handleCallbackPinRemovedEvent(Request const& request, Response& response, Event::EventCallback const& eventBase, Event::PinRemoved const&)                 { handleUsingCmdMap(request, response, &eventBase, "Event/PinRemoved", "handleCallbackPinRemovedEvent");}
+        virtual void handleCallbackStarAddedEvent(Request const& request, Response& response, Event::EventCallback const& eventBase, Event::StarAdded const&)                   { handleUsingCmdMap(request, response, &eventBase, "Event/StarAdded", "handleCallbackStarAddedEvent");}
+        virtual void handleCallbackStarRemovedEvent(Request const& request, Response& response, Event::EventCallback const& eventBase, Event::StarRemoved const&)               { handleUsingCmdMap(request, response, &eventBase, "Event/StarRemoved", "handleCallbackStarRemovedEvent");}
+        virtual void handleCallbackAppMentionedEvent(Request const& request, Response& response, Event::EventCallback const& eventBase, Event::AppMentioned const&)             { handleUsingCmdMap(request, response, &eventBase, "Event/AppMentioned", "handleCallbackAppMentionedEvent");}
+        virtual void handleActionsViewSubmit(Request const& request, Response& response, API::Views::ViewSubmission const& event)                                               { handleUsingCmdMap(request, response, &event, "View/ViewSubmission/" + event.view.id, "handleActionsViewSubmit"); }
 
         /*
          * The following 8 methods are called from: handleUserActions
          */
-        virtual void handleActionsDatePicker(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*selected_date*/)    { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsDatePicker", "Call to unimplemented method"); response.setStatus(501); }
-        virtual void handleActionsDateTimePicker(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::time_t /*selected_date_time*/)  { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsDateTimePicker", "Call to unimplemented method"); response.setStatus(501); }
-        virtual void handleActionsTimePicker(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*selected_time*/)    { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsTimePicker", "Call to unimplemented method"); response.setStatus(501); }
-        virtual void handleActionsRadioButton(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)           { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsRadioButton", "Call to unimplemented method"); response.setStatus(501); }
-        virtual void handleActionsStaticMenu(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)            { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsStaticMenu", "Call to unimplemented method"); response.setStatus(501); }
-        virtual void handleActionsOverflowMenu(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)          { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsOverflowMenu", "Call to unimplemented method"); response.setStatus(501); }
-        virtual void handleActionsButton(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)                { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsButton", "Call to unimplemented method"); response.setStatus(501); }
-        virtual void handleActionsPlainTextInput(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)        { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsPlainTextInput", "Call to unimplemented method"); response.setStatus(501); }
-        virtual void handleActionsCheckBox(Request& /*request*/, Response& response, API::BlockActions const& event, std::string const& action_id, BlockKit::VecElOption const& value);
+        virtual void handleActionsDatePicker(Request const&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*selected_date*/)    { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsDatePicker", "Call to unimplemented method"); response.setStatus(501); }
+        virtual void handleActionsDateTimePicker(Request const&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::time_t /*selected_date_time*/)  { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsDateTimePicker", "Call to unimplemented method"); response.setStatus(501); }
+        virtual void handleActionsTimePicker(Request const&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*selected_time*/)    { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsTimePicker", "Call to unimplemented method"); response.setStatus(501); }
+        virtual void handleActionsRadioButton(Request const&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)           { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsRadioButton", "Call to unimplemented method"); response.setStatus(501); }
+        virtual void handleActionsStaticMenu(Request const&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)            { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsStaticMenu", "Call to unimplemented method"); response.setStatus(501); }
+        virtual void handleActionsOverflowMenu(Request const&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)          { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsOverflowMenu", "Call to unimplemented method"); response.setStatus(501); }
+        virtual void handleActionsButton(Request const&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)                { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsButton", "Call to unimplemented method"); response.setStatus(501); }
+        virtual void handleActionsPlainTextInput(Request const&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, std::string const& /*value*/)        { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "handleActionsPlainTextInput", "Call to unimplemented method"); response.setStatus(501); }
+        virtual void handleActionsCheckBox(Request const& /*request*/, Response& response, API::BlockActions const& event, std::string const& action_id, BlockKit::VecElOption const& value);
 
 
         /*
          * The following methods is called from: handleSlashCommand
          */
-        virtual void handleSlashWithCommand(Request& request, Response& response, SlashCommand const& command)      {handleUsingCmdMap(request, response, &command, command.command + "/" + command.text, "handleSlashWithCommand");}
+        virtual void handleSlashWithCommand(Request const& request, Response& response, SlashCommand const& command)      {handleUsingCmdMap(request, response, &command, command.command + "/" + command.text, "handleSlashWithCommand");}
 
         /*
          * Checkboxes are complicated.
          * Need some extra processing before handing of
          */
-        virtual void handleActionsCheckBox(Request&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, BlockKit::VecElOption const& /*value*/, std::string const& /*changed*/, bool /*state*/, BlockKit::Blocks& /*newUI*/)
+        virtual void handleActionsCheckBox(Request const&, Response& response, API::BlockActions const&, std::string const& /*action_id*/, BlockKit::VecElOption const& /*value*/, std::string const& /*changed*/, bool /*state*/, BlockKit::Blocks& /*newUI*/)
         { ThorsLogError("ThorsAnvil::Slack::SlackEventHandler", "SlackEventHandler", "Call to unimplemented method"); response.setStatus(501); }
         BlockKit::VecElOption&  getInitialOptions(BlockKit::Block& block, std::string const& action_id);
 
-        void handleUsingCmdMap(Request& request, Response& response, CmdEvent const& event, std::string const& key, char const* msg);
+        void handleUsingCmdMap(Request const& request, Response& response, CmdEvent const& event, std::string const& key, char const* msg);
 
         /* Local Visitor types */
         struct VisitorEvent
         {
             SlackEventHandler&      plugin;
-            Request&                request;
+            Request const&          request;
             Response&               response;
 
             void operator()(Event::EventURLVerification const& event)    {plugin.handleURLVerificationEvent(request, response, event);}
@@ -127,7 +133,7 @@ class SlackEventHandler
         {
             SlackEventHandler&          plugin;
             Event::EventCallback const& eventBase;
-            Request&                    request;
+            Request const&              request;
             Response&                   response;
 
             void operator()(Event::Message const& event)                 {plugin.handleCallbackMessageEvent(request, response, eventBase, event);}
@@ -176,7 +182,7 @@ SlackEventHandler::SlackEventHandler(std::string_view slackSecret, CmdMap&& cmdM
 {}
 
 inline
-void SlackEventHandler::handleEvent(Request& request, Response& response)
+void SlackEventHandler::handleEvent(Request const& request, Response& response)
 {
     using ThorsAnvil::Nisse::HTTP::HeaderResponse;
     using namespace std::string_literals;
@@ -192,7 +198,7 @@ void SlackEventHandler::handleEvent(Request& request, Response& response)
 }
 
 inline
-bool SlackEventHandler::validateRequest(Request& request)
+bool SlackEventHandler::validateRequest(Request const& request)
 {
 #if 0
     /*
@@ -233,7 +239,7 @@ bool SlackEventHandler::validateRequest(Request& request)
 }
 
 inline
-std::string SlackEventHandler::getEventType(Request& request, Response& /*response*/, bool& found)
+std::string SlackEventHandler::getEventType(Request const& request, Response& /*response*/, bool& found)
 {
     if (!found) {
         found = true;
@@ -254,7 +260,7 @@ std::string SlackEventHandler::getEventType(Request& request, Response& /*respon
 
 
 inline
-void SlackEventHandler::handleURLVerificationEvent(Request& /*request*/, Response& response, Event::EventURLVerification const& event)
+void SlackEventHandler::handleURLVerificationEvent(Request const& /*request*/, Response& response, Event::EventURLVerification const& event)
 {
     ThorsLogTrack("ThorsAnvil::Slack::SlackEventHandler", "handleURLVerificationEvent", "Sending URL Verification");
     ThorsAnvil::Nisse::HTTP::HeaderResponse  headers;
@@ -270,14 +276,14 @@ void SlackEventHandler::handleURLVerificationEvent(Request& /*request*/, Respons
 }
 
 inline
-void SlackEventHandler::handleCallbackEvent(Request& request, Response& response, Event::EventCallback const& event)
+void SlackEventHandler::handleCallbackEvent(Request const& request, Response& response, Event::EventCallback const& event)
 {
     ThorsLogTrack("ThorsAnvil::Slack::SlackEventHandler", "handleCallbackEvent", "Handling callback event");
     std::visit(VisitorCallbackEvent{*this, event, request, response}, event.event);
 }
 
 inline
-void SlackEventHandler::handleUserActions(Request& request, Response& response)
+void SlackEventHandler::handleUserActions(Request const& request, Response& response)
 {
     ThorsLogTrack("ThorsAnvil::Slack::TodoSlackEventHandler", "handleUserActions", "Recievent User Action");
     std::stringstream stream(request.variables()["payload"]);
@@ -359,7 +365,7 @@ BlockKit::VecElOption&  SlackEventHandler::getInitialOptions(BlockKit::Block& bl
 }
 
 inline
-void SlackEventHandler::handleActionsCheckBox(Request& request, Response& response, API::BlockActions const& event, std::string const& action_id, BlockKit::VecElOption const& values)
+void SlackEventHandler::handleActionsCheckBox(Request const& request, Response& response, API::BlockActions const& event, std::string const& action_id, BlockKit::VecElOption const& values)
 {
     ThorsLogDebug("SlackEventHandler", "processesActionsCheckBox", "Recievent User Click on Checkbox");
 
@@ -424,14 +430,14 @@ void SlackEventHandler::handleActionsCheckBox(Request& request, Response& respon
 }
 
 inline
-void SlackEventHandler::handleSlashCommand(Request& request, Response& response)
+void SlackEventHandler::handleSlashCommand(Request const& request, Response& response)
 {
     SlashCommand        command(request);
     handleSlashWithCommand(request, response, command);
 }
 
 inline
-void SlackEventHandler::handleUsingCmdMap(Request& request, Response& response, CmdEvent const& event, std::string const& key, char const* msg)
+void SlackEventHandler::handleUsingCmdMap(Request const& request, Response& response, CmdEvent const& event, std::string const& key, char const* msg)
 {
     auto find = cmdMap.find(key);
     if (find == cmdMap.end()) {
@@ -440,7 +446,7 @@ void SlackEventHandler::handleUsingCmdMap(Request& request, Response& response, 
         return;
     }
     ThorsLogDebug("ThorsAnvil::Slack::SlackEventHandler", msg, "Calling client handler");
-    find->second(request, response, event);
+    find->second(SlackRequest{request, response, event});
 }
 
 }

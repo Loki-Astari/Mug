@@ -4,14 +4,14 @@
 
 class L4Plugin: public ThorsAnvil::ThorsMug::MugPluginSimple
 {
-    void handle(ThorsAnvil::Nisse::HTTP::Request& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response)
+    void handle(ThorsAnvil::Nisse::HTTP::Request const& /*request*/, ThorsAnvil::Nisse::HTTP::Response& response)
     {
         response.setStatus(404);
     }
     public:
         virtual std::vector<ThorsAnvil::ThorsMug::Action> getAction() override
         {
-            return {{ThorsAnvil::Nisse::HTTP::Method::GET, "/Plop/{Command}",[&](ThorsAnvil::Nisse::HTTP::Request& request, ThorsAnvil::Nisse::HTTP::Response& response){handle(request, response);return true;}}};
+            return {{ThorsAnvil::Nisse::HTTP::Method::GET, "/Plop/{Command}",[&](ThorsAnvil::Nisse::HTTP::Request const& request, ThorsAnvil::Nisse::HTTP::Response& response){handle(request, response);return true;}}};
         }
 };
 
