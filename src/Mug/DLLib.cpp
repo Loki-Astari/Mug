@@ -25,14 +25,21 @@ void DLLib::load()
     for (auto& instance: instances) {
         ThorsLogInfo("DLLib", "load", "Plugin Config: ", instance.config);
         instance.plugin         = mugFunc(instance.config.c_str());
-        instance.plugin->start(instance.handler);
+        if (instance.plugin) {
+            instance.plugin->start(instance.handler);
+        }
+        else {
+            ThorsLogError("DLLib", "load", "Plugin Config: failed to load a plugin: ", instance.config);
+        }
     }
 }
 void DLLib::unload()
 {
     for (auto& instance: instances) {
         ThorsLogInfo("DLLib", "unload", "Plugin Config: ", instance.config);
-        instance.plugin->stop(instance.handler);
+        if (instance.plugin) {
+            instance.plugin->stop(instance.handler);
+        }
     }
 }
 
