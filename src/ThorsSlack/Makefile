@@ -1,8 +1,8 @@
 CONFIG_NAME					= Mug
-THORSANVIL_ROOT             = $(realpath ../../)
+THORSANVIL_ROOT				?= $(realpath ../../)
 
 CXXFLAGS					+= -DDISABLE_SLACKTEST=$(DISABLE_SLACKTEST)
-TARGET                      = ThorsSlack.head
+TARGET						= ThorsSlack.head
 FILE_WARNING_FLAGS			= -Wno-missing-braces -Wno-deprecated-copy-with-user-provided-dtor -Wno-deprecated-declarations
 LDLIBS_EXTERN_BUILD			= ThorSerialize MagicEnum Nisse
 COVERAGE_REQUIRED			= 60
