@@ -60,11 +60,20 @@
 /* We have found package Thors Serializer */
 #undef HAVE_THORSSERIALIZER
 
+/* We have found ThorSerializeHeaderOnly package */
+#undef HAVE_ThorSerializeHeaderOnly
+
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
 /* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR
+
+/* Check for older build tools and use simpler code with old tools */
+#undef NO_STD_SUPPORT_FROM_CHAR_DOUBLE
+
+/* Check for older build tools and use simpler code with old tools */
+#undef NO_STD_SUPPORT_TO_CHAR_DOUBLE
 
 /* Name of package */
 #undef PACKAGE
