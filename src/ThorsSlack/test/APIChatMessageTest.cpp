@@ -6,6 +6,7 @@
 #include "SlackClient.h"
 #include "SlackBlockKit.h"
 #include "ThorSerialize/JsonThor.h"
+#include "NisseHTTP/Response.h"
 
 #include <variant>
 #include <thread>
