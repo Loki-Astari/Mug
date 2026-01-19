@@ -11,6 +11,8 @@
 #include <variant>
 #include <thread>
 
+#undef PostMessage
+
 using namespace std::literals::string_literals;
 namespace BK = ThorsAnvil::Slack::BlockKit;
 
