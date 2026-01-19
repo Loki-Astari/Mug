@@ -21,7 +21,28 @@ using ThorsAnvil::Slack::API::Chat::PostMessage;
 using ThorsAnvil::Slack::API::Chat::PostEphemeral;
 using ThorsAnvil::Slack::API::Chat::Delete;
 using ThorsAnvil::Slack::API::Chat::Update;
+class SocketSetUp
+{
+#ifdef  __WINNT__
+    public:
+        SocketSetUp()
+        {
+            WSADATA wsaData;
+            WORD wVersionRequested = MAKEWORD(2, 2);
+            int err = WSAStartup(wVersionRequested, &wsaData);
+            if (err != 0) {
+                printf("WSAStartup failed with error: %d\n", err);
+                throw std::runtime_error("Failed to set up Sockets");
+            }
+        }
+        ~SocketSetUp()
+        {
+            WSACleanup();
+        }
+#endif
+};
 
+SocketSetUp             socketSetUp;
 Environment             environment("test/data/environment.json");
 SlackClient             client(environment.botToken, environment.userToken);
 
