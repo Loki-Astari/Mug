@@ -13,6 +13,9 @@ Nisse_ROOT_DIR=@Nisse_ROOT_DIR@
 event_ROOT_LIB=@event_ROOT_LIB@
 event_ROOT_DIR=@event_ROOT_DIR@
 
+BoostCoRoutine_ROOT_DIR=@BoostCoRoutine_ROOT_DIR@
+BoostCoRoutine_ROOT_LIB=@BoostCoRoutine_ROOT_LIB@
+
 MagicEnumHeaderOnly_ROOT_DIR=@MagicEnumHeaderOnly_ROOT_DIR@
 ThorSerializeHeaderOnly_ROOT_DIR=@ThorSerializeHeaderOnly_ROOT_DIR@
 

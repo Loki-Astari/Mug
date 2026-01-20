@@ -24,6 +24,7 @@ AX_THOR_CHECK_USE_BOOST([1.70], [], [
         The minimum version we support is via boost 1.70 please upgrade your boost libraries to this (or later).
     ])
 ])
+AX_THOR_CHECK_USE_THORS_BOOSTCOROUTINE
 
 sedStrip='s/-.*//'
 UNAME=`uname -s | sed "${sedStrip}"`
