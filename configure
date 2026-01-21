@@ -1530,18 +1530,19 @@ Optional Packages:
                           Directory of ThorSerializeHeaderOnly include folder:
                           the folder that has the include file
 
-  --with-botToken=<token> Slack authentication token. Used to authenticate
-                          with Slack when running tests
-
-  --with-userToken=<token>
+  --with-slack-botToken=<token>
                           Slack authentication token. Used to authenticate
                           with Slack when running tests
 
-  --with-slackSecret=<secret>
-                          Slack secret. Used to hash requests and thus
-                          validate incomming requests from slack
+  --with-slack-userToken=<token>
+                          Slack authentication token. Used to authenticate
+                          with Slack when running tests
 
-  --with-slackChannel=<channel>
+  --with-slack-secret=<secret>
+                          Slack secret. Used to hash requests and thus
+                          validate incoming requests from slack
+
+  --with-slack-channel=<channel>
                           Slack channel to use for testing.
 
   --with-boost[=ARG]      use Boost library from a standard location
@@ -6312,22 +6313,22 @@ then :
 
 else case e in #(
   e)
-if test "x${with_botToken}" == "x"
+if test "x${with_slack_botToken}" == "x"
 then :
   as_fn_error $? "No Bot token defined. Can not run the slack tests. Please look at tutorials on how to generate a slack Bot Token." "$LINENO" 5
 
 fi
-if test "x${with_userToken}" == "x"
+if test "x${with_slack_userToken}" == "x"
 then :
   as_fn_error $? "No User token defined. Can not run the slack tests. Please look at tutorials on how to generate a slack User Token." "$LINENO" 5
 
 fi
-if test "x${with_slackSecret}" == "x"
+if test "x${with_slack_secret}" == "x"
 then :
   as_fn_error $? "No slack secret defined. Can not run the slack tests. Please look at tutorials on how to generate a slack Bot Secret." "$LINENO" 5
 
 fi
-if test "x${with_slackChannel}" == "x"
+if test "x${with_slack_channel}" == "x"
 then :
   as_fn_error $? "No slack channel defined. Can not run the slack tests. Please look at tutorials on how to generate a slack Bot Secret." "$LINENO" 5
 
@@ -6337,26 +6338,26 @@ esac
 fi
 if test "x${with_botToken}" != "x"
 then :
-  subconfigure="${subconfigure} --with-botToken=${with_botToken}"
+  subconfigure="${subconfigure} --with-slack-botToken=${with_botToken}"
 fi
 if test "x${with_userToken}" != "x"
 then :
-  subconfigure="${subconfigure} --with-userToken=${with_userToken}"
+  subconfigure="${subconfigure} --with-slack-userToken=${with_userToken}"
 fi
 if test "x${with_slackSecret}" != "x"
 then :
-  subconfigure="${subconfigure} --with-slackSecret=${with_slackSecret}"
+  subconfigure="${subconfigure} --with-slack-secret=${with_slackSecret}"
 fi
 if test "x${with_slackChannel}" != "x"
 then :
-  subconfigure="${subconfigure} --with-slackChannel=${with_slackChannel}"
+  subconfigure="${subconfigure} --with-slack-channel=${with_slackChannel}"
 fi
 
 if test "x$enable_slacktest" != "xno"
 then :
 
 data=$(curl \
-   --header "authorization: Bearer ${with_botToken}" \
+   --header "authorization: Bearer ${with_slack_botToken}" \
 ✗  --header "content-type: application/json; charset=utf-8" \
 │  --request GET \
 │  https://slack.com/api/auth.test 2> /dev/null)
@@ -6369,7 +6370,7 @@ then :
 Failed to authenticate with slack please check your token
 
 Command used:
-    curl --header \"authorization: Bearer ${with_botToken}\" --header \"content-type: application/json; charset=utf-8\" --request GET https://slack.com/api/auth.test
+    curl --header \"authorization: Bearer ${with_slack_botToken}\" --header \"content-type: application/json; charset=utf-8\" --request GET https://slack.com/api/auth.test
 
 Response:
     ${data}
@@ -6382,10 +6383,10 @@ fi
 mkdir -p src/ThorsSlack/test/data
 cat - <<ENVIRONMENT > src/ThorsSlack/test/data/environment.json
 {
-    "botToken": "${with_botToken}",
-    "userToken": "${with_userToken}",
-    "slackSecret": "${with_slackSecret}",
-    "slackChannel": "${with_slackChannel}"
+    "botToken": "${with_slack_botToken}",
+    "userToken": "${with_slack_userToken}",
+    "slackSecret": "${with_slack_secret}",
+    "slackChannel": "${with_slack_channel}"
 }
 ENVIRONMENT
 
