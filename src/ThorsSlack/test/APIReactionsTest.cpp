@@ -13,7 +13,7 @@
 using namespace std::literals::string_literals;
 
 using ThorsAnvil::Slack::SlackClient;
-using ThorsAnvil::Slack::API::Chat::PostMessage;
+using ThorsAnvil::Slack::API::Chat::POSTMessage;
 using ThorsAnvil::Slack::API::Chat::Delete;
 using ThorsAnvil::Slack::API::Reactions::Get;
 using ThorsAnvil::Slack::API::Reactions::Add;
@@ -25,14 +25,14 @@ extern Environment             environment;
 
 class APIReactionsTest : public ::testing::Test {
     protected:
-        static PostMessage::Reply      post;
+        static POSTMessage::Reply      post;
     protected:
         //void SetUp() override {}
         //void TearDown() override {}
     public:
         static void SetUpTestSuite()
         {
-            client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "The APIReactionsTest::Add message to add reactions to"}, post, true);
+            client.sendMessage(POSTMessage{.channel = environment.slackChannel, .text = "The APIReactionsTest::Add message to add reactions to"}, post, true);
             ASSERT_TRUE(post.ok);
             Add::Reply      replyB;
             client.sendMessage(Add{.channel = environment.slackChannel, .name = "stuck_out_tongue_winking_eye", .timestamp = post.message.ts}, replyB, true);
@@ -48,7 +48,7 @@ class APIReactionsTest : public ::testing::Test {
         }
 };
 
-PostMessage::Reply APIReactionsTest::post;
+POSTMessage::Reply APIReactionsTest::post;
 TEST_F(APIReactionsTest, AddTest)
 {
     Add::Reply      reply;

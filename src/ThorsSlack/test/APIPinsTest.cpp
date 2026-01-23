@@ -13,7 +13,7 @@
 using namespace std::literals::string_literals;
 
 using ThorsAnvil::Slack::SlackClient;
-using ThorsAnvil::Slack::API::Chat::PostMessage;
+using ThorsAnvil::Slack::API::Chat::POSTMessage;
 using ThorsAnvil::Slack::API::Chat::Delete;
 using ThorsAnvil::Slack::API::Pins::Add;
 using ThorsAnvil::Slack::API::Pins::List;
@@ -24,14 +24,14 @@ extern Environment             environment;
 
 class APIPinsTest : public ::testing::Test {
     protected:
-        static PostMessage::Reply      post;
+        static POSTMessage::Reply      post;
     protected:
         //void SetUp() override {}
         //void TearDown() override {}
     public:
         static void SetUpTestSuite()
         {
-            client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "The APIPinTest::Add message to add pins to"}, post, true);
+            client.sendMessage(POSTMessage{.channel = environment.slackChannel, .text = "The APIPinTest::Add message to add pins to"}, post, true);
             ASSERT_TRUE(post.ok);
         }
         static void TearDownTestSuite()
@@ -39,7 +39,7 @@ class APIPinsTest : public ::testing::Test {
             client.sendMessage(Delete{.channel = environment.slackChannel, .ts = post.message.ts});
         }
 };
-PostMessage::Reply APIPinsTest::post;
+POSTMessage::Reply APIPinsTest::post;
 
 TEST_F(APIPinsTest, Add)
 {

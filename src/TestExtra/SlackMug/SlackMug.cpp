@@ -27,7 +27,7 @@ void SlackMug::handleCommand(NisHTTP::Request const& request, NisHTTP::Response&
     std::string const& userId = request.variables()["user_id"];
     std::string const& channel = request.variables()["channel_id"];
 
-    client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage{.channel = channel, .text = "I have seen " + std::to_string(messageCount[userId])});
+    client.sendMessage(ThorsAnvil::Slack::API::Chat::POSTMessage{.channel = channel, .text = "I have seen " + std::to_string(messageCount[userId])});
     response.setStatus(200);
 }
 

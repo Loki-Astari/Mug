@@ -13,7 +13,7 @@
 using namespace std::literals::string_literals;
 
 using ThorsAnvil::Slack::SlackClient;
-using ThorsAnvil::Slack::API::Chat::PostMessage;
+using ThorsAnvil::Slack::API::Chat::POSTMessage;
 using ThorsAnvil::Slack::API::Chat::Delete;
 using ThorsAnvil::Slack::API::Star::Add;
 using ThorsAnvil::Slack::API::Star::Remove;
@@ -25,16 +25,16 @@ extern Environment             environment;
 
 class APIStarTest : public ::testing::Test {
     protected:
-        static PostMessage::Reply      postNoStar;
-        static PostMessage::Reply      postWithStar;
+        static POSTMessage::Reply      postNoStar;
+        static POSTMessage::Reply      postWithStar;
     protected:
     public:
         //static void SetUpTestSuite()
         void SetUp() override
         {
-            client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "The APIStarTest::Add message No star"}, postNoStar, true);
+            client.sendMessage(POSTMessage{.channel = environment.slackChannel, .text = "The APIStarTest::Add message No star"}, postNoStar, true);
             ASSERT_TRUE(postNoStar.ok);
-            client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "The APIStarTest::Add message With star"}, postWithStar, true);
+            client.sendMessage(POSTMessage{.channel = environment.slackChannel, .text = "The APIStarTest::Add message With star"}, postWithStar, true);
             ASSERT_TRUE(postWithStar.ok);
 
             Add::Reply      replyB;
@@ -49,8 +49,8 @@ class APIStarTest : public ::testing::Test {
         }
 };
 
-PostMessage::Reply APIStarTest::postNoStar;
-PostMessage::Reply APIStarTest::postWithStar;
+POSTMessage::Reply APIStarTest::postNoStar;
+POSTMessage::Reply APIStarTest::postWithStar;
 
 TEST_F(APIStarTest, AddStarToNoStar)
 {

@@ -19,7 +19,7 @@ using namespace std::literals::string_literals;
 namespace BK = ThorsAnvil::Slack::BlockKit;
 
 using ThorsAnvil::Slack::SlackClient;
-using ThorsAnvil::Slack::API::Chat::PostMessage;
+using ThorsAnvil::Slack::API::Chat::POSTMessage;
 using ThorsAnvil::Slack::API::Chat::GetPermalink;
 using ThorsAnvil::Slack::API::Chat::MeMessage;
 using ThorsAnvil::Slack::API::Chat::Unfurl;
@@ -31,8 +31,8 @@ extern Environment             environment;
 
 TEST(APIChatUtilTest, GetPermalink)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
     BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
@@ -63,7 +63,7 @@ TEST(APIChatUtilTest, MeMessage)
 TODO
 TEST(APIChatUtilTest, UnfurlURL)
 {
-    PostMessage::Reply  reply   = client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."});
+    POSTMessage::Reply  reply   = client.sendMessage(POSTMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."});
     ASSERT_TRUE(reply.ok);
 
     Unfurl message{

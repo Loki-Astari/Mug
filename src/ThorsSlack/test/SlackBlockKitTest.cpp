@@ -16,15 +16,15 @@ using namespace std::literals::string_literals;
 namespace BK = ThorsAnvil::Slack::BlockKit;
 
 using ThorsAnvil::Slack::SlackClient;
-using ThorsAnvil::Slack::API::Chat::PostMessage;
+using ThorsAnvil::Slack::API::Chat::POSTMessage;
 
 extern SlackClient             client;
 extern Environment             environment;
 
 TEST(SlackBlockKitTest, Block_Section_ElText)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{
                             .channel = environment.slackChannel,
                             .blocks = BK::Blocks{
                                 BK::makeSectionMarkD("Section With Text"),
@@ -49,8 +49,8 @@ TEST(SlackBlockKitTest, Block_Section_ElText)
 
 TEST(SlackBlockKitTest, Block_RichText_Section_Text)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{
                             .channel = environment.slackChannel,
                             .blocks = BK::Blocks{BK::RichText{}.addSection({{"Rich Text: Section", {true, true, true, true}}})}
                        }, reply, true);
@@ -74,8 +74,8 @@ TEST(SlackBlockKitTest, Block_RichText_Section_Text)
 
 TEST(SlackBlockKitTest, Block_RichText_ListBullet_Section_Text)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{
                             .channel = environment.slackChannel,
                             .blocks = BK::Blocks{BK::RichText{}.addList(BK::bullet, {{"Rich Text: List-bullet",{true,false,true,false}}})}
                        }, reply, true);
@@ -102,8 +102,8 @@ TEST(SlackBlockKitTest, Block_RichText_ListBullet_Section_Text)
 
 TEST(SlackBlockKitTest, Block_RichText_ListOrder_Section_Text)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{
                             .channel = environment.slackChannel,
                             .blocks = BK::Blocks{BK::RichText{}.addList(BK::ordered, {{"Rich Text: List-ordered",{false,true,false,true}}})}
                        }, reply, true);
@@ -130,8 +130,8 @@ TEST(SlackBlockKitTest, Block_RichText_ListOrder_Section_Text)
 
 TEST(SlackBlockKitTest, Block_RichText_Pre_Formatted)
 {
-    PostMessage::Reply  reply;
-    PostMessage         message = {
+    POSTMessage::Reply  reply;
+    POSTMessage         message = {
                             .channel = environment.slackChannel,
                             .blocks = BK::Blocks{BK::RichText{}.addPreForm(1, {{"Rich Text PreFormaatted Test", {true, true, false,false}}})}
                         };
@@ -141,8 +141,8 @@ TEST(SlackBlockKitTest, Block_RichText_Pre_Formatted)
 
 TEST(SlackBlockKitTest, Block_RichText_QUOTE)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{
                             .channel = environment.slackChannel,
                             .blocks = BK::Blocks{BK::RichText{}.addQuote(1, {{"Rich Text Quote", {true, false, false, true}}})}
                        }, reply, true);
@@ -151,8 +151,8 @@ TEST(SlackBlockKitTest, Block_RichText_QUOTE)
 
 TEST(SlackBlockKitTest, BlockAllRichTextElements)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{
                             .channel = environment.slackChannel,
                             .blocks = BK::Blocks{
                                         BK::RichText{
@@ -192,8 +192,8 @@ TEST(SlackBlockKitTest, BlockAllRichTextElements)
 
 TEST(SlackBlockKitTest, Block_RichText_Failure)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{
                             .channel = environment.slackChannel,
                             .blocks = BK::Blocks{BK::RichText{}.addQuote(3, {{"Rich Text Quote", {true, true, true, true}}})}
                        }, reply);
@@ -202,7 +202,7 @@ TEST(SlackBlockKitTest, Block_RichText_Failure)
 
 TEST(SlackBlockKitTest, Block_Action_Button)
 {
-    PostMessage     message{
+    POSTMessage     message{
                         .channel = environment.slackChannel,
                         .blocks = BK::Blocks{
                             BK::Context{
@@ -220,7 +220,7 @@ TEST(SlackBlockKitTest, Block_Action_Button)
                         }
                     };
 #if 0
-    PostMessage     message{
+    POSTMessage     message{
                         .channel = environment.slackChannel,
                         .blocks = BK::Blocks{
                             BK::Actions{
@@ -233,15 +233,15 @@ TEST(SlackBlockKitTest, Block_Action_Button)
     BK::Context& actions = std::get<BK::Context>(message.blocks.value()[0]);
 
     ThorsAnvil::Serialize::PrinterConfig config{ThorsAnvil::Serialize::OutputType::Stream};
-    PostMessage::Reply      reply;
+    POSTMessage::Reply      reply;
     client.sendMessage(message, reply, true);
     ASSERT_TRUE(reply.ok);
 #endif
 }
 TEST(SlackBlockKitTest, Block_Section_All_Standard_Elements)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{
                            .channel = environment.slackChannel,
                                 // Actions, Context, Context_Actions, Divider, File, Header, Image, Input, Markdown, RichText, Section, Table, Video
                            .blocks = BK::Blocks{

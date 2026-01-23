@@ -14,7 +14,7 @@ int main()
     ThorsLogDebug("main", "main", "SlackCLI ", environment.botToken);
 
     using ThorsAnvil::Slack::SlackClient;
-    using ThorsAnvil::Slack::API::Chat::PostMessage;
+    using ThorsAnvil::Slack::API::Chat::POSTMessage;
     using ThorsAnvil::Slack::API::Chat::ScheduleMessage;
     using ThorsAnvil::Slack::API::Chat::DeleteScheduledMessage;
     using ThorsAnvil::Slack::API::Chat::ScheduledMessagesList;
@@ -22,8 +22,8 @@ int main()
 
     SlackClient             client(environment.botToken, environment.userToken);
 
-    PostMessage::Reply reply;
-    client.sendMessage(PostMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply);
+    POSTMessage::Reply reply;
+    client.sendMessage(POSTMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply);
     //
     // auto reply1 = client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "A timed message"});
     // auto reply2 = client.sendMessage(ScheduleMessage{.channel = "C09RU2URYMS", .post_at = time(nullptr) + 60, .text = "A timed message"});

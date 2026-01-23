@@ -16,13 +16,13 @@ void SlackEventHandler::handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Requ
         std::string channel = "@" + userId;
         std::string         text = "I see: " + event.text;
 
-        client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage{.channel = channel, .text = text});
+        client.sendMessage(ThorsAnvil::Slack::API::Chat::POSTMessage{.channel = channel, .text = text});
         if (event.text == "start") {
             sendWelcomeMessage(event.channel.value(), userId);
             return;
         }
         if (event.text.find("POP")) {
-            client.sendMessage(ThorsAnvil::Slack::API::Chat::PostMessage
+            client.sendMessage(ThorsAnvil::Slack::API::Chat::POSTMessage
                                {
                                     .channel = event.channel.value(),
                                     .text = "We saw a bad work!!!",
@@ -41,7 +41,7 @@ void SlackEventHandler::sendWelcomeMessage(std::string const& channel, std::stri
     }
 
     auto message = find->second.getMessage();
-    client.sendMessage(message, [&find](ThorsAnvil::Slack::API::Chat::PostMessage::Reply&& result){find->second.timestamp = std::stoi(result.ts);});
+    client.sendMessage(message, [&find](ThorsAnvil::Slack::API::Chat::POSTMessage::Reply&& result){find->second.timestamp = std::stoi(result.ts);});
 }
 
 void SlackEventHandler::handleCallbackReactionAddedEvent(ThorsAnvil::Nisse::HTTP::Request const& /*request*/, ThorsAnvil::Nisse::HTTP::Response& /*response*/, ThorsAnvil::Slack::Event::EventCallback const&, ThorsAnvil::Slack::Event::ReactionAdded const& event)

@@ -34,7 +34,7 @@ class WelcomeMessage
             , completed(false)
         {}
 
-        API::Chat::PostMessage getMessage()
+        API::Chat::POSTMessage getMessage()
         {
             return {    .channel = channel,
                         .text = "Plop",

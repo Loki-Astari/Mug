@@ -11,13 +11,11 @@
 #include <variant>
 #include <thread>
 
-#undef PostMessage
-
 using namespace std::literals::string_literals;
 namespace BK = ThorsAnvil::Slack::BlockKit;
 
 using ThorsAnvil::Slack::SlackClient;
-using ThorsAnvil::Slack::API::Chat::PostMessage;
+using ThorsAnvil::Slack::API::Chat::POSTMessage;
 using ThorsAnvil::Slack::API::Chat::PostEphemeral;
 using ThorsAnvil::Slack::API::Chat::Delete;
 using ThorsAnvil::Slack::API::Chat::Update;
@@ -51,8 +49,8 @@ SlackClient             client(environment.botToken, environment.userToken);
 
 TEST(APIChatMessageTest, SimpleText)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
     BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
@@ -68,8 +66,8 @@ TEST(APIChatMessageTest, SimpleText)
 
 TEST(APIChatMessageTest, Block_Section_ElText)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{
                             .channel = environment.slackChannel,
                             .blocks = BK::Blocks{
                                         BK::Section{
@@ -103,15 +101,15 @@ TEST(APIChatMessageTest, Block_Section_ElText)
 
 TEST(APIChatMessageTest, MessageWithBadJSON)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "Json does not support new line\n"}, reply);
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{.channel = environment.slackChannel, .text = "Json does not support new line\n"}, reply);
     ASSERT_FALSE(reply.ok);
 }
 
 TEST(APIChatMessageTest, Delete)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
     BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
@@ -149,8 +147,8 @@ TEST(APIChatMessageTest, PostEphemeral)
 
 TEST(APIChatMessageTest, Update)
 {
-    PostMessage::Reply      reply;
-    client.sendMessage(PostMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
+    POSTMessage::Reply      reply;
+    client.sendMessage(POSTMessage{.channel = environment.slackChannel, .text = "I hope the tour went well, Mr. Wonka."}, reply, true);
     ASSERT_TRUE(reply.ok);
     ASSERT_TRUE(std::holds_alternative<BK::RichText>(reply.message.blocks[0]));
     BK::RichText&           text = std::get<BK::RichText>(reply.message.blocks[0]);
