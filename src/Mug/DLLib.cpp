@@ -49,6 +49,9 @@ void DLLib::addInstance(HTTPHandler& handler, Plugin const& pluginInfo)
     ThorsLogInfo("DLLib", "addInstance", "Called ", path.c_str(), " ", pluginInfo.config.getString());
     std::string config = pluginInfo.config.getString();
     MugPlugin*  pluginPtr = mugFunc(config.c_str());
+    if (pluginPtr == nullptr) {
+        ThorsLogAndThrowError(std::runtime_error, "DLLib", "addInstance", "mugFunc() returned nullptr!");
+    }
     instances.emplace_back(handler, std::move(config), pluginPtr);
     pluginPtr->start(handler);
 }
