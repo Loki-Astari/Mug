@@ -4,6 +4,11 @@
 
 The Mug server is designed to be a lightweight server that will dynamically load configured C++ modules.
 
+**Online documentation:**
+- https://loki-astari.github.io/ThorsAnvil/Mug.html
+- https://loki-astari.github.io/ThorsAnvil/ThorsMug.html
+- https://loki-astari.github.io/ThorsAnvil/ThorsSlack.html
+
 If the modules change (are rebuilt) Mug will auto-detect this update and load this new version automatically allowing a very simple build/test cycle, trying to be similar to the Python Jug concept.
 
 Modules implement the `ThorsAnvil::ThorsMug::MugPlugin` interface which allows you to install REST based listeners on a ["NissaServer"](https://github.com/Loki-Astari/Nisse) that provide all the underlying functionality for async processing of HTTP(S) requests.
