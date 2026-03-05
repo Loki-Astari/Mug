@@ -17,12 +17,14 @@ int main(int argc, char* argv[])
     using ThorsAnvil::ThorsMug::MugServer;
     using ThorsAnvil::ThorsMug::MugServerMode;
 
-    std::cout << "Mug\n";
     try
     {
         MugArgs     arguments;
         MugCLA      parser(std::vector<std::string_view>(argv, argv + argc), arguments);
 
+        if (!arguments.silent) {
+            std::cout << "Mug\n";
+        }
         if (arguments.help) { /// TODO
             parser.displayHelp(argv[0]);
             return 0;
@@ -58,12 +60,12 @@ int main(int argc, char* argv[])
     }
     catch (std::exception const& e)
     {
-        std::cout << "Exception: " << e.what() << "\n";
+        std::cerr << "Exception: " << e.what() << "\n";
         throw;
     }
     catch (...)
     {
-        std::cout << "Exception: Uknowne\n";
+        std::cerr << "Exception: Unknown\n";
         throw;
     }
 }
