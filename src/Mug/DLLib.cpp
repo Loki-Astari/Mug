@@ -13,11 +13,54 @@ DLLib::DLLib(std::filesystem::path const& path)
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "DLLib", "Empty path used for library");
     }
     loadLibrary();
+    load();         // Does nothing.
+                    // But it shows the duality with the destructor.
 }
+
+DLLib::DLLib(DLLib const& copy)
+    : DLLib(copy.path)
+{
+    for (auto& inst: copy.instances) {
+        instances.emplace_back(inst.handler, inst.config, nullptr);
+    }
+}
+
 DLLib::~DLLib()
 {
     unload();
     unloadLibrary();
+}
+
+void DLLib::swap(DLLib& other) noexcept
+{
+    using std::swap;
+    swap(path,          other.path);
+    swap(lastModified,  other.lastModified);
+    swap(lib,           other.lib);
+    swap(mugFunc,       other.mugFunc);
+    swap(instances,     other.instances);
+}
+
+// Check if the DLL has been re-built.
+// If it has then we unload the DLL and re-load the new version.
+bool DLLib::check()
+{
+    std::filesystem::file_time_type modifyTime = std::filesystem::last_write_time(path);
+    if (modifyTime > lastModified) {
+
+        // Try and load the new version.
+        {
+            DLLib   reload(*this);
+            // Swap the current and reloaded state.
+            swap(reload);
+            // The destructor will unload the current config.
+        }
+        // We just swapped the reload variable above with this.
+        // We now need to load() the config file.
+        load();
+        return true;
+    }
+    return false;
 }
 
 void DLLib::load()
@@ -26,6 +69,8 @@ void DLLib::load()
         ThorsLogInfo("DLLib", "load", "Plugin Config: ", instance.config);
         instance.plugin         = mugFunc(instance.config.c_str());
         if (instance.plugin) {
+            // Adds the handlers back.
+            // Requests can now be handeled.
             instance.plugin->start(instance.handler);
         }
         else {
@@ -38,22 +83,15 @@ void DLLib::unload()
     for (auto& instance: instances) {
         ThorsLogInfo("DLLib", "unload", "Plugin Config: ", instance.config);
         if (instance.plugin) {
+            // Removes the handlers
+            // Any subsequent requests will not be handled.
+            // Until the plugin is reloaded.
+            //
+            // Nisse makes sure that that in-flight requests are finished
+            // before this function returns.
             instance.plugin->stop(instance.handler);
         }
     }
-}
-
-
-void DLLib::addInstance(HTTPHandler& handler, Plugin const& pluginInfo)
-{
-    ThorsLogInfo("DLLib", "addInstance", "Called ", path.c_str(), " ", pluginInfo.config.getString());
-    std::string config = pluginInfo.config.getString();
-    MugPlugin*  pluginPtr = mugFunc(config.c_str());
-    if (pluginPtr == nullptr) {
-        ThorsLogAndThrowError(std::runtime_error, "DLLib", "addInstance", "mugFunc() returned nullptr!");
-    }
-    instances.emplace_back(handler, std::move(config), pluginPtr);
-    pluginPtr->start(handler);
 }
 
 void DLLib::loadLibrary()
@@ -89,40 +127,16 @@ char const* DLLib::safeDLerror()
     return message == nullptr ? "" : message;
 }
 
-
-bool DLLib::check()
+void DLLib::addInstance(HTTPHandler& handler, Plugin const& pluginInfo)
 {
-    std::filesystem::file_time_type modifyTime = std::filesystem::last_write_time(path);
-    if (modifyTime > lastModified) {
-        // Unload the plugins we have.
-        unload();
-
-        // Reload the DLL
-        unloadLibrary();
-        lib = nullptr;
-        loadLibrary();
-
-        // Reload the plugins we have configed.
-        load();
-        return true;
+    ThorsLogInfo("DLLib", "addInstance", "Called ", path.c_str(), " ", pluginInfo.config.getString());
+    std::string config = pluginInfo.config.getString();
+    MugPlugin*  pluginPtr = mugFunc(config.c_str());
+    if (pluginPtr == nullptr) {
+        ThorsLogAndThrowError(std::runtime_error, "DLLib", "addInstance", "mugFunc() returned nullptr!");
     }
-    return false;
-}
+    instances.emplace_back(handler, std::move(config), pluginPtr);
 
-void DLLibMap::load(NisHttp::HTTPHandler& handler, Plugin const& pluginInfo)
-{
-    ThorsLogInfo("DLLibMap", "load ", pluginInfo.pluginPath, " : ", pluginInfo.config.getString());
-    std::error_code ec;
-    std::filesystem::path    libPath = std::filesystem::canonical(pluginInfo.pluginPath, ec);
-    if (libPath.empty()) {
-        ThorsLogAndThrowError(std::runtime_error, "DLLibMap", "load", "Invalid path to shared library: ", pluginInfo.pluginPath);
-    }
-    // Note the plugin may have already been loaded.
-    //      If it has we will not create a new object but reuse the DLLObject.
-    Iterator find = libs.find(libPath.string());
-    if (find == std::end(libs)) {
-        auto insert = libs.emplace(libPath, libPath);
-        find = insert.first;
-    }
-    find->second.addInstance(handler, pluginInfo);
+    // Add the handlers to the main loop.
+    pluginPtr->start(handler);
 }

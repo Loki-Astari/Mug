@@ -3,7 +3,7 @@
 
 #include "ThorsMugConfig.h"
 #include "MugConfig.h"
-#include "DLLib.h"
+#include "DLLibMap.h"
 #include "NisseServer/NisseServer.h"
 #include "NisseServer/TimerAction.h"
 #include "NisseHTTP/PyntHTTPControl.h"

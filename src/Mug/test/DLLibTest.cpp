@@ -48,6 +48,14 @@ TEST(DLLibTest, LoadOKFunctionBad)
                  std::runtime_error
                  );
 }
+TEST(DLLibTest, LoadEmptyPath)
+{
+    auto action = [&](){ThorsAnvil::ThorsMug::DLLib   dlLib1(FS::path(""));};
+    EXPECT_THROW(
+                 action(),
+                 std::runtime_error
+                 );
+}
 
 TEST(DLLibTest, LoadL3Call)
 {
