@@ -5,7 +5,25 @@
 
 using namespace ThorsAnvil::ThorsMug;
 
-
+/*
+ * We call:
+ *      loadLibrary() / unloadLibrary() once for each DLL.
+ *                                      This loads the library and makes sure we can get the "MugFunc"
+ *                                      from the DLL.
+ * For each config object we find we call:
+ *      addInstance() which makes sure the library is correctly loaded (see above)
+ *      Then calls the "MugFunc" passing the config to get a "Non Owned" pointer to the "MugPlugin" object.
+ *
+ *      Then we call "start()" on the MugPlugin object.
+ *          This is usually used to register the handlers
+ *
+ * We call
+ *      load() / unload() is used to unload and re-load each instance that has previously been created with
+ *      addInstance(). This is done if we detect that the DLL has been updated.
+ *
+ * Note:
+ *      unload() is also called on destruction to make sure "stop()" is called on the plugin.
+ */
 DLLib::DLLib(std::filesystem::path const& path)
     : path(path)
 {
@@ -13,13 +31,17 @@ DLLib::DLLib(std::filesystem::path const& path)
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "DLLib", "Empty path used for library");
     }
     loadLibrary();
-    load();         // Does nothing.
-                    // But it shows the duality with the destructor.
+    // The loading of each config is done via: addInstance()
+    // At this point there is nothing to load()
+    // That is why the constructor and destructor are not symmetric.
 }
 
+// Used by the check() function to try and re-load and DLL.
 DLLib::DLLib(DLLib const& copy)
     : DLLib(copy.path)
 {
+    // Note: We will need to call load()
+    //       to reload all these configuration instances.
     for (auto& inst: copy.instances) {
         instances.emplace_back(inst.handler, inst.config, nullptr);
     }
@@ -34,11 +56,12 @@ DLLib::~DLLib()
 void DLLib::swap(DLLib& other) noexcept
 {
     using std::swap;
-    swap(path,          other.path);
-    swap(lastModified,  other.lastModified);
-    swap(lib,           other.lib);
-    swap(mugFunc,       other.mugFunc);
-    swap(instances,     other.instances);
+    swap(path,              other.path);
+    swap(lastModified,      other.lastModified);
+    swap(lastLoadAttempt,   other.lastLoadAttempt);
+    swap(lib,               other.lib);
+    swap(mugFunc,           other.mugFunc);
+    swap(instances,         other.instances);
 }
 
 // Check if the DLL has been re-built.
@@ -46,19 +69,35 @@ void DLLib::swap(DLLib& other) noexcept
 bool DLLib::check()
 {
     std::filesystem::file_time_type modifyTime = std::filesystem::last_write_time(path);
-    if (modifyTime > lastModified) {
+    if (modifyTime > lastLoadAttempt) {
+
+        // Even if we fail to fail to load we want to track the last attempt.
+        // There is no point in trying to reload if we know it is going to fail.
+        lastLoadAttempt = modifyTime;
 
         // Try and load the new version.
+        // Note: This may generate an exception.
+        // We will catch log and drop any exception.
+        try
         {
-            DLLib   reload(*this);
-            // Swap the current and reloaded state.
-            swap(reload);
-            // The destructor will unload the current config.
+            {
+                DLLib   reload(*this);
+                // Swap the current and reloaded state.
+                swap(reload);
+                // The destructor will unload the current config.
+            }
+            // We just swapped the reload variable above with this.
+            // We now need to load() the config file again as the destructor
+            // called stop on each MugPlugin object to unregister any handlers.
+            load();
+            return true;
         }
-        // We just swapped the reload variable above with this.
-        // We now need to load() the config file.
-        load();
-        return true;
+        catch (std::exception const& e) {
+            ThorsLogError("ThorsAnvil::ThorsMug::DLLib", "check", "Failed to load new version of the dynamic library: ", path.c_str(), " ", e.what());
+        }
+        catch (...) {
+            ThorsLogError("ThorsAnvil::ThorsMug::DLLib", "check", "Failed to load new version of the dynamic library: ", path.c_str(), " Unknown");
+        }
     }
     return false;
 }
@@ -110,6 +149,7 @@ void DLLib::loadLibrary()
         ThorsLogAndThrowError(std::runtime_error, "DLLib", "loadLibrary", "dlsym() failed: ", safeDLerror());
     }
     lastModified = std::filesystem::last_write_time(path);
+    lastLoadAttempt = lastModified;
     mugFunc      = reinterpret_cast<MugFunc>(mugFuncSym);
 }
 

@@ -119,9 +119,37 @@ TEST(DLLibTest, CallCheck)
     EXPECT_EQ(404, response.getCode().code);
 }
 
-TEST(DLLibTest, CheckOnEmpty)
+TEST(DLLibTest, CheckWithNoChange)
 {
     ThorsAnvil::ThorsMug::DLLib         dlLib(FS::canonical(FS::path("../TestExtra/L3/release/libL3" SLIB)));
     EXPECT_EQ(false, dlLib.check());
+}
+
+#include <boost/filesystem.hpp>
+
+TEST(DLLibTest, CheckWithChange)
+{
+    ThorsAnvil::ThorsMug::DLLib         dlLib(FS::canonical(FS::path("../TestExtra/L3/release/libL3" SLIB)));
+    EXPECT_EQ(false, dlLib.check());
+
+    namespace fs = boost::filesystem;
+    sleep(2);
+    fs::last_write_time("../TestExtra/L3/release/libL3" SLIB, std::time(nullptr));
+    EXPECT_EQ(true, dlLib.check());
+}
+
+TEST(DLLibTest, CheckWithChangeWithInstance)
+{
+    ThorsAnvil::ThorsMug::DLLib         dlLib(FS::canonical(FS::path("../TestExtra/L3/release/libL3" SLIB)));
+
+    ThorsAnvil::Nisse::HTTP::HTTPHandler    handler;
+    dlLib.addInstance(handler, ThorsAnvil::ThorsMug::Plugin{"../TestExtra/L3/release/libL3" SLIB});
+
+    EXPECT_EQ(false, dlLib.check());
+
+    namespace fs = boost::filesystem;
+    sleep(2);
+    fs::last_write_time("../TestExtra/L3/release/libL3" SLIB, std::time(nullptr));
+    EXPECT_EQ(true, dlLib.check());
 }
 

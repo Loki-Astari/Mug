@@ -33,6 +33,7 @@ class DLLib
 
     std::filesystem::path               path;                       // Path to the dynamic library
     std::filesystem::file_time_type     lastModified;               // last time the library was modified.
+    std::filesystem::file_time_type     lastLoadAttempt;            // last time the library was modified.
     void*                               lib             = nullptr;  // Pointer to the loaded library.
     MugFunc                             mugFunc;                    // Function retrieved from the library
     std::vector<Config>                 instances;                  // Config object for each result of calling
@@ -44,9 +45,13 @@ class DLLib
         DLLib& operator=(DLLib&&)       = delete;
 
         DLLib(std::filesystem::path const&);
-        DLLib(DLLib const&);
-        ~DLLib();
+    private:
+        DLLib(DLLib const&);            // Used by check() to perform a re-load
+                                        // We load the new version of the lib and then swap
+                                        // with the current state
         void swap(DLLib& other) noexcept;
+    public:
+        ~DLLib();
 
         // These two functions are called from
         // DLLibMap.
