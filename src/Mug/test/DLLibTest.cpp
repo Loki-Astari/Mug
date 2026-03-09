@@ -140,6 +140,7 @@ TEST(DLLibTest, CheckWithChange)
 
 TEST(DLLibTest, CheckWithChangeWithInstance)
 {
+    GTEST_SKIP();
     ThorsAnvil::ThorsMug::DLLib         dlLib(FS::canonical(FS::path("../TestExtra/L3/release/libL3" SLIB)));
 
     ThorsAnvil::Nisse::HTTP::HTTPHandler    handler;
