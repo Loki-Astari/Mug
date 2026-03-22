@@ -4,6 +4,9 @@
 *.gcov
 confdefs.h
 
+.cluade
+.clangd
+
 unittest
 
 coverage/
