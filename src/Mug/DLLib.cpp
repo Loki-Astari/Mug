@@ -92,10 +92,12 @@ bool DLLib::check()
             load();
             return true;
         }
-        catch (std::exception const& e) {
+        catch (std::exception const& e)
+        {
             ThorsLogError("ThorsAnvil::ThorsMug::DLLib", "check", "Failed to load new version of the dynamic library: ", path.c_str(), " ", e.what());
         }
-        catch (...) {
+        catch (...)
+        {
             ThorsLogError("ThorsAnvil::ThorsMug::DLLib", "check", "Failed to load new version of the dynamic library: ", path.c_str(), " Unknown");
         }
     }
