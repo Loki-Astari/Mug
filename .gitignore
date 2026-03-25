@@ -35,6 +35,7 @@ config.h
 src/ThorsMug/ThorsMugConfig.h
 src/ThorsSlackBot/ThorsSlackBotConfig.h
 src/ThorsSlack/ThorsSlackConfig.h
+src/Mug/LogFile
 MockHeaderInclude.h
 
 CallCheckAfterLibChange.dylib
