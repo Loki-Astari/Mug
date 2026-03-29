@@ -13,7 +13,6 @@ extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(char const* config
     return slackMug.get();
 }
 
-namespace Ser       = ThorsAnvil::Serialize;
 namespace NisHTTP   = ThorsAnvil::Nisse::HTTP;
 
 SlackMug::SlackMug(char const*)

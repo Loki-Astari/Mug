@@ -1,4 +1,3 @@
-#include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
 #if !(defined(DISABLE_SLACKTEST) && (DISABLE_SLACKTEST == 1))
@@ -10,7 +9,6 @@
 #include "SlackClient.h"
 #include "SlackBlockKit.h"
 
-#include "ThorSerialize/JsonThor.h"
 #include <thread>
 #include <variant>
 
@@ -22,7 +20,6 @@ using ThorsAnvil::Slack::SlackClient;
 using ThorsAnvil::Slack::API::Chat::POSTMessage;
 using ThorsAnvil::Slack::API::Chat::GetPermalink;
 using ThorsAnvil::Slack::API::Chat::MeMessage;
-using ThorsAnvil::Slack::API::Chat::Unfurl;
 using ThorsAnvil::Slack::API::Chat::UnfurlURL;
 
 extern SlackClient             client;

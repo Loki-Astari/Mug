@@ -1,4 +1,3 @@
-#include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
 #if !(defined(DISABLE_SLACKTEST) && (DISABLE_SLACKTEST == 1))
@@ -6,8 +5,6 @@
 #include "Environment.h"
 #include "SlackClient.h"
 #include "APIChatMessage.h"
-#include "ThorSerialize/JsonThor.h"
-#include "ThorSerialize/PrinterConfig.h"
 #include "SlackBlockKit.h"
 
 #include <variant>

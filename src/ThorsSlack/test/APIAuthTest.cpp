@@ -1,4 +1,3 @@
-#include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
 #if !(defined(DISABLE_SLACKTEST) && (DISABLE_SLACKTEST == 1))

@@ -3,7 +3,6 @@
 #include "ThorsSlack/APIChatMessage.h"
 #include "ThorsSlack/APIChatSchedule.h"
 #include "ThorsSlack/APIChatStream.h"
-#include "ThorSerialize/JsonThor.h"
 
 using namespace std::literals::string_literals;
 

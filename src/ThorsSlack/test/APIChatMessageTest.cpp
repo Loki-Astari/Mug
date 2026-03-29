@@ -1,4 +1,3 @@
-#include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
 #include "APIChatMessage.h"
@@ -6,7 +5,6 @@
 #include "SlackClient.h"
 #include "SlackBlockKit.h"
 #include "ThorSerialize/JsonThor.h"
-#include "NisseHTTP/Response.h"
 
 #include <variant>
 #include <thread>

@@ -4,17 +4,15 @@
 #include "NisseHTTP/HTTPHandler.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
-#include "NisseHTTP/URL.h"
 #include "NisseHTTP/Util.h"
 #include <filesystem>
 #include <sstream>
-#include <thread>
 
 namespace FS = std::filesystem;
 
-#define QUOTE1(X)   #X
-#define QUOTE(X)    QUOTE1(X)
-#define SLIB        "." QUOTE( SHARED_LIB_EXTENSION )
+#define DLL_TEST_QUOTE1(X)  #X
+#define DLL_TEST_QUOTE(X)   DLL_TEST_QUOTE1(X)
+#define SLIB                "." DLL_TEST_QUOTE( SHARED_LIB_EXTENSION )
 
 
 TEST(DLLibTest, LoadL3)

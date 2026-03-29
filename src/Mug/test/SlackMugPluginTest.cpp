@@ -7,9 +7,6 @@
 #include "ThorSerialize/JsonThor.h"
 #include "NisseHTTP/ClientRequest.h"
 
-#include "HTTPSend.h"
-#include "HTTPResponse.h"
-
 #include <latch>
 #include <thread>
 

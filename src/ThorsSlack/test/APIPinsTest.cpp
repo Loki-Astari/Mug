@@ -1,4 +1,3 @@
-#include "ThorsSlackConfig.h"
 #include "gtest/gtest.h"
 
 #if !(defined(DISABLE_SLACKTEST) && (DISABLE_SLACKTEST == 1))
@@ -8,7 +7,6 @@
 #include "APIChatMessage.h"
 #include "APIPins.h"
 
-#include "ThorSerialize/JsonThor.h"
 
 using namespace std::literals::string_literals;
 

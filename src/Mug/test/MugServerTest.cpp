@@ -4,11 +4,9 @@
 #include "MugConfig.h"
 #include "MugServer.h"
 
-#include "NisseHTTP/ClientStream.h"
 #include "NisseHTTP/ClientRequest.h"
 #include "NisseHTTP/Util.h"
 #include "ThorSerialize/JsonThor.h"
-#include "ThorsSocket/Socket.h"
 #include "ThorsSocket/SocketStream.h"
 
 #include "HTTPSend.h"

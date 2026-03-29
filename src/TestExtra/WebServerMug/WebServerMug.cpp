@@ -2,7 +2,6 @@
 
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
-#include "NisseServer/NisseServer.h"
 
 #include <string_view>
 
