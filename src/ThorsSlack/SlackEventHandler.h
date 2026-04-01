@@ -227,7 +227,8 @@ bool SlackEventHandler::validateRequest(Request const& request)
         hmac.appendData(body);
     }
     std::size_t versionNext = versionEnd + (versionEnd == std::size(sig) ? 0 : 1);
-    bool result = (ThorsAnvil::Crypto::hexdigest<ThorsAnvil::Crypto::Sha256>(digest) == std::string_view{std::begin(sig) + versionNext, std::end(sig)});
+    std::string dig = ThorsAnvil::Crypto::hexdigest<ThorsAnvil::Crypto::Sha256>(digest);
+    bool result = std::size(dig) == std::size(sig) && CRYPTO_memcmp(dig.c_str(), sig.c_str(), std::size(dig));
     ThorsLogDebug("ThorsAnvil::Slack::SlackEventHandler", "validateRequest", "Request Validation: ", (result ? "OK": "FAIL"));
     return result;
 }
