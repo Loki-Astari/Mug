@@ -28,20 +28,20 @@ MugServer::MugServer(MugConfig const& config, MugServerMode /*mode*/)
     , control(*this)
     , libraryChecker(*this)
 {
-    ThorsLogInfo("MugServer", "MugServer", "Create Server");
+    ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "Create Server");
     servers.reserve(config.servers.size());
 
     for (auto const& server: config.servers) {
-        ThorsLogDebug("MugServer", "MugServer", "Adding Server: ", server.port);
+        ThorsLogDebug("ThorsAnvil::ThorsMug::MugServer", "MugServer", "Adding Server: ", server.port);
         servers.emplace_back();
         for (auto const& action: server.actions) {
-            ThorsLogDebug("MugServer", "MugServer", "  Adding Action: ", action.pluginPath, " Config: ", action.config.getString());
+            ThorsLogDebug("ThorsAnvil::ThorsMug::MugServer", "MugServer", "  Adding Action: ", action.pluginPath, " Config: ", action.config.getString());
 
             libraries.load(servers.back(), action);
         }
         listen(getServerInit(server.certPath, server.port), servers.back());
     }
-    ThorsLogDebug("MugServer", "MugServer", "  Adding Control Port: ", config.controlPort);
+    ThorsLogDebug("ThorsAnvil::ThorsMug::MugServer", "MugServer", "  Adding Control Port: ", config.controlPort);
     listen(TASock::ServerInfo{config.controlPort}, control);
 
     using namespace std::chrono_literals;

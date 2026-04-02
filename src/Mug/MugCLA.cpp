@@ -34,42 +34,42 @@ void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
 
     for (std::string_view const& arg: arguments)
     {
-        ThorsLogDebug("MugCLA", "parseArguments", "Check arguments ", arg);
+        ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Check arguments ", arg);
         if (first) {
             first = false;
             continue;
         }
         SplitArg  const argVal = splitArgument(arg);
-        ThorsLogDebug("MugCLA", "parseArguments", "Flag:  ", argVal.flag);
-        ThorsLogDebug("MugCLA", "parseArguments", "Value: ", argVal.value);
+        ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Flag:  ", argVal.flag);
+        ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Value: ", argVal.value);
 
         if (argVal.flag == "--help")
         {
-            ThorsLogDebug("MugCLA", "parseArguments", "Activate Help");
+            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Help");
             args.setHelp();
             continue;
         }
         if (argVal.flag == "--silent")
         {
-            ThorsLogDebug("MugCLA", "parseArguments", "Activate Silent");
+            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Silent");
             args.setSilent();
             continue;
         }
         if (argVal.flag == "--logFile")
         {
-            ThorsLogDebug("MugCLA", "parseArguments", "Activate LogFile");
+            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate LogFile");
             args.logAddFile(argVal.value);
             continue;
         }
         if (argVal.flag == "--logSys")
         {
-            ThorsLogDebug("MugCLA", "parseArguments", "Activate LogSys");
+            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate LogSys");
             args.logAddSys(!argVal.hasValue ? arguments[0] : argVal.value);
             continue;
         }
         if (argVal.flag == "--logLevel")
         {
-            ThorsLogDebug("MugCLA", "parseArguments", "Activate LogLevel");
+            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate LogLevel");
             auto find = verbosity.find(argVal.value);
             if (find == std::end(verbosity)) {
                 int value = 0;
@@ -89,14 +89,14 @@ void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
         }
         if (argVal.flag == "--config")
         {
-            ThorsLogDebug("MugCLA", "parseArguments", "Activate Config");
+            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Config");
             setConfig = true;
             args.setConfigFile(argVal.value);
             continue;
         }
 
         // Invalid Flag;
-        ThorsLogDebug("MugCLA", "parseArguments", "Invalid Flag");
+        ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Invalid Flag");
         args.setHelp();
     }
 }

@@ -28,7 +28,7 @@ DLLib::DLLib(std::filesystem::path const& path)
     : path(path)
 {
     if (path.empty()) {
-        ThorsLogAndThrowError(std::runtime_error, "DLLib", "DLLib", "Empty path used for library");
+        ThorsLogAndThrowError(std::runtime_error, "ThorsAnvil::ThorsMug::DLLib", "DLLib", "Empty path used for library");
     }
     loadLibrary();
     // The loading of each config is done via: addInstance()
@@ -107,7 +107,7 @@ bool DLLib::check()
 void DLLib::load()
 {
     for (auto& instance: instances) {
-        ThorsLogInfo("DLLib", "load", "Plugin Config: ", instance.config);
+        ThorsLogInfo("ThorsAnvil::ThorsMug::DLLib", "load", "Plugin Config: ", instance.config);
         instance.plugin         = mugFunc(instance.config.c_str());
         if (instance.plugin) {
             // Adds the handlers back.
@@ -115,14 +115,14 @@ void DLLib::load()
             instance.plugin->start(instance.handler);
         }
         else {
-            ThorsLogError("DLLib", "load", "Plugin Config: failed to load a plugin: ", instance.config);
+            ThorsLogError("ThorsAnvil::ThorsMug::DLLib", "load", "Plugin Config: failed to load a plugin: ", instance.config);
         }
     }
 }
 void DLLib::unload()
 {
     for (auto& instance: instances) {
-        ThorsLogInfo("DLLib", "unload", "Plugin Config: ", instance.config);
+        ThorsLogInfo("ThorsAnvil::ThorsMug::DLLib", "unload", "Plugin Config: ", instance.config);
         if (instance.plugin) {
             // Removes the handlers
             // Any subsequent requests will not be handled.
@@ -137,18 +137,18 @@ void DLLib::unload()
 
 void DLLib::loadLibrary()
 {
-    ThorsLogInfo("DLLib", "loadLibrary", "path: ", path);
+    ThorsLogInfo("ThorsAnvil::ThorsMug::DLLib", "loadLibrary", "path: ", path);
     std::error_code ec;
     lib = ::dlopen(std::filesystem::canonical(path, ec).c_str(), RTLD_NOW | RTLD_LOCAL | DLOPEN_PLAT_FLAG);
     if (lib == nullptr) {
-        ThorsLogAndThrowError(std::runtime_error, "DLLib", "loadLibrary", "dlopen() failed: ", safeDLerror());
+        ThorsLogAndThrowError(std::runtime_error, "ThorsAnvil::ThorsMug::DLLib", "loadLibrary", "dlopen() failed: ", safeDLerror());
     }
 
     void*           mugFuncSym = ::dlsym(lib, "mugCreateInstance");
     if (mugFuncSym == nullptr) {
         ::dlclose(lib);
         lib = nullptr;
-        ThorsLogAndThrowError(std::runtime_error, "DLLib", "loadLibrary", "dlsym() failed: ", safeDLerror());
+        ThorsLogAndThrowError(std::runtime_error, "ThorsAnvil::ThorsMug::DLLib", "loadLibrary", "dlsym() failed: ", safeDLerror());
     }
     lastModified = std::filesystem::last_write_time(path);
     lastLoadAttempt = lastModified;
@@ -157,7 +157,7 @@ void DLLib::loadLibrary()
 
 void DLLib::unloadLibrary()
 {
-    ThorsLogInfo("DLLib", "unloadLibrary", "path: ", path);
+    ThorsLogInfo("ThorsAnvil::ThorsMug::DLLib", "unloadLibrary", "path: ", path);
     if (lib) {
         ::dlclose(lib);
     }
@@ -171,11 +171,11 @@ char const* DLLib::safeDLerror()
 
 void DLLib::addInstance(HTTPHandler& handler, Plugin const& pluginInfo)
 {
-    ThorsLogInfo("DLLib", "addInstance", "Called ", path.c_str(), " ", pluginInfo.config.getString());
+    ThorsLogInfo("ThorsAnvil::ThorsMug::DLLib", "addInstance", "Called ", path.c_str(), " ", pluginInfo.config.getString());
     std::string config = pluginInfo.config.getString();
     MugPlugin*  pluginPtr = mugFunc(config.c_str());
     if (pluginPtr == nullptr) {
-        ThorsLogAndThrowError(std::runtime_error, "DLLib", "addInstance", "mugFunc() returned nullptr!");
+        ThorsLogAndThrowError(std::runtime_error, "ThorsAnvil::ThorsMug::DLLib", "addInstance", "mugFunc() returned nullptr!");
     }
     instances.emplace_back(handler, std::move(config), pluginPtr);
 
