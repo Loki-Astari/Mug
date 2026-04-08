@@ -1,5 +1,5 @@
 THORSANVIL_ROOT				?= $(realpath ../)
-TARGET						= ThorsMug ThorsSlack TestExtra Mug
+TARGET						= ThorsMug TestExtra Mug
 
 
 
