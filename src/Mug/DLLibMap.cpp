@@ -5,6 +5,7 @@
 using namespace ThorsAnvil::ThorsMug;
 
 
+THORSMUG_HEADER_ONLY_INCLUDE
 void DLLibMap::load(NisHttp::HTTPHandler& handler, Plugin const& pluginInfo)
 {
     ThorsLogInfo("ThorsAnvil::ThorsMug::DLLibMap", "load", pluginInfo.pluginPath, " : ", pluginInfo.config.getString());

@@ -15,6 +15,7 @@ const VerbosityMap      MugCLA::verbosity  = {
                                                     {"Error",   loguru::Verbosity_ERROR},
                                              };
 
+THORSMUG_HEADER_ONLY_INCLUDE
 SplitArg MugCLA::splitArgument(std::string_view arg)
 {
     std::size_t  find = arg.find('=');
@@ -28,6 +29,7 @@ SplitArg MugCLA::splitArgument(std::string_view arg)
     return {flag, param, hasValue};
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
 {
     bool first = true;
@@ -101,6 +103,7 @@ void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
     }
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 void MugCLA::displayHelp(std::string_view command, std::ostream& output)
 {
     output << "Usage: " << command << " [--help] [--silent] [--logLevel=(All|Trace|Track|Debug|Info|Warn|Error)] [--config=<configFile>]\n"
@@ -131,6 +134,7 @@ The server will refuse to start when there is an error.
 
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 MugCLA::MugCLA(std::vector<std::string_view> const& arguments, MugCLAInterface& args)
     : args(args)
 {

@@ -24,6 +24,7 @@ using namespace ThorsAnvil::ThorsMug;
  * Note:
  *      unload() is also called on destruction to make sure "stop()" is called on the plugin.
  */
+THORSMUG_HEADER_ONLY_INCLUDE
 DLLib::DLLib(std::filesystem::path const& path)
     : path(path)
 {
@@ -37,6 +38,7 @@ DLLib::DLLib(std::filesystem::path const& path)
 }
 
 // Used by the check() function to try and re-load and DLL.
+THORSMUG_HEADER_ONLY_INCLUDE
 DLLib::DLLib(DLLib const& copy)
     : DLLib(copy.path)
 {
@@ -47,12 +49,14 @@ DLLib::DLLib(DLLib const& copy)
     }
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 DLLib::~DLLib()
 {
     unload();
     unloadLibrary();
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 void DLLib::swap(DLLib& other) noexcept
 {
     using std::swap;
@@ -66,6 +70,7 @@ void DLLib::swap(DLLib& other) noexcept
 
 // Check if the DLL has been re-built.
 // If it has then we unload the DLL and re-load the new version.
+THORSMUG_HEADER_ONLY_INCLUDE
 bool DLLib::check()
 {
     std::filesystem::file_time_type modifyTime = std::filesystem::last_write_time(path);
@@ -104,6 +109,7 @@ bool DLLib::check()
     return false;
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 void DLLib::load()
 {
     for (auto& instance: instances) {
@@ -119,6 +125,8 @@ void DLLib::load()
         }
     }
 }
+
+THORSMUG_HEADER_ONLY_INCLUDE
 void DLLib::unload()
 {
     for (auto& instance: instances) {
@@ -135,6 +143,7 @@ void DLLib::unload()
     }
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 void DLLib::loadLibrary()
 {
     ThorsLogInfo("ThorsAnvil::ThorsMug::DLLib", "loadLibrary", "path: ", path);
@@ -155,6 +164,7 @@ void DLLib::loadLibrary()
     mugFunc      = reinterpret_cast<MugFunc>(mugFuncSym);
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 void DLLib::unloadLibrary()
 {
     ThorsLogInfo("ThorsAnvil::ThorsMug::DLLib", "unloadLibrary", "path: ", path);
@@ -163,12 +173,14 @@ void DLLib::unloadLibrary()
     }
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 char const* DLLib::safeDLerror()
 {
     char const* message = ::dlerror();
     return message == nullptr ? "" : message;
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 void DLLib::addInstance(HTTPHandler& handler, Plugin const& pluginInfo)
 {
     ThorsLogInfo("ThorsAnvil::ThorsMug::DLLib", "addInstance", "Called ", path.c_str(), " ", pluginInfo.config.getString());

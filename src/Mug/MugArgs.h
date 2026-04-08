@@ -38,4 +38,8 @@ struct MugArgs: public MugCLAInterface
 
 }
 
+#if defined(THORSMUG_HEADER_ONLY) && THORSMUG_HEADER_ONLY == 1
+#include "MugArgs.source"
+#endif
+
 #endif

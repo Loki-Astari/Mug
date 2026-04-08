@@ -73,4 +73,8 @@ class DLLib
 
 }
 
+#if defined(THORSMUG_HEADER_ONLY) && THORSMUG_HEADER_ONLY == 1
+#include "DLLib.source"
+#endif
+
 #endif

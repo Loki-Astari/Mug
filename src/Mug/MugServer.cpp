@@ -6,6 +6,7 @@
 using namespace ThorsAnvil::ThorsMug;
 
 
+THORSMUG_HEADER_ONLY_INCLUDE
 TASock::ServerInit MugServer::getServerInit(std::optional<std::filesystem::path> certPath, int port)
 {
     // If there is not certificate simply use a normal port.
@@ -23,6 +24,7 @@ TASock::ServerInit MugServer::getServerInit(std::optional<std::filesystem::path>
     return TASock::SServerInfo{port, std::move(ctx)};
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 MugServer::MugServer(MugConfig const& config, MugServerMode /*mode*/)
     : NisseServer(workerCount)
     , control(*this)
@@ -51,6 +53,7 @@ MugServer::MugServer(MugConfig const& config, MugServerMode /*mode*/)
     }
 }
 
+THORSMUG_HEADER_ONLY_INCLUDE
 void MugServer::checkLibrary()
 {
     libraries.checkAll();

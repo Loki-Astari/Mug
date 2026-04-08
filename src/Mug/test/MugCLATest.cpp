@@ -7,7 +7,7 @@
 struct MockFile
 {
     std::string name;
-    MockFile(std::string const& name, std::string const& content)
+    MockFile(std::string const& name, std::string const& /*content*/)
         : name(name)
     {
         std::ofstream   file(name);

@@ -25,4 +25,8 @@ class DLLibMap
 
 }
 
+#if defined(THORSMUG_HEADER_ONLY) && THORSMUG_HEADER_ONLY == 1
+#include "DLLibMap.source"
+#endif
+
 #endif

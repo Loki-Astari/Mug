@@ -61,4 +61,8 @@ class MugServer: public NisseServer
 
 }
 
+#if defined(THORSMUG_HEADER_ONLY) && THORSMUG_HEADER_ONLY == 1
+#include "MugServer.source"
+#endif
+
 #endif

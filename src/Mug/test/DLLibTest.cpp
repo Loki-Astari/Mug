@@ -70,7 +70,7 @@ TEST(DLLibTest, LoadL3Call)
     ThorsAnvil::Nisse::HTTP::Response       response(output, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1, 200);
 
 
-    dlLib1.addInstance(handler, ThorsAnvil::ThorsMug::Plugin{"../TestExtra/L3/release/libL3"});
+    dlLib1.addInstance(handler, ThorsAnvil::ThorsMug::Plugin{.pluginPath = "../TestExtra/L3/release/libL3"});
     handler.processRequest(request, response);
     EXPECT_EQ(305, response.getCode().code);
 }
@@ -89,7 +89,7 @@ TEST(DLLibTest, LoadL4Call)
     ThorsAnvil::Nisse::HTTP::Response       response(output, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1, 200);
 
 
-    dlLib1.addInstance(handler, ThorsAnvil::ThorsMug::Plugin{"../TestExtra/L4/release/libL4"});
+    dlLib1.addInstance(handler, ThorsAnvil::ThorsMug::Plugin{.pluginPath = "../TestExtra/L4/release/libL4"});
     handler.processRequest(request, response);
     EXPECT_EQ(404, response.getCode().code);
 }
@@ -109,7 +109,7 @@ TEST(DLLibTest, CallCheck)
     ThorsAnvil::Nisse::HTTP::Response       response(output, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1, 200);
 
 
-    dlLib1.addInstance(handler, ThorsAnvil::ThorsMug::Plugin{"../TestExtra/L4/release/libL4"});
+    dlLib1.addInstance(handler, ThorsAnvil::ThorsMug::Plugin{.pluginPath = "../TestExtra/L4/release/libL4"});
     handler.processRequest(request, response);
     EXPECT_EQ(404, response.getCode().code);
     EXPECT_EQ(false, dlLib1.check());
@@ -142,7 +142,7 @@ TEST(DLLibTest, CheckWithChangeWithInstance)
     ThorsAnvil::ThorsMug::DLLib         dlLib(FS::canonical(FS::path("../TestExtra/L3/release/libL3" SLIB)));
 
     ThorsAnvil::Nisse::HTTP::HTTPHandler    handler;
-    dlLib.addInstance(handler, ThorsAnvil::ThorsMug::Plugin{"../TestExtra/L3/release/libL3" SLIB});
+    dlLib.addInstance(handler, ThorsAnvil::ThorsMug::Plugin{.pluginPath = "../TestExtra/L3/release/libL3" SLIB});
 
     EXPECT_EQ(false, dlLib.check());
 
