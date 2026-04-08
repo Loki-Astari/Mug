@@ -43,8 +43,4 @@ ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::Plugin, pluginPath, config);
 ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::PortConfig, port, certPath, actions);
 ThorsAnvil_MakeTrait(ThorsAnvil::ThorsMug::MugConfig, servers, controlPort, libraryCheckTime);
 
-#if defined(THORSMUG_HEADER_ONLY) && THORSMUG_HEADER_ONLY == 1
-#include "MugConfig.source"
-#endif
-
 #endif
