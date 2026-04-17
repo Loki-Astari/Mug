@@ -1,6 +1,5 @@
 THORSANVIL_ROOT				?= $(realpath ../)
-TARGET						= ThorsMug TestExtra Mug
+SUBDIRS						= ThorsMug TestExtra Mug
 
 
-
-include $(THORSANVIL_ROOT)/build/tools/Project.Makefile
+include $(THORSANVIL_ROOT)/build/tools/Makefile
