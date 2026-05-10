@@ -12,9 +12,14 @@ namespace NisHttp   = ThorsAnvil::Nisse::HTTP;
 
 std::unique_ptr<WebServerPlugin>     webServer;
 
-extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(char const* config)
+extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(int init, char const* config)
 {
-    webServer.reset(new WebServerPlugin(config));
+    if (init) {
+        webServer.reset(new WebServerPlugin(config));
+    }
+    else {
+        webServer.reset();
+    }
     return webServer.get();
 }
 

@@ -18,7 +18,7 @@ class L4Plugin: public ThorsAnvil::ThorsMug::MugPluginSimple
 L4Plugin    l4;
 
 
-extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(char const*)
+extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(int, char const*)
 {
     return &l4;
 }

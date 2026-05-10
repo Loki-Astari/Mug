@@ -114,7 +114,7 @@ void DLLib::load()
 {
     for (auto& instance: instances) {
         ThorsLogInfo("ThorsAnvil::ThorsMug::DLLib", "load", "Plugin Config: ", instance.config);
-        instance.plugin         = mugFunc(instance.config.c_str());
+        instance.plugin         = mugFunc(1, instance.config.c_str());
         if (instance.plugin) {
             // Adds the handlers back.
             // Requests can now be handeled.
@@ -139,6 +139,7 @@ void DLLib::unload()
             // Nisse makes sure that that in-flight requests are finished
             // before this function returns.
             instance.plugin->stop(instance.handler);
+            mugFunc(0, instance.config.c_str());
         }
     }
 }
@@ -185,7 +186,7 @@ void DLLib::addInstance(HTTPHandler& handler, Plugin const& pluginInfo)
 {
     ThorsLogInfo("ThorsAnvil::ThorsMug::DLLib", "addInstance", "Called ", path.c_str(), " ", pluginInfo.config.getString());
     std::string config = pluginInfo.config.getString();
-    MugPlugin*  pluginPtr = mugFunc(config.c_str());
+    MugPlugin*  pluginPtr = mugFunc(1, config.c_str());
     if (pluginPtr == nullptr) {
         ThorsLogAndThrowError(std::runtime_error, "ThorsAnvil::ThorsMug::DLLib", "addInstance", "mugFunc() returned nullptr!");
     }

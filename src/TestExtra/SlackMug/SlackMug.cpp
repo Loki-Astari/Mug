@@ -7,9 +7,14 @@
 const Environment           environment("/Users/martinyork/Repo/ThorsMug/src/ThorsSlackMug/.slackenv");
 std::unique_ptr<SlackMug>   slackMug;
 
-extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(char const* config)
+extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(int init, char const* config)
 {
-    slackMug.reset(new SlackMug(config));
+    if (init) {
+        slackMug.reset(new SlackMug(config));
+    }
+    else {
+        slackMug.reset();
+    }
     return slackMug.get();
 }
 

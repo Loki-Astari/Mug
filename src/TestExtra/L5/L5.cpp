@@ -19,7 +19,7 @@ class L5Plugin: public ThorsAnvil::ThorsMug::MugPluginSimple
 L5Plugin    l5;
 
 
-extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugFunctionNotCorrectName(char const*)
+extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugFunctionNotCorrectName(int, char const*)
 {
     return &l5;
 }
