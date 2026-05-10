@@ -16,16 +16,17 @@ class SlackEventHandler: public ThorsAnvil::Slack::SlackEventHandler
     ThorsAnvil::Slack::SlackClient& client;
     std::map<std::string, int>&     messageCount;
     std::map<std::pair<std::string, std::string>, WelcomeMessage>   welcomeMessages;
+    ThorsAnvil::Slack::EventHandlerMap     eventHandlerMap;
     public:
         SlackEventHandler(std::string_view slackSecret, ThorsAnvil::Slack::SlackClient& client, std::map<std::string, int>& messageCount);
     private:
-        virtual void handleCallbackMessageEvent(ThorsAnvil::Nisse::HTTP::Request const& request, ThorsAnvil::Nisse::HTTP::Response& response, ThorsAnvil::Slack::Event::EventCallback const&, ThorsAnvil::Slack::Event::Message const& event) override;
-        virtual void handleCallbackReactionAddedEvent(ThorsAnvil::Nisse::HTTP::Request const& request, ThorsAnvil::Nisse::HTTP::Response& response, ThorsAnvil::Slack::Event::EventCallback const&, ThorsAnvil::Slack::Event::ReactionAdded const& event) override;
-        virtual void handleCallbackReactionRemovedEvent(ThorsAnvil::Nisse::HTTP::Request const& request, ThorsAnvil::Nisse::HTTP::Response& response, ThorsAnvil::Slack::Event::EventCallback const&, ThorsAnvil::Slack::Event::ReactionRemoved const& event) override;
-        virtual void handleCallbackPinAddedEvent(ThorsAnvil::Nisse::HTTP::Request const& request, ThorsAnvil::Nisse::HTTP::Response& response, ThorsAnvil::Slack::Event::EventCallback const&, ThorsAnvil::Slack::Event::PinAdded const& event) override;
-        virtual void handleCallbackPinRemovedEvent(ThorsAnvil::Nisse::HTTP::Request const& request, ThorsAnvil::Nisse::HTTP::Response& response, ThorsAnvil::Slack::Event::EventCallback const&, ThorsAnvil::Slack::Event::PinRemoved const& event) override;
-        virtual void handleCallbackStarAddedEvent(ThorsAnvil::Nisse::HTTP::Request const& request, ThorsAnvil::Nisse::HTTP::Response& response, ThorsAnvil::Slack::Event::EventCallback const&, ThorsAnvil::Slack::Event::StarAdded const& event) override;
-        virtual void handleCallbackStarRemovedEvent(ThorsAnvil::Nisse::HTTP::Request const& request, ThorsAnvil::Nisse::HTTP::Response& response, ThorsAnvil::Slack::Event::EventCallback const&, ThorsAnvil::Slack::Event::StarRemoved const& event) override;
+        void handleCallbackMessageEvent(ThorsAnvil::Slack::EventRequest<ThorsAnvil::Slack::Event::Message> const& r);
+        void handleCallbackReactionAddedEvent(ThorsAnvil::Slack::EventRequest<ThorsAnvil::Slack::Event::ReactionAdded> const& r);
+        void handleCallbackReactionRemovedEvent(ThorsAnvil::Slack::EventRequest<ThorsAnvil::Slack::Event::ReactionRemoved> const& r);
+        void handleCallbackPinAddedEvent(ThorsAnvil::Slack::EventRequest<ThorsAnvil::Slack::Event::PinAdded> const& r);
+        void handleCallbackPinRemovedEvent(ThorsAnvil::Slack::EventRequest<ThorsAnvil::Slack::Event::PinRemoved> const& r);
+        void handleCallbackStarAddedEvent(ThorsAnvil::Slack::EventRequest<ThorsAnvil::Slack::Event::StarAdded> const& r);
+        void handleCallbackStarRemovedEvent(ThorsAnvil::Slack::EventRequest<ThorsAnvil::Slack::Event::StarRemoved> const& r);
 
         void sendWelcomeMessage(std::string const& channel, std::string const& user);
 };
