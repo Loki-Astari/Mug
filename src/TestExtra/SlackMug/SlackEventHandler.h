@@ -12,11 +12,16 @@
 class SlackEventHandler: public ThorsAnvil::Slack::SlackEventHandler
 {
     using WelcomeMessage = ThorsAnvil::Slack::WelcomeMessage;
+    using WelcomeMap     = std::map<std::pair<std::string, std::string>, WelcomeMessage>;
 
-    ThorsAnvil::Slack::SlackClient& client;
-    std::map<std::string, int>&     messageCount;
-    std::map<std::pair<std::string, std::string>, WelcomeMessage>   welcomeMessages;
-    ThorsAnvil::Slack::EventHandlerMap     eventHandlerMap;
+    ThorsAnvil::Slack::SlackClient&             client;
+    std::map<std::string, int>&                 messageCount;
+    WelcomeMap                                  welcomeMessages;
+    ThorsAnvil::Slack::EventHandlerMap          eventHandlerMap;
+    ThorsAnvil::Slack::SlashCommandHandlerMap   slashCommandHandlerMap;
+    ThorsAnvil::Slack::ActionHandlerMap         actionHandlerMap;
+    ThorsAnvil::Slack::ViewHandlerMap           viewHandlerMap;
+
     public:
         SlackEventHandler(std::string_view slackSecret, ThorsAnvil::Slack::SlackClient& client, std::map<std::string, int>& messageCount);
     private:
