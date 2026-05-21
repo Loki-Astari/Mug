@@ -136,7 +136,7 @@ MugPlugin* mugCreateSimpleInstance(int init, char const* configStr)
 /**
  * Simplify the Bot interface for Mug server
  **/
-#define THORS_ANVIL_SIMPLT_MUG_SERVER_INIT(Config, Server)                                      \
+#define THORS_ANVIL_SIMPLE_MUG_SERVER_INIT(Config, Server)                                      \
                                                                                                 \
 extern "C" ThorsAnvil::ThorsMug::MugPlugin* mugCreateInstance(int init, char const* configStr)  \
 {                                                                                               \
