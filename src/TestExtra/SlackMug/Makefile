@@ -4,7 +4,7 @@ TARGET						= SlackMug.slib SlackCLI.prog
 NO_HEADER					= YES
 
 
-FILE_WARNING_FLAGS			+= -Wno-missing-braces -Wno-deprecated-copy-with-user-provided-dtor -Wno-deprecated-declarations -Wno-error=type-limits -Wno-error=missing-field-initializers
+FILE_WARNING_FLAGS			+= -Wno-missing-braces -Wno-deprecated-copy-with-user-provided-dtor -Wno-deprecated-declarations -Wno-error=type-limits -Wno-missing-field-initializers
 LDLIBS_EXTERN_BUILD			+= MagicEnum Nisse ThorSerialize crypto
 LDLIBS						+= -lcrypto
 

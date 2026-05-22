@@ -5,7 +5,7 @@ TEST_ONLY					= YES
 
 
 FILE_WARNING_FLAGS			+= -Wno-missing-braces -Wno-deprecated-copy-with-user-provided-dtor
-LDLIBS_EXTERN_BUILD			+= Nisse ThorSerialize
+LDLIBS_EXTERN_BUILD			+= MagicEnum Nisse ThorSerialize
 
 
 include $(THORSANVIL_ROOT)/build/tools/Makefile
