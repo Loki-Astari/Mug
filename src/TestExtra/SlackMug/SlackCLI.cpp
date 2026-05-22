@@ -1,5 +1,5 @@
 #include "Environment.h"
-#include "ThorsSlack/SlackClient.h"
+#include "ThorsSlack/Client.h"
 #include "ThorsSlack/APIChatMessage.h"
 #include "ThorsSlack/APIChatSchedule.h"
 #include "ThorsSlack/APIChatStream.h"
@@ -12,14 +12,14 @@ int main()
     const Environment     environment(".slackenv");
     ThorsLogDebug("main", "main", "SlackCLI ", environment.botToken);
 
-    using ThorsAnvil::Slack::SlackClient;
+    using ThorsAnvil::Slack::Client;
     using ThorsAnvil::Slack::API::Chat::POSTMessage;
     using ThorsAnvil::Slack::API::Chat::ScheduleMessage;
     using ThorsAnvil::Slack::API::Chat::DeleteScheduledMessage;
     using ThorsAnvil::Slack::API::Chat::ScheduledMessagesList;
     using ThorsAnvil::Slack::API::Chat::StartStream;
 
-    SlackClient             client(environment.botToken, environment.userToken);
+    Client             client(environment.botToken, environment.userToken);
 
     POSTMessage::Reply reply;
     client.sendMessage(POSTMessage{.channel = "C09RU2URYMS", .text = "I hope the tour went well, Mr. Wonka."}, reply);

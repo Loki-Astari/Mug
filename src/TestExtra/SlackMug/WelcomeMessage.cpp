@@ -1,5 +1,5 @@
 #include "WelcomeMessage.h"
-#include "ThorsSlack/SlackBlockKit.h"
+#include "ThorsSlack/BlockKit.h"
 
 
 using namespace ThorsAnvil::Slack;

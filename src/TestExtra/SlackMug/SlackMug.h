@@ -3,7 +3,7 @@
 
 #include "SlackMugConfig.h"
 #include "SlackEventHandler.h"
-#include "ThorsSlack/SlackClient.h"
+#include "ThorsSlack/Client.h"
 #include "ThorsMug/MugPlugin.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
@@ -13,7 +13,7 @@
 
 class SlackMug: public ThorsAnvil::ThorsMug::MugPluginSimple
 {
-        ThorsAnvil::Slack::SlackClient          client;
+        ThorsAnvil::Slack::Client               client;
         SlackEventHandler                       eventHandler;
         std::map<std::string, int>              messageCount;
 

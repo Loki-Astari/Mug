@@ -3,7 +3,7 @@
 
 #include "SlackMugConfig.h"
 #include "ThorsSlack/APIChatMessage.h"
-#include "ThorsSlack/SlackBlockKit.h"
+#include "ThorsSlack/BlockKit.h"
 
 #include <utility>
 #include <string>

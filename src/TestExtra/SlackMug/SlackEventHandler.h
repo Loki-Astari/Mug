@@ -4,26 +4,26 @@
 #include "SlackMugConfig.h"
 #include "ThorsSlack/EventCallback.h"
 #include "WelcomeMessage.h"
-#include "ThorsSlack/SlackClient.h"
-#include "ThorsSlack/SlackEventHandler.h"
+#include "ThorsSlack/Client.h"
+#include "ThorsSlack/EventHandler.h"
 #include "NisseHTTP/Request.h"
 #include "NisseHTTP/Response.h"
 
-class SlackEventHandler: public ThorsAnvil::Slack::SlackEventHandler
+class SlackEventHandler: public ThorsAnvil::Slack::EventHandler
 {
     using WelcomeMessage = ThorsAnvil::Slack::WelcomeMessage;
     using WelcomeMap     = std::map<std::pair<std::string, std::string>, WelcomeMessage>;
 
-    ThorsAnvil::Slack::SlackClient&             client;
+    ThorsAnvil::Slack::Client&                  client;
     std::map<std::string, int>&                 messageCount;
     WelcomeMap                                  welcomeMessages;
-    ThorsAnvil::Slack::EventHandlerMap          eventHandlerMap;
+    ThorsAnvil::Slack::EventFunctionMap         eventHandlerMap;
     ThorsAnvil::Slack::SlashCommandHandlerMap   slashCommandHandlerMap;
     ThorsAnvil::Slack::ActionHandlerMap         actionHandlerMap;
     ThorsAnvil::Slack::ViewHandlerMap           viewHandlerMap;
 
     public:
-        SlackEventHandler(std::string_view slackSecret, ThorsAnvil::Slack::SlackClient& client, std::map<std::string, int>& messageCount);
+        SlackEventHandler(std::string_view slackSecret, ThorsAnvil::Slack::Client& client, std::map<std::string, int>& messageCount);
     private:
         void handleCallbackMessageEvent(ThorsAnvil::Slack::EventRequest<ThorsAnvil::Slack::Event::Message> const& r);
         void handleCallbackReactionAddedEvent(ThorsAnvil::Slack::EventRequest<ThorsAnvil::Slack::Event::ReactionAdded> const& r);
