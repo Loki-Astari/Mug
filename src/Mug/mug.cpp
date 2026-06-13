@@ -11,6 +11,9 @@
 
 int main(int argc, char* argv[])
 {
+    ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
+    ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "===================== Start ============================");
+    ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
     using ThorsAnvil::ThorsMug::MugCLA;
     using ThorsAnvil::ThorsMug::MugArgs;
     using ThorsAnvil::ThorsMug::MugConfig;
@@ -68,4 +71,7 @@ int main(int argc, char* argv[])
         std::cerr << "Exception: Unknown\n";
         throw;
     }
+    ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
+    ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "====================== End =============================");
+    ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
 }
