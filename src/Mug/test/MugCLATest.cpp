@@ -23,10 +23,12 @@ struct MockFile
 struct MockArguments: public ThorsAnvil::ThorsMug::MugCLAInterface
 {
     std::size_t                 classCount      = 0;
-    std::array<std::size_t, 6>  methodCallCount = {0, 0, 0, 0, 0, 0};
+    std::array<std::size_t, 8>  methodCallCount = {0, 0, 0, 0, 0, 0, 0, 0};
     std::filesystem::path       config;
     std::filesystem::path       logFile;
     std::string                 appName;
+    std::string                 signalCmd;
+    std::filesystem::path       pidFile;
     loguru::Verbosity           verbosity;
 
     virtual void logAddFile(std::filesystem::path file)     override
@@ -62,6 +64,18 @@ struct MockArguments: public ThorsAnvil::ThorsMug::MugCLAInterface
         ++classCount;
         ++methodCallCount[5];
         config = file;
+    }
+    virtual void setSignal(std::string_view signal)         override
+    {
+        ++classCount;
+        ++methodCallCount[6];
+        signalCmd = signal;
+    }
+    virtual void setPidFile(std::filesystem::path file)     override
+    {
+        ++classCount;
+        ++methodCallCount[7];
+        pidFile = file;
     }
 };
 

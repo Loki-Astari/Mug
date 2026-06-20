@@ -2,8 +2,23 @@
 
 #include "NisseServer/NisseServer.h"
 #include <chrono>
+#include <csignal>
 
 using namespace ThorsAnvil::ThorsMug;
+
+std::atomic<bool> MugServer::sighupReceived{false};
+std::atomic<bool> MugServer::sigtermReceived{false};
+
+THORSMUG_HEADER_ONLY_INCLUDE
+void mugSignalHandler(int sig)
+{
+    if (sig == SIGHUP) {
+        MugServer::sighupReceived.store(true, std::memory_order_relaxed);
+    }
+    if (sig == SIGTERM) {
+        MugServer::sigtermReceived.store(true, std::memory_order_relaxed);
+    }
+}
 
 
 THORSMUG_HEADER_ONLY_INCLUDE
@@ -29,6 +44,7 @@ MugServer::MugServer(MugConfig const& config, MugServerMode /*mode*/)
     : NisseServer(workerCount)
     , control(*this)
     , libraryChecker(*this)
+    , signalChecker(*this)
 {
     ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "Create Server");
     servers.reserve(config.servers.size());
@@ -51,10 +67,33 @@ MugServer::MugServer(MugConfig const& config, MugServerMode /*mode*/)
     if (config.libraryCheckTime != 0) {
         addTimer(libraryCheckTime, libraryChecker);
     }
+
+    struct sigaction sa{};
+    sa.sa_handler = mugSignalHandler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGHUP, &sa, nullptr);
+    sigaction(SIGTERM, &sa, nullptr);
+
+    addTimer(500ms, signalChecker);
 }
 
 THORSMUG_HEADER_ONLY_INCLUDE
 void MugServer::checkLibrary()
 {
     libraries.checkAll();
+}
+
+THORSMUG_HEADER_ONLY_INCLUDE
+void MugServer::checkSignal()
+{
+    if (sighupReceived.exchange(false, std::memory_order_relaxed)) {
+        ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "checkSignal", "SIGHUP received, initiating reload");
+        reloadFlag = true;
+        stopSoft();
+    }
+    if (sigtermReceived.exchange(false, std::memory_order_relaxed)) {
+        ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "checkSignal", "SIGTERM received, initiating shutdown");
+        stopSoft();
+    }
 }

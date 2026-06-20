@@ -96,6 +96,18 @@ void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
             args.setConfigFile(argVal.value);
             continue;
         }
+        if (argVal.flag == "--signal")
+        {
+            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Signal");
+            args.setSignal(argVal.value);
+            continue;
+        }
+        if (argVal.flag == "--pidFile")
+        {
+            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate PidFile");
+            args.setPidFile(argVal.value);
+            continue;
+        }
 
         // Invalid Flag;
         ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Invalid Flag");
@@ -106,7 +118,7 @@ void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
 THORSMUG_HEADER_ONLY_INCLUDE
 void MugCLA::displayHelp(std::string_view command, std::ostream& output)
 {
-    output << "Usage: " << command << " [--help] [--silent] [--logLevel=(All|Trace|Track|Debug|Info|Warn|Error)] [--config=<configFile>]\n"
+    output << "Usage: " << command << " [--help] [--silent] [--logLevel=(All|Trace|Track|Debug|Info|Warn|Error)] [--config=<configFile>] [--signal=(reload|stop)] [--pidFile=<pidFile>]\n\n"
            << R"(
 --help:     prints out the help.
 --silent:   does not spint startup information.
@@ -114,6 +126,9 @@ void MugCLA::displayHelp(std::string_view command, std::ostream& output)
 --logFile:  add a file that log messages will be sent to.
 --logSys:   send messages to syslog.
 --config:   specifies a specific config file.
+--signal:   reload:  send SIGHUP to a running mug process to re-read its config and restart services.
+            stop:    send SIGTERM to a running mug process for graceful shutdown.
+--pidFile:  specifies the PID file path (default: /tmp/mug.pid).
 
 If no config file is explicitly specified then the following files are checked in order to see If they exist:
 )";

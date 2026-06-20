@@ -9,11 +9,16 @@
 #include "NisseHTTP/PyntHTTPControl.h"
 #include "NisseHTTP/HTTPHandler.h"
 
+#include <atomic>
 #include <vector>
 #include <optional>
 #include <filesystem>
 
 
+extern "C"
+{
+    void mugSignalHandler(int);
+}
 namespace ThorsAnvil::ThorsMug
 {
 
@@ -40,6 +45,26 @@ class MugServer: public NisseServer
             }
     };
 
+    class SignalChecker: public TimerAction
+    {
+        MugServer& server;
+        public:
+            SignalChecker(MugServer& server)
+                : server(server)
+            {}
+            virtual void handleRequest(int) override
+            {
+                server.checkSignal();
+            }
+    };
+
+    /*
+     * Signal handler can set these flags.
+     */
+    friend void ::mugSignalHandler(int);
+    static std::atomic<bool>    sighupReceived;
+    static std::atomic<bool>    sigtermReceived;
+
     static constexpr std::size_t workerCount = 4;
 
     using Hanlders = std::vector<HTTPHandler>;
@@ -49,14 +74,20 @@ class MugServer: public NisseServer
     Hanlders                    servers;
     DLLibMap                    libraries;
     LibraryChecker              libraryChecker;
+    SignalChecker               signalChecker;
+    bool                        reloadFlag = false;
 
     TASock::ServerInit getServerInit(std::optional<std::filesystem::path> certPath, int port);
 
     public:
         MugServer(MugConfig const& config, MugServerMode mode);
 
+        bool reloadRequested() const    {return reloadFlag;}
+
     private:
         void checkLibrary();
+        void checkSignal();
+
 };
 
 }

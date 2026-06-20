@@ -22,6 +22,18 @@ void MugArgs::setConfigFile(std::filesystem::path file)
 }
 
 THORSMUG_HEADER_ONLY_INCLUDE
+void MugArgs::setSignal(std::string_view sig)
+{
+    signal = sig;
+}
+
+THORSMUG_HEADER_ONLY_INCLUDE
+void MugArgs::setPidFile(std::filesystem::path file)
+{
+    pidFile = file;
+}
+
+THORSMUG_HEADER_ONLY_INCLUDE
 void MugArgs::logAddFile(std::filesystem::path file)
 {
     loguru::add_file(std::string(file).c_str(), loguru::FileMode::Truncate, ThorsLogLevelGet());
