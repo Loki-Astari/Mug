@@ -12,12 +12,14 @@
 namespace ThorsAnvil::ThorsMug
 {
 
+enum class SignalFlag {NoSignal, Reload, Stop};
+
 struct MugCLAInterface
 {
     virtual void setHelp()                                  = 0;
     virtual void setSilent()                                = 0;
     virtual void setConfigFile(std::filesystem::path file)  = 0;
-    virtual void setSignal(std::string_view signal)         = 0;
+    virtual void setSignal(SignalFlag signal)               = 0;
     virtual void setPidFile(std::filesystem::path file)     = 0;
     virtual void logAddFile(std::filesystem::path file)     = 0;
     virtual void logAddSys(std::string_view app)            = 0;
@@ -29,13 +31,13 @@ struct MugArgs: public MugCLAInterface
     bool        help    = false;
     bool        silent  = false;
     std::filesystem::path    configPath;
-    std::string              signal;
+    SignalFlag               signalType = SignalFlag::NoSignal;
     std::filesystem::path    pidFile = "/tmp/mug.pid";
 
     virtual void setHelp()                                  override;
     virtual void setSilent()                                override;
     virtual void setConfigFile(std::filesystem::path file)  override;
-    virtual void setSignal(std::string_view signal)         override;
+    virtual void setSignal(SignalFlag signal)               override;
     virtual void setPidFile(std::filesystem::path file)     override;
     virtual void logAddFile(std::filesystem::path file)     override;
     virtual void logAddSys(std::string_view app)            override;

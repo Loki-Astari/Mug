@@ -99,7 +99,15 @@ void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
         if (argVal.flag == "--signal")
         {
             ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Signal");
-            args.setSignal(argVal.value);
+            if (argVal.value == "reload") {
+                args.setSignal(SignalFlag::Reload);
+            }
+            else if (argVal.value == "stop") {
+                args.setSignal(SignalFlag::Stop);
+            }
+            else {
+                args.setHelp();
+            }
             continue;
         }
         if (argVal.flag == "--pidFile")

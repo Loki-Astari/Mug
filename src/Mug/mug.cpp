@@ -26,15 +26,15 @@ static int sendSignalToRunningMug(ThorsAnvil::ThorsMug::MugArgs const& arguments
     }
 
     int sig = 0;
-    if (arguments.signal == "reload") {
+    if (arguments.signalType == ThorsAnvil::ThorsMug::SignalFlag::Reload) {
         sig = SIGHUP;
     }
-    else if (arguments.signal == "stop") {
+    if (arguments.signalType == ThorsAnvil::ThorsMug::SignalFlag::Stop) {
         sig = SIGTERM;
     }
     else
     {
-        std::cerr << "Unknown signal command: " << arguments.signal << "\n"
+        std::cerr << "Unknown signal command: " << ThorsAnvil::Serialize::jsonExporter(arguments.signalType) << "\n"
                   << "Valid commands: reload, stop\n";
         return 1;
     }
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
             return 0;
         }
 
-        if (!arguments.signal.empty()) {
+        if (arguments.signalType != ThorsAnvil::ThorsMug::SignalFlag::NoSignal) {
             return sendSignalToRunningMug(arguments);
         }
 

@@ -22,14 +22,14 @@ struct MockFile
 
 struct MockArguments: public ThorsAnvil::ThorsMug::MugCLAInterface
 {
-    std::size_t                 classCount      = 0;
-    std::array<std::size_t, 8>  methodCallCount = {0, 0, 0, 0, 0, 0, 0, 0};
-    std::filesystem::path       config;
-    std::filesystem::path       logFile;
-    std::string                 appName;
-    std::string                 signalCmd;
-    std::filesystem::path       pidFile;
-    loguru::Verbosity           verbosity;
+    std::size_t                         classCount      = 0;
+    std::array<std::size_t, 8>          methodCallCount = {0, 0, 0, 0, 0, 0, 0, 0};
+    std::filesystem::path               config;
+    std::filesystem::path               logFile;
+    std::string                         appName;
+    ThorsAnvil::ThorsMug::SignalFlag    signalCmd;
+    std::filesystem::path               pidFile;
+    loguru::Verbosity                   verbosity;
 
     virtual void logAddFile(std::filesystem::path file)     override
     {
@@ -65,7 +65,7 @@ struct MockArguments: public ThorsAnvil::ThorsMug::MugCLAInterface
         ++methodCallCount[5];
         config = file;
     }
-    virtual void setSignal(std::string_view signal)         override
+    virtual void setSignal(ThorsAnvil::ThorsMug::SignalFlag signal)               override
     {
         ++classCount;
         ++methodCallCount[6];
@@ -243,6 +243,45 @@ TEST(MugCLATest, displayHelp)
 
     EXPECT_FALSE(output.str().empty());
 
+}
+TEST(MugCLATest, setLogLevelByValue)
+{
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--logLevel=8"}, mockArgs);
+
+    // Call to load
+    ASSERT_EQ(1, mockArgs.classCount);
+    ASSERT_EQ(1, mockArgs.methodCallCount[2]);
+    ASSERT_EQ(8, mockArgs.verbosity);
+}
+TEST(MugCLATest, setSignalReload)
+{
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--signal=reload"}, mockArgs);
+
+    // Call to load
+    ASSERT_EQ(1, mockArgs.classCount);
+    ASSERT_EQ(1, mockArgs.methodCallCount[6]);
+    ASSERT_EQ(ThorsAnvil::ThorsMug::SignalFlag::Reload, mockArgs.signalCmd);
+}
+TEST(MugCLATest, setSignalStop)
+{
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--signal=stop"}, mockArgs);
+
+    // Call to load
+    ASSERT_EQ(1, mockArgs.classCount);
+    ASSERT_EQ(1, mockArgs.methodCallCount[6]);
+    ASSERT_EQ(ThorsAnvil::ThorsMug::SignalFlag::Stop, mockArgs.signalCmd);
+}
+TEST(MugCLATest, setSignalBad)
+{
+    MockArguments                       mockArgs;
+    ThorsAnvil::ThorsMug::MugCLA        cla({"Test", "--signal=bad"}, mockArgs);
+
+    // Call to load
+    ASSERT_EQ(1, mockArgs.classCount);
+    ASSERT_EQ(1, mockArgs.methodCallCount[3]);
 }
 TEST(MugCLATest, findDefaultConfigFile)
 {

@@ -22,9 +22,9 @@ void MugArgs::setConfigFile(std::filesystem::path file)
 }
 
 THORSMUG_HEADER_ONLY_INCLUDE
-void MugArgs::setSignal(std::string_view sig)
+void MugArgs::setSignal(SignalFlag sig)
 {
-    signal = sig;
+    signalType = sig;
 }
 
 THORSMUG_HEADER_ONLY_INCLUDE
