@@ -21,6 +21,7 @@ class SlackEventHandler: public ThorsAnvil::Slack::EventHandler
     ThorsAnvil::Slack::SlashCommandHandlerMap   slashCommandHandlerMap;
     ThorsAnvil::Slack::ActionHandlerMap         actionHandlerMap;
     ThorsAnvil::Slack::ViewHandlerMap           viewHandlerMap;
+    ThorsAnvil::Slack::ShortcutHandlerMap       shortcutHandleMap;
 
     public:
         SlackEventHandler(std::string_view slackSecret, ThorsAnvil::Slack::Client& client, std::map<std::string, int>& messageCount);

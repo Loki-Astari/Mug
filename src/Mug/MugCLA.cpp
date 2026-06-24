@@ -127,7 +127,7 @@ void MugCLA::displayHelp(std::string_view command, std::ostream& output)
 --logSys:   send messages to syslog.
 --config:   specifies a specific config file.
 --signal:   reload:  send SIGHUP to a running mug process to re-read its config and restart services.
-            stop:    send SIGTERM to a running mug process for graceful shutdown.
+            stop:    send SIGTERM to a running mug process to graceful shutdown.
 --pidFile:  specifies the PID file path (default: /tmp/mug.pid).
 
 If no config file is explicitly specified then the following files are checked in order to see If they exist:

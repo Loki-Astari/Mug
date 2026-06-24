@@ -5,6 +5,7 @@
 #include <csignal>
 
 using namespace ThorsAnvil::ThorsMug;
+using Sigaction = struct sigaction;
 
 std::atomic<bool> MugServer::sighupReceived{false};
 std::atomic<bool> MugServer::sigtermReceived{false};
@@ -68,7 +69,7 @@ MugServer::MugServer(MugConfig const& config, MugServerMode /*mode*/)
         addTimer(libraryCheckTime, libraryChecker);
     }
 
-    struct sigaction sa{};
+    Sigaction sa{};
     sa.sa_handler = mugSignalHandler;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;

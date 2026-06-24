@@ -2,7 +2,7 @@
 #include "ThorsSlack/EventCallback.h"
 
 SlackEventHandler::SlackEventHandler(std::string_view slackSecret, ThorsAnvil::Slack::Client& client, std::map<std::string, int>& messageCount)
-    : ThorsAnvil::Slack::EventHandler(client, slackSecret, eventHandlerMap, slashCommandHandlerMap, actionHandlerMap, viewHandlerMap)
+    : ThorsAnvil::Slack::EventHandler(client, slackSecret, eventHandlerMap, slashCommandHandlerMap, actionHandlerMap, viewHandlerMap, shortcutHandleMap)
     , client(client)
     , messageCount(messageCount)
 {

@@ -28,9 +28,12 @@ static int sendSignalToRunningMug(ThorsAnvil::ThorsMug::MugArgs const& arguments
     int sig = 0;
     if (arguments.signal == "reload") {
         sig = SIGHUP;
-    } else if (arguments.signal == "stop") {
+    }
+    else if (arguments.signal == "stop") {
         sig = SIGTERM;
-    } else {
+    }
+    else
+    {
         std::cerr << "Unknown signal command: " << arguments.signal << "\n"
                   << "Valid commands: reload, stop\n";
         return 1;
@@ -114,6 +117,12 @@ int main(int argc, char* argv[])
         } while (reload);
 
         std::filesystem::remove(arguments.pidFile);
+
+        if (!arguments.silent) {
+            ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
+            ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "====================== End =============================");
+            ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
+        }
     }
     catch (std::exception const& e)
     {
@@ -124,10 +133,5 @@ int main(int argc, char* argv[])
     {
         std::cerr << "Exception: Unknown\n";
         throw;
-    }
-    if (!arguments.silent) {
-        ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
-        ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "====================== End =============================");
-        ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
     }
 }
