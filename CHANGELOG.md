@@ -6,7 +6,7 @@ This component is part of [ThorsAnvil](https://github.com/Loki-Astari/ThorsAnvil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
-## [10.3.0] - 2026-06-24
+## [11.0.0] - 2026-06-24
 
 ### Added
 - Added signal handlers for graceful shutdown
