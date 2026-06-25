@@ -42,3 +42,19 @@ TEST(MugArgsTest, setLogLevelAll)
     args.logSetLevel(loguru::Verbosity_5);
     EXPECT_EQ(ThorsLogLevelGet(), loguru::Verbosity_5);
 }
+TEST(MugArgsTest, setSignalReload)
+{
+    ThorsLogTemp                    tmp(0);
+    ThorsAnvil::ThorsMug::MugArgs   args;
+
+    args.setSignal(ThorsAnvil::ThorsMug::SignalFlag::Reload);
+    EXPECT_EQ(args.signalType, ThorsAnvil::ThorsMug::SignalFlag::Reload);
+}
+TEST(MugArgsTest, setSignalStop)
+{
+    ThorsLogTemp                    tmp(0);
+    ThorsAnvil::ThorsMug::MugArgs   args;
+
+    args.setSignal(ThorsAnvil::ThorsMug::SignalFlag::Stop);
+    EXPECT_EQ(args.signalType, ThorsAnvil::ThorsMug::SignalFlag::Stop);
+}
