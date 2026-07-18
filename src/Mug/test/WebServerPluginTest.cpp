@@ -5,7 +5,7 @@
 #include "MugConfig.h"
 
 #include "ThorSerialize/JsonThor.h"
-#include "NisseHTTP/ClientRequest.h"
+#include "NisseHTTP/ClientHTTP.h"
 
 #include "HTTPSend.h"
 #include "HTTPResponse.h"
@@ -69,12 +69,8 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFile)
 
     // Touch the control point to shut down the server.
     latch.wait();
-    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    ThorsAnvil::Nisse::HTTP::HeaderResponse     headers;
-    headers.add("host", "localhost");
-    headers.add("content-length", "0");
-    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-    request.addHeaders(headers);
+    ThorsAnvil::Nisse::HTTP::ClientHTTP         client({"localhost", 8079});
+    client.get({.path = "/?command=stophard"});
 }
 
 TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
@@ -126,13 +122,8 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
     ASSERT_EQ("Data for page 1\n", response.getBody());
 
     // Touch the control point to shut down the server.
-    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
-    headers.add("host", "localhost");
-    headers.add("content-length", "0");
-    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-    request.addHeaders(headers);
-    request.flushRequest();
+    ThorsAnvil::Nisse::HTTP::ClientHTTP       client({"localhost", 8079});
+    client.get({.path = "/?command=stophard"});
     waitForExit.wait();
 }
 

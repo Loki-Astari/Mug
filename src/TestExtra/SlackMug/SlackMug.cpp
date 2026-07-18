@@ -35,10 +35,16 @@ void SlackMug::handleCommand(NisHTTP::Request const& request, NisHTTP::Response&
     response.setStatus(200);
 }
 
+void SlackMug::handleFilePage1(NisHTTP::Request const& /*request*/, NisHTTP::Response& response)
+{
+    response.body(NisHttp::Encoding::Chunked) << "Data for page 1";
+}
+
 std::vector<ThorsAnvil::ThorsMug::Action> SlackMug::getAction()
 {
     return {
             {NisHTTP::Method::POST, "/event",           [&](NisHTTP::Request const& request, NisHTTP::Response& response){eventHandler.handleEvent(request, response);return true;}, [&](NisHTTP::Request const& request){return eventHandler.validateRequest(request);}},
-            {NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request const& request, NisHTTP::Response& response){handleCommand(request, response);return true;},            [&](NisHTTP::Request const& request){return eventHandler.validateRequest(request);}}
+            {NisHTTP::Method::POST, "/command/speak",   [&](NisHTTP::Request const& request, NisHTTP::Response& response){handleCommand(request, response);return true;},            [&](NisHTTP::Request const& request){return eventHandler.validateRequest(request);}},
+            {NisHTTP::Method::GET,  "/files/page1",     [&](NisHTTP::Request const& request, NisHTTP::Response& response){handleFilePage1(request, response);return true;}}
            };
 }

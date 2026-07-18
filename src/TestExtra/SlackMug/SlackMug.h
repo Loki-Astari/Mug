@@ -19,6 +19,7 @@ class SlackMug: public ThorsAnvil::ThorsMug::MugPluginSimple
 
 
         void handleCommand(ThorsAnvil::Nisse::HTTP::Request const& request, ThorsAnvil::Nisse::HTTP::Response& response);
+        void handleFilePage1(ThorsAnvil::Nisse::HTTP::Request const& request, ThorsAnvil::Nisse::HTTP::Response& response);
 
     public:
         SlackMug(char const* config);

@@ -5,7 +5,7 @@
 #include "MugConfig.h"
 
 #include "ThorSerialize/JsonThor.h"
-#include "NisseHTTP/ClientRequest.h"
+#include "NisseHTTP/ClientHTTP.h"
 
 #include <latch>
 #include <thread>
@@ -66,15 +66,11 @@ TEST(SlackMugPluginTest, ServiceRunAddServerWithFile)
 
     // Touch the control point to shut down the server.
     latch.wait();
-    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    ThorsAnvil::Nisse::HTTP::HeaderResponse     headers;
-    headers.add("host", "localhost");
-    headers.add("content-length", "0");
-    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-    request.addHeaders(headers);
+    ThorsAnvil::Nisse::HTTP::ClientHTTP         client(ThorsAnvil::ThorsSocket::SocketInfo{"localhost", 8079}, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1);
+    client.get({.path = "/?command=stophard"});
+    client.processResp([](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
 
-#if 0
 TEST(SlackMugPluginTest, ServiceRunAddServerWithFileValidateWorks)
 {
     std::stringstream   configStream(R"(
@@ -114,23 +110,18 @@ TEST(SlackMugPluginTest, ServiceRunAddServerWithFileValidateWorks)
     LocalJthread     serverThread(work);
     latch.wait();
 
-    ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8070});
+    ThorsAnvil::Nisse::HTTP::ClientHTTP     client({"localhost", 8070});
+    client.get({.path = "/files/page1"});
 
-    socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/files/page1");
+    std::string line;
+    client.processResp([&line](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const& resp)
+    {
+        std::getline(resp.body(), line);
+    });
 
-    ThorsAnvil::ThorsSocket::HTTPResponse   response;
-    socketData >> response;
+    EXPECT_EQ("Data for page 1", line);
 
-    ASSERT_EQ("Data for page 1\n", response.getBody());
-
-    // Touch the control point to shut down the server.
-    ThorsAnvil::ThorsSocket::SocketStream       socket({"localhost", 8079});
-    ThorsAnvil::Nisse::HTTP::HeaderResponse   headers;
-    headers.add("host", "localhost");
-    headers.add("content-length", "0");
-    ThorsAnvil::Nisse::HTTP::ClientRequest  request(socket, "localhost:/?command=stophard");
-    request.addHeaders(headers);
-    request.flushRequest();
+    ThorsAnvil::Nisse::HTTP::ClientHTTP     control({"localhost", 8079});
+    control.get({.path = "/?command=stophard"});
     waitForExit.wait();
 }
-#endif
