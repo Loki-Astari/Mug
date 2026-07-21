@@ -53,10 +53,10 @@ TEST(SlackMugPluginTest, ServiceRunAddServerWithFile)
         ASSERT_TRUE(false);
     }
 
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
     std::latch                          latch(1);
 
     auto work = [&]() {
+        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
         server.run(
                 [&latch](){latch.count_down();}
         );
@@ -67,7 +67,7 @@ TEST(SlackMugPluginTest, ServiceRunAddServerWithFile)
     // Touch the control point to shut down the server.
     latch.wait();
     ThorsAnvil::Nisse::HTTP::ClientHTTP         client(ThorsAnvil::ThorsSocket::SocketInfo{"localhost", 8079}, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1);
-    client.get({.path = "/?command=stophard"});
+    client.get<std::string>({.path = "/?command=stophard"});
     client.processResp([](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
 
@@ -96,11 +96,11 @@ TEST(SlackMugPluginTest, ServiceRunAddServerWithFileValidateWorks)
         ASSERT_TRUE(false);
     }
 
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
     std::latch                          latch(1);
     std::latch                          waitForExit(1);
 
     auto work = [&]() {
+        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
         server.run(
                 [&latch](){latch.count_down();}
         );
@@ -111,17 +111,11 @@ TEST(SlackMugPluginTest, ServiceRunAddServerWithFileValidateWorks)
     latch.wait();
 
     ThorsAnvil::Nisse::HTTP::ClientHTTP     client({"localhost", 8070});
-    client.get({.path = "/files/page1"});
-
-    std::string line;
-    client.processResp([&line](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const& resp)
-    {
-        std::getline(resp.body(), line);
-    });
+    std::string line = client.get<std::string>({.path = "/files/page1"});
 
     EXPECT_EQ("Data for page 1", line);
 
     ThorsAnvil::Nisse::HTTP::ClientHTTP     control({"localhost", 8079});
-    control.get({.path = "/?command=stophard"});
+    control.get<std::string>({.path = "/?command=stophard"});
     waitForExit.wait();
 }

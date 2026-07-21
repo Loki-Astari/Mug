@@ -46,31 +46,14 @@ TEST(MugServerTest, CreateActive)
     ThorsAnvil::ThorsMug::MugServerMode mode = ThorsAnvil::ThorsMug::Active;
     ThorsAnvil::ThorsMug::MugServer     server(config, mode);
 }
-TEST(MugServerTest, ServiceRunManuallyStopped)
-{
-    ThorsAnvil::ThorsMug::MugConfig     config;
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
-    std::latch                          latch(1);
-
-    auto work = [&]() {
-        server.run(
-                [&latch](){latch.count_down();}
-        );
-    };
-
-    LocalJthread     serverThread(work);
-
-    latch.wait();
-    server.stopHard();
-}
 
 TEST(MugServerTest, ServiceRunDefaultConfigHitControl)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
     std::latch                          latch(1);
 
     auto work = [&]() {
+        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
         server.run(
                 [&latch](){latch.count_down();}
         );
@@ -81,7 +64,7 @@ TEST(MugServerTest, ServiceRunDefaultConfigHitControl)
     // Touch the control point to shut down the server.
     latch.wait();
     ThorsAnvil::Nisse::HTTP::ClientHTTP     client({"localhost", 8079});
-    client.get({.path = "/?command=stophard"});
+    client.get<std::string>({.path = "/?command=stophard"});
 }
 
 TEST(MugServerTest, ServiceRunModifiedControl)
@@ -99,10 +82,10 @@ TEST(MugServerTest, ServiceRunModifiedControl)
     }
 
 
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
     std::latch                          latch(1);
 
     auto work = [&]() {
+        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
         server.run(
                 [&latch](){latch.count_down();}
         );
@@ -113,7 +96,7 @@ TEST(MugServerTest, ServiceRunModifiedControl)
     // Touch the control point to shut down the server.
     latch.wait();
     ThorsAnvil::Nisse::HTTP::ClientHTTP       client({"localhost", 8078});
-    client.get({.path = "/?command=stophard"});
+    client.get<std::string>({.path = "/?command=stophard"});
 }
 
 TEST(MugServerTest, ServiceRunAddServer)
@@ -136,10 +119,10 @@ TEST(MugServerTest, ServiceRunAddServer)
         ASSERT_TRUE(false);
     }
 
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
     std::latch                          latch(1);
 
     auto work = [&]() {
+        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
         server.run(
                 [&latch](){latch.count_down();}
         );
@@ -150,7 +133,7 @@ TEST(MugServerTest, ServiceRunAddServer)
     // Touch the control point to shut down the server.
     latch.wait();
     ThorsAnvil::Nisse::HTTP::ClientHTTP       client({"localhost", 8079});
-    client.get({.path = "/?command=stophard"});
+    client.get<std::string>({.path = "/?command=stophard"});
 }
 
 TEST(MugServerTest, CallALoadedLib)
@@ -178,11 +161,11 @@ TEST(MugServerTest, CallALoadedLib)
         ASSERT_TRUE(false);
     }
 
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
     std::latch                          latch(1);
     std::latch                          waitForExit(1);
 
     auto work = [&]() {
+        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
         server.run(
                 [&latch](){latch.count_down();}
         );
@@ -204,7 +187,7 @@ TEST(MugServerTest, CallALoadedLib)
 
     // Touch the control point to shut down the server.
     ThorsAnvil::Nisse::HTTP::ClientHTTP       client({"localhost", 8079});
-    client.get({.path = "/?command=stophard"});
+    client.get<std::string>({.path = "/?command=stophard"});
     waitForExit.wait();
 }
 

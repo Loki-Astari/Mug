@@ -56,10 +56,10 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFile)
         ASSERT_TRUE(false);
     }
 
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
     std::latch                          latch(1);
 
     auto work = [&]() {
+        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
         server.run(
                 [&latch](){latch.count_down();}
         );
@@ -70,7 +70,7 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFile)
     // Touch the control point to shut down the server.
     latch.wait();
     ThorsAnvil::Nisse::HTTP::ClientHTTP         client({"localhost", 8079});
-    client.get({.path = "/?command=stophard"});
+    client.get<std::string>({.path = "/?command=stophard"});
 }
 
 TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
@@ -98,11 +98,11 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
         ASSERT_TRUE(false);
     }
 
-    ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
     std::latch                          latch(1);
     std::latch                          waitForExit(1);
 
     auto work = [&]() {
+        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
         server.run(
                 [&latch](){latch.count_down();}
         );
@@ -119,11 +119,11 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
     ThorsAnvil::ThorsSocket::HTTPResponse   response;
     socketData >> response;
 
-    ASSERT_EQ("Data for page 1\n", response.getBody());
+    ASSERT_EQ("\"Data for page 1\"\n", response.getBody());
 
     // Touch the control point to shut down the server.
     ThorsAnvil::Nisse::HTTP::ClientHTTP       client({"localhost", 8079});
-    client.get({.path = "/?command=stophard"});
+    client.get<std::string>({.path = "/?command=stophard"});
     waitForExit.wait();
 }
 

@@ -37,7 +37,7 @@ void SlackMug::handleCommand(NisHTTP::Request const& request, NisHTTP::Response&
 
 void SlackMug::handleFilePage1(NisHTTP::Request const& /*request*/, NisHTTP::Response& response)
 {
-    response.body(NisHttp::Encoding::Chunked) << "Data for page 1";
+    response.body(NisHttp::Encoding::Chunked) << "\"Data for page 1\"";
 }
 
 std::vector<ThorsAnvil::ThorsMug::Action> SlackMug::getAction()
