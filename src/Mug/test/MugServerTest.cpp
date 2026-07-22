@@ -96,7 +96,7 @@ TEST(MugServerTest, ServiceRunModifiedControl)
     // Touch the control point to shut down the server.
     latch.wait();
     ThorsAnvil::Nisse::HTTP::ClientHTTP       client({"localhost", 8078});
-    client.get<std::string>({.path = "/?command=stophard"});
+    client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
 
 TEST(MugServerTest, ServiceRunAddServer)
@@ -133,7 +133,7 @@ TEST(MugServerTest, ServiceRunAddServer)
     // Touch the control point to shut down the server.
     latch.wait();
     ThorsAnvil::Nisse::HTTP::ClientHTTP       client({"localhost", 8079});
-    client.get<std::string>({.path = "/?command=stophard"});
+    client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
 
 TEST(MugServerTest, CallALoadedLib)
@@ -187,7 +187,7 @@ TEST(MugServerTest, CallALoadedLib)
 
     // Touch the control point to shut down the server.
     ThorsAnvil::Nisse::HTTP::ClientHTTP       client({"localhost", 8079});
-    client.get<std::string>({.path = "/?command=stophard"});
+    client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
     waitForExit.wait();
 }
 

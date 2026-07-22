@@ -67,8 +67,7 @@ TEST(SlackMugPluginTest, ServiceRunAddServerWithFile)
     // Touch the control point to shut down the server.
     latch.wait();
     ThorsAnvil::Nisse::HTTP::ClientHTTP         client(ThorsAnvil::ThorsSocket::SocketInfo{"localhost", 8079}, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1);
-    client.get<std::string>({.path = "/?command=stophard"});
-    client.processResp([](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
+    client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
 
 TEST(SlackMugPluginTest, ServiceRunAddServerWithFileValidateWorks)
