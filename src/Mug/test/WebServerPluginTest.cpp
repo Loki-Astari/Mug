@@ -7,27 +7,11 @@
 #include "ThorSerialize/JsonThor.h"
 #include "NisseHTTP/ClientHTTP.h"
 
-#include <latch>
-#include <thread>
-
 #define LOCAL_QUOTE1(X)     #X
 #define LOCAL_QUOTE(X)      LOCAL_QUOTE1(X)
 #define SLIB                "." LOCAL_QUOTE( SHARED_LIB_EXTENSION )
 
-/*
- * Some locations were we build do not currently support std::jthread.
- * This is a simplified version just for testing purposes.
- */
-//    std::jthread
-class LocalJthread: public std::thread
-{
-    public:
-        using std::thread::thread;
-        ~LocalJthread()
-        {
-            join();
-        }
-};
+using MugServerRunner = ThorsAnvil::Nisse::Server::UnitTest::ServerRunner<ThorsAnvil::ThorsMug::MugServer>;
 
 TEST(WebServerPluginTest, ServiceRunAddServerWithFile)
 {
@@ -52,20 +36,8 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFile)
     if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
         ASSERT_TRUE(false);
     }
+    MugServerRunner                     server{config, ThorsAnvil::ThorsMug::Active};
 
-    std::latch                          latch(1);
-
-    auto work = [&]() {
-        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
-        server.run(
-                [&latch](){latch.count_down();}
-        );
-    };
-
-    LocalJthread     serverThread(work);
-
-    // Touch the control point to shut down the server.
-    latch.wait();
     ThorsAnvil::Nisse::HTTP::ClientHTTP         client({"localhost", 8079});
     client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
@@ -94,20 +66,7 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
     if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
         ASSERT_TRUE(false);
     }
-
-    std::latch                          latch(1);
-    std::latch                          waitForExit(1);
-
-    auto work = [&]() {
-        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
-        server.run(
-                [&latch](){latch.count_down();}
-        );
-        waitForExit.count_down();
-    };
-
-    LocalJthread     serverThread(work);
-    latch.wait();
+    MugServerRunner                     server{config, ThorsAnvil::ThorsMug::Active};
 
     ThorsAnvil::Nisse::HTTP::ClientHTTP     client({"localhost", 8070});
     ThorsAnvil::Nisse::HTTP::HeaderRequest  headers;
@@ -119,6 +78,5 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
     // Touch the control point to shut down the server.
     ThorsAnvil::Nisse::HTTP::ClientHTTP       client2({"localhost", 8079});
     client2.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
-    waitForExit.wait();
 }
 
