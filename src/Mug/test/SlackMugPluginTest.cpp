@@ -7,27 +7,9 @@
 #include "ThorSerialize/JsonThor.h"
 #include "NisseHTTP/ClientHTTP.h"
 
-#include <latch>
-#include <thread>
-
 #define LOCAL_QUOTE1(X)     #X
 #define LOCAL_QUOTE(X)      LOCAL_QUOTE1(X)
 #define SLIB                "." LOCAL_QUOTE( SHARED_LIB_EXTENSION )
-
-/*
- * Some locations were we build do not currently support std::jthread.
- * This is a simplified version just for testing purposes.
- */
-//    std::jthread
-class LocalJthread: public std::thread
-{
-    public:
-        using std::thread::thread;
-        ~LocalJthread()
-        {
-            join();
-        }
-};
 
 using MugServerRunner = ThorsAnvil::Nisse::Server::UnitTest::ServerRunner<ThorsAnvil::ThorsMug::MugServer>;
 
