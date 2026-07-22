@@ -7,9 +7,6 @@
 #include "ThorSerialize/JsonThor.h"
 #include "NisseHTTP/ClientHTTP.h"
 
-#include "HTTPSend.h"
-#include "HTTPResponse.h"
-
 #include <latch>
 #include <thread>
 
@@ -112,18 +109,16 @@ TEST(WebServerPluginTest, ServiceRunAddServerWithFileValidateWorks)
     LocalJthread     serverThread(work);
     latch.wait();
 
-    ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8070});
+    ThorsAnvil::Nisse::HTTP::ClientHTTP     client({"localhost", 8070});
+    ThorsAnvil::Nisse::HTTP::HeaderRequest  headers;
+    headers.add("accept", "application/json");
+    std::string result = client.get<std::string>({.path = "/files/page1", .headers = headers});
 
-    socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/files/page1");
-
-    ThorsAnvil::ThorsSocket::HTTPResponse   response;
-    socketData >> response;
-
-    ASSERT_EQ("\"Data for page 1\"\n", response.getBody());
+    ASSERT_EQ("Data for page 1", result);
 
     // Touch the control point to shut down the server.
-    ThorsAnvil::Nisse::HTTP::ClientHTTP       client({"localhost", 8079});
-    client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
+    ThorsAnvil::Nisse::HTTP::ClientHTTP       client2({"localhost", 8079});
+    client2.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
     waitForExit.wait();
 }
 

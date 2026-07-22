@@ -9,9 +9,6 @@
 #include "ThorSerialize/JsonThor.h"
 #include "ThorsSocket/SocketStream.h"
 
-#include "HTTPSend.h"
-#include "HTTPResponse.h"
-
 #include <sstream>
 #include <latch>
 
@@ -176,18 +173,20 @@ TEST(MugServerTest, CallALoadedLib)
     latch.wait();
 
     // Talk to server.
-    ThorsAnvil::ThorsSocket::SocketStream socketData({"localhost", 8070});
-
-    socketData << ThorsAnvil::ThorsSocket::HTTPSend(ThorsAnvil::ThorsSocket::SendType::GET, ThorsAnvil::ThorsSocket::SendVersion::HTTP1_1, "localhost", "/Plop/");
-
-    ThorsAnvil::ThorsSocket::HTTPResponse   response;
-    socketData >> response;
-
-    ASSERT_EQ(305, response.getCode());
+    ThorsAnvil::Nisse::HTTP::ClientHTTP     client({"localhost", 8070});
+    ThorsAnvil::Nisse::HTTP::HeaderRequest  headers;
+    headers.add("accept", "application/json");
+    bool called = false;
+    client.get_async({.path = "/Plop/"}, [&called](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const& resp)
+    {
+        called = true;
+        ASSERT_EQ(305, resp.getStatus());
+    });
+    ASSERT_TRUE(called);
 
     // Touch the control point to shut down the server.
-    ThorsAnvil::Nisse::HTTP::ClientHTTP       client({"localhost", 8079});
-    client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
+    ThorsAnvil::Nisse::HTTP::ClientHTTP       client2({"localhost", 8079});
+    client2.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
     waitForExit.wait();
 }
 
