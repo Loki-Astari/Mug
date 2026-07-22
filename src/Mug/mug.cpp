@@ -1,6 +1,6 @@
 #include "MugArgs.h"
 #include "MugCLA.h"
-#include "MugServer.h"
+#include "Server.h"
 #include "MugConfig.h"
 
 #include "ThorSerialize/JsonThor.h"
@@ -51,8 +51,8 @@ int main(int argc, char* argv[])
     using ThorsAnvil::ThorsMug::MugCLA;
     using ThorsAnvil::ThorsMug::MugArgs;
     using ThorsAnvil::ThorsMug::MugConfig;
-    using ThorsAnvil::ThorsMug::MugServer;
-    using ThorsAnvil::ThorsMug::MugServerMode;
+    using ThorsAnvil::ThorsMug::Server;
+    using ThorsAnvil::ThorsMug::ServerMode;
 
     try
     {
@@ -60,9 +60,9 @@ int main(int argc, char* argv[])
         MugCLA      parser(std::vector<std::string_view>(argv, argv + argc), arguments);
 
         if (!arguments.silent) {
-            ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
-            ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "===================== Start ============================");
-            ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
+            ThorsLogInfo("ThorsAnvil::ThorsMug::Server", "Server", "========================================================");
+            ThorsLogInfo("ThorsAnvil::ThorsMug::Server", "Server", "===================== Start ============================");
+            ThorsLogInfo("ThorsAnvil::ThorsMug::Server", "Server", "========================================================");
         }
         if (arguments.help) { /// TODO
             parser.displayHelp(argv[0]);
@@ -85,12 +85,12 @@ int main(int argc, char* argv[])
         {
             std::ofstream pidStream(arguments.pidFile);
             if (!pidStream) {
-                ThorsLogAndThrowError(std::runtime_error, "ThorsAnvil::ThorsMug::MugServer", "main", "Failed to write PID file: ", arguments.pidFile.c_str());
+                ThorsLogAndThrowError(std::runtime_error, "ThorsAnvil::ThorsMug::Server", "main", "Failed to write PID file: ", arguments.pidFile.c_str());
             }
             pidStream << getpid();
         }
 
-        MugServerMode mode = arguments.silent ? MugServerMode::Headless : MugServerMode::Active;
+        ServerMode mode = arguments.silent ? ServerMode::Headless : ServerMode::Active;
         bool reload = false;
         do {
             using ThorsAnvil::Serialize::jsonImporter;
@@ -108,20 +108,20 @@ int main(int argc, char* argv[])
                 ThorsLogAndThrowError(std::runtime_error, "ThorsMug", "main", "Config specifies no servers to run");
             }
 
-            MugServer       server(config, mode);
+            Server       server(config, mode);
             server.run();
             reload = server.reloadRequested();
             if (reload) {
-                ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "main", "Reload requested, re-reading config");
+                ThorsLogInfo("ThorsAnvil::ThorsMug::Server", "main", "Reload requested, re-reading config");
             }
         } while (reload);
 
         std::filesystem::remove(arguments.pidFile);
 
         if (!arguments.silent) {
-            ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
-            ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "====================== End =============================");
-            ThorsLogInfo("ThorsAnvil::ThorsMug::MugServer", "MugServer", "========================================================");
+            ThorsLogInfo("ThorsAnvil::ThorsMug::Server", "Server", "========================================================");
+            ThorsLogInfo("ThorsAnvil::ThorsMug::Server", "Server", "====================== End =============================");
+            ThorsLogInfo("ThorsAnvil::ThorsMug::Server", "Server", "========================================================");
         }
     }
     catch (std::exception const& e)

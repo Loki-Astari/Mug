@@ -22,21 +22,20 @@ extern "C"
 namespace ThorsAnvil::ThorsMug
 {
 
-using ThorsAnvil::Nisse::Server::Server;
 using ThorsAnvil::Nisse::Server::TimerAction;
 using ThorsAnvil::Nisse::HTTP::HTTPHandler;
 using ThorsAnvil::Nisse::HTTP::PyntHTTPControl;
 
 
-enum MugServerMode {Headless, Active};
+enum ServerMode {Headless, Active};
 
-class MugServer: public Server
+class Server: public ThorsAnvil::Nisse::Server::Server
 {
     class LibraryChecker: public TimerAction
     {
-        MugServer& server;
+        Server& server;
         public:
-            LibraryChecker(MugServer& server)
+            LibraryChecker(Server& server)
                 : server(server)
             {}
             virtual void handleRequest(int) override
@@ -47,9 +46,9 @@ class MugServer: public Server
 
     class SignalChecker: public TimerAction
     {
-        MugServer& server;
+        Server& server;
         public:
-            SignalChecker(MugServer& server)
+            SignalChecker(Server& server)
                 : server(server)
             {}
             virtual void handleRequest(int) override
@@ -80,7 +79,7 @@ class MugServer: public Server
     TASock::ServerInit getServerInit(std::optional<std::filesystem::path> certPath, int port);
 
     public:
-        MugServer(MugConfig const& config, MugServerMode mode);
+        Server(MugConfig const& config, ServerMode mode);
 
         bool reloadRequested() const    {return reloadFlag;}
 
@@ -93,7 +92,7 @@ class MugServer: public Server
 }
 
 #if defined(THORSMUG_HEADER_ONLY) && THORSMUG_HEADER_ONLY == 1
-#include "MugServer.source"
+#include "Server.source"
 #endif
 
 #endif

@@ -2,7 +2,7 @@
 #include <string>
 #include <thread>
 #include "MugConfig.h"
-#include "MugServer.h"
+#include "Server.h"
 
 #include "NisseHTTP/ClientHTTP.h"
 #include "NisseHTTP/Server.h"
@@ -14,22 +14,22 @@
 #define LOCAL_QUOTE(X)      LOCAL_QUOTE1(X)
 #define SLIB                "." LOCAL_QUOTE( SHARED_LIB_EXTENSION )
 
-using MugServerRunner = ThorsAnvil::Nisse::Server::UnitTest::ServerRunner<ThorsAnvil::ThorsMug::MugServer>;
+using MugServerRunner = ThorsAnvil::Nisse::Server::UnitTest::ServerRunner<ThorsAnvil::ThorsMug::Server>;
 
-TEST(MugServerTest, CreateHeadless)
+TEST(ServerTest, CreateHeadless)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
-    ThorsAnvil::ThorsMug::MugServerMode mode = ThorsAnvil::ThorsMug::Headless;
+    ThorsAnvil::ThorsMug::ServerMode    mode = ThorsAnvil::ThorsMug::Headless;
     MugServerRunner                     server{config, mode};
 }
-TEST(MugServerTest, CreateActive)
+TEST(ServerTest, CreateActive)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
-    ThorsAnvil::ThorsMug::MugServerMode mode = ThorsAnvil::ThorsMug::Active;
+    ThorsAnvil::ThorsMug::ServerMode    mode = ThorsAnvil::ThorsMug::Active;
     MugServerRunner                     server{config, mode};
 }
 
-TEST(MugServerTest, ServiceRunDefaultConfigHitControl)
+TEST(ServerTest, ServiceRunDefaultConfigHitControl)
 {
     ThorsAnvil::ThorsMug::MugConfig     config;
     MugServerRunner                     server{config, ThorsAnvil::ThorsMug::Active};
@@ -38,7 +38,7 @@ TEST(MugServerTest, ServiceRunDefaultConfigHitControl)
     client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
 
-TEST(MugServerTest, ServiceRunModifiedControl)
+TEST(ServerTest, ServiceRunModifiedControl)
 {
     std::stringstream   configStream(R"(
         {
@@ -57,7 +57,7 @@ TEST(MugServerTest, ServiceRunModifiedControl)
     client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
 
-TEST(MugServerTest, ServiceRunAddServer)
+TEST(ServerTest, ServiceRunAddServer)
 {
     std::stringstream   configStream(R"(
         {
@@ -82,7 +82,7 @@ TEST(MugServerTest, ServiceRunAddServer)
     client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
 
-TEST(MugServerTest, CallALoadedLib)
+TEST(ServerTest, CallALoadedLib)
 {
     std::stringstream   configStream(R"(
         {

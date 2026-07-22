@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "ThorsMugConfig.h"
-#include "MugServer.h"
+#include "Server.h"
 #include "MugConfig.h"
 
 #include "ThorSerialize/JsonThor.h"
@@ -11,7 +11,7 @@
 #define LOCAL_QUOTE(X)      LOCAL_QUOTE1(X)
 #define SLIB                "." LOCAL_QUOTE( SHARED_LIB_EXTENSION )
 
-using MugServerRunner = ThorsAnvil::Nisse::Server::UnitTest::ServerRunner<ThorsAnvil::ThorsMug::MugServer>;
+using MugServerRunner = ThorsAnvil::Nisse::Server::UnitTest::ServerRunner<ThorsAnvil::ThorsMug::Server>;
 
 TEST(WebServerPluginTest, ServiceRunAddServerWithFile)
 {
