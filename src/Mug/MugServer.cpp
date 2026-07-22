@@ -1,6 +1,6 @@
 #include "MugServer.h"
 
-#include "NisseServer/NisseServer.h"
+#include "NisseServer/Server.h"
 #include <chrono>
 #include <csignal>
 
@@ -42,7 +42,7 @@ TASock::ServerInit MugServer::getServerInit(std::optional<std::filesystem::path>
 
 THORSMUG_HEADER_ONLY_INCLUDE
 MugServer::MugServer(MugConfig const& config, MugServerMode /*mode*/)
-    : NisseServer(workerCount)
+    : Server(workerCount)
     , control(*this)
     , libraryChecker(*this)
     , signalChecker(*this)

@@ -4,7 +4,7 @@
 #include "ThorsMugConfig.h"
 #include "MugConfig.h"
 #include "DLLibMap.h"
-#include "NisseServer/NisseServer.h"
+#include "NisseServer/Server.h"
 #include "NisseServer/TimerAction.h"
 #include "NisseHTTP/PyntHTTPControl.h"
 #include "NisseHTTP/HTTPHandler.h"
@@ -22,7 +22,7 @@ extern "C"
 namespace ThorsAnvil::ThorsMug
 {
 
-using ThorsAnvil::Nisse::Server::NisseServer;
+using ThorsAnvil::Nisse::Server::Server;
 using ThorsAnvil::Nisse::Server::TimerAction;
 using ThorsAnvil::Nisse::HTTP::HTTPHandler;
 using ThorsAnvil::Nisse::HTTP::PyntHTTPControl;
@@ -30,7 +30,7 @@ using ThorsAnvil::Nisse::HTTP::PyntHTTPControl;
 
 enum MugServerMode {Headless, Active};
 
-class MugServer: public NisseServer
+class MugServer: public Server
 {
     class LibraryChecker: public TimerAction
     {
