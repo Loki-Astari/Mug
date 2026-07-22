@@ -29,6 +29,8 @@ class LocalJthread: public std::thread
         }
 };
 
+using MugServerRunner = ThorsAnvil::Nisse::Server::UnitTest::ServerRunner<ThorsAnvil::ThorsMug::MugServer>;
+
 TEST(SlackMugPluginTest, ServiceRunAddServerWithFile)
 {
     std::stringstream   configStream(R"(
@@ -52,20 +54,8 @@ TEST(SlackMugPluginTest, ServiceRunAddServerWithFile)
     if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
         ASSERT_TRUE(false);
     }
+    MugServerRunner                     server{config, ThorsAnvil::ThorsMug::Active};
 
-    std::latch                          latch(1);
-
-    auto work = [&]() {
-        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
-        server.run(
-                [&latch](){latch.count_down();}
-        );
-    };
-
-    LocalJthread     serverThread(work);
-
-    // Touch the control point to shut down the server.
-    latch.wait();
     ThorsAnvil::Nisse::HTTP::ClientHTTP         client(ThorsAnvil::ThorsSocket::SocketInfo{"localhost", 8079}, ThorsAnvil::Nisse::HTTP::Version::HTTP1_1);
     client.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
@@ -94,20 +84,7 @@ TEST(SlackMugPluginTest, ServiceRunAddServerWithFileValidateWorks)
     if (!(configStream >> ThorsAnvil::Serialize::jsonImporter(config))) {
         ASSERT_TRUE(false);
     }
-
-    std::latch                          latch(1);
-    std::latch                          waitForExit(1);
-
-    auto work = [&]() {
-        ThorsAnvil::ThorsMug::MugServer     server(config, ThorsAnvil::ThorsMug::Active);
-        server.run(
-                [&latch](){latch.count_down();}
-        );
-        waitForExit.count_down();
-    };
-
-    LocalJthread     serverThread(work);
-    latch.wait();
+    MugServerRunner                     server{config, ThorsAnvil::ThorsMug::Active};
 
     ThorsAnvil::Nisse::HTTP::ClientHTTP     client({"localhost", 8070});
     std::string line = client.get<std::string>({.path = "/files/page1"});
@@ -115,6 +92,5 @@ TEST(SlackMugPluginTest, ServiceRunAddServerWithFileValidateWorks)
     EXPECT_EQ("Data for page 1", line);
 
     ThorsAnvil::Nisse::HTTP::ClientHTTP     control({"localhost", 8079});
-    control.get<std::string>({.path = "/?command=stophard"});
-    waitForExit.wait();
+    control.get_async({.path = "/?command=stophard"}, [](ThorsAnvil::Nisse::HTTP::ClientHTTPResponse const&){});
 }
