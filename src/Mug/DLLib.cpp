@@ -99,11 +99,11 @@ bool DLLib::check()
         }
         catch (std::exception const& e)
         {
-            ThorsLogError("ThorsAnvil::ThorsMug::DLLib", "check", "Failed to load new version of the dynamic library: ", path.c_str(), " ", e.what());
+            ThorsLogAlert("ThorsAnvil::ThorsMug::DLLib", "check", "Failed to load new version of the dynamic library: ", path.c_str(), " ", e.what());
         }
         catch (...)
         {
-            ThorsLogError("ThorsAnvil::ThorsMug::DLLib", "check", "Failed to load new version of the dynamic library: ", path.c_str(), " Unknown");
+            ThorsLogAlert("ThorsAnvil::ThorsMug::DLLib", "check", "Failed to load new version of the dynamic library: ", path.c_str(), " Unknown");
         }
     }
     return false;
@@ -121,7 +121,7 @@ void DLLib::load()
             instance.plugin->start(instance.handler);
         }
         else {
-            ThorsLogError("ThorsAnvil::ThorsMug::DLLib", "load", "Plugin Config: failed to load a plugin: ", instance.config);
+            ThorsLogAlert("ThorsAnvil::ThorsMug::DLLib", "load", "Plugin Config: failed to load a plugin: ", instance.config);
         }
     }
 }

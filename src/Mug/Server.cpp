@@ -51,16 +51,16 @@ Server::Server(MugConfig const& config, ServerMode /*mode*/)
     servers.reserve(config.servers.size());
 
     for (auto const& server: config.servers) {
-        ThorsLogDebug("ThorsAnvil::ThorsMug::Server", "Server", "Adding Server: ", server.port);
+        ThorsLogNotice("ThorsAnvil::ThorsMug::Server", "Server", "Adding Server: ", server.port);
         servers.emplace_back();
         for (auto const& action: server.actions) {
-            ThorsLogDebug("ThorsAnvil::ThorsMug::Server", "Server", "  Adding Action: ", action.pluginPath, " Config: ", action.config.getString());
+            ThorsLogNotice("ThorsAnvil::ThorsMug::Server", "Server", "  Adding Action: ", action.pluginPath, " Config: ", action.config.getString());
 
             libraries.load(servers.back(), action);
         }
         listen(getServerInit(server.certPath, server.port), servers.back());
     }
-    ThorsLogDebug("ThorsAnvil::ThorsMug::Server", "Server", "  Adding Control Port: ", config.controlPort);
+    ThorsLogNotice("ThorsAnvil::ThorsMug::Server", "Server", "  Adding Control Port: ", config.controlPort);
     listen(TASock::ServerInfo{config.controlPort}, control);
 
     using namespace std::chrono_literals;

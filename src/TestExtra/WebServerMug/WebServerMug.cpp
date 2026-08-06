@@ -43,18 +43,18 @@ std::vector<ThorsAnvil::ThorsMug::Action> WebServerPlugin::getAction()
 
 void WebServerPlugin::handleRequestPath(NisHttp::Request const& request, NisHttp::Response& response)
 {
-    ThorsLogDebug("MugServer", "handleRequestLib", "Handle file extract");
+    ThorsLogNotice("MugServer", "handleRequestLib", "Handle file extract");
     // Get the path from the HTTP request object.
     // Remove the leading slash if it exists.
     std::string_view    path = request.variables()["FilePath"];
-    ThorsLogDebug("MugServer", "handleRequestPath", "Input Path:   ", path);
+    ThorsLogNotice("MugServer", "handleRequestPath", "Input Path:   ", path);
 
     // Check that the path is valid
     // i.e. Some basic checks that the user is not trying to break into the filesystem.
     std::filesystem::path            requestPath = std::filesystem::path(path).lexically_normal();
-    ThorsLogDebug("MugServer", "handleRequestPath", "Request Path: ", requestPath.string());
+    ThorsLogNotice("MugServer", "handleRequestPath", "Request Path: ", requestPath.string());
     if (requestPath.empty() || (*requestPath.begin()) == "..") {
-        ThorsLogDebug("MugServer", "handleRequestPath", "400 Invalid Path");
+        ThorsLogNotice("MugServer", "handleRequestPath", "400 Invalid Path");
         response.error(400, "Invalid Request Path");
         return;
     }
@@ -63,14 +63,14 @@ void WebServerPlugin::handleRequestPath(NisHttp::Request const& request, NisHttp
     // Note if the user picked a directory we look for index.html
     std::error_code ec;
     std::filesystem::path        filePath = std::filesystem::path{contentDir} /= requestPath;
-    ThorsLogDebug("MugServer", "handleRequestPath", "File Path:    ", filePath.string());
+    ThorsLogNotice("MugServer", "handleRequestPath", "File Path:    ", filePath.string());
     filePath = std::filesystem::canonical(filePath, ec);
-    ThorsLogDebug("MugServer", "handleRequestPath", "Conical Path: ", filePath.string());
+    ThorsLogNotice("MugServer", "handleRequestPath", "Conical Path: ", filePath.string());
     if (!ec && std::filesystem::is_directory(filePath)) {
         filePath = std::filesystem::canonical(filePath /= "index.html", ec);
     }
     if (ec || !std::filesystem::is_regular_file(filePath)) {
-        ThorsLogDebug("MugServer", "handleRequestPath", "404 No File Found: ", filePath);
+        ThorsLogNotice("MugServer", "handleRequestPath", "404 No File Found: ", filePath);
         response.error(404, "No File Found At Path");
         return;
     }

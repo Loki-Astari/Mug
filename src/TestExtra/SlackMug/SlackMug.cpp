@@ -27,7 +27,7 @@ SlackMug::SlackMug(char const*)
 
 void SlackMug::handleCommand(NisHTTP::Request const& request, NisHTTP::Response& response)
 {
-    ThorsLogDebug("SlackMug", "handleCommand", "Recievent Command");
+    ThorsLogNotice("SlackMug", "handleCommand", "Recievent Command");
     std::string const& userId = request.variables()["user_id"];
     std::string const& channel = request.variables()["channel_id"];
 

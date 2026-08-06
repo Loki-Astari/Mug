@@ -36,42 +36,42 @@ void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
 
     for (std::string_view const& arg: arguments)
     {
-        ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Check arguments ", arg);
+        ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Check arguments ", arg);
         if (first) {
             first = false;
             continue;
         }
         SplitArg  const argVal = splitArgument(arg);
-        ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Flag:  ", argVal.flag);
-        ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Value: ", argVal.value);
+        ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Flag:  ", argVal.flag);
+        ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Value: ", argVal.value);
 
         if (argVal.flag == "--help")
         {
-            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Help");
+            ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Help");
             args.setHelp();
             continue;
         }
         if (argVal.flag == "--silent")
         {
-            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Silent");
+            ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Silent");
             args.setSilent();
             continue;
         }
         if (argVal.flag == "--logFile")
         {
-            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate LogFile");
+            ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate LogFile");
             args.logAddFile(argVal.value);
             continue;
         }
         if (argVal.flag == "--logSys")
         {
-            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate LogSys");
+            ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate LogSys");
             args.logAddSys(!argVal.hasValue ? arguments[0] : argVal.value);
             continue;
         }
         if (argVal.flag == "--logLevel")
         {
-            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate LogLevel");
+            ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate LogLevel");
             auto find = verbosity.find(argVal.value);
             if (find == std::end(verbosity)) {
                 int value = 0;
@@ -91,14 +91,14 @@ void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
         }
         if (argVal.flag == "--config")
         {
-            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Config");
+            ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Config");
             setConfig = true;
             args.setConfigFile(argVal.value);
             continue;
         }
         if (argVal.flag == "--signal")
         {
-            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Signal");
+            ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate Signal");
             if (argVal.value == "reload") {
                 args.setSignal(SignalFlag::Reload);
             }
@@ -112,13 +112,13 @@ void MugCLA::parseArguments(std::vector<std::string_view> const& arguments)
         }
         if (argVal.flag == "--pidFile")
         {
-            ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate PidFile");
+            ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Activate PidFile");
             args.setPidFile(argVal.value);
             continue;
         }
 
         // Invalid Flag;
-        ThorsLogDebug("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Invalid Flag");
+        ThorsLogNotice("ThorsAnvil::ThorsMug::MugCLA", "parseArguments", "Invalid Flag");
         args.setHelp();
     }
 }

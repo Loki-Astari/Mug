@@ -10,7 +10,7 @@ int main()
 {
     ThorsLogLevel(9);
     const Environment     environment(".slackenv");
-    ThorsLogDebug("main", "main", "SlackCLI ", environment.botToken);
+    ThorsLogNotice("main", "main", "SlackCLI ", environment.botToken);
 
     using ThorsAnvil::Slack::Client;
     using ThorsAnvil::Slack::API::Chat::POSTMessage;
